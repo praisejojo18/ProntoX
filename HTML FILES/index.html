@@ -1,110 +1,32 @@
-<!--This is page for the login and sign_up page and also  dashboard-->
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-  <div class="card">
-    <div class="brand">
-      <h1>Pronto<b>X</b></h1>
-    </div>
-
-    <!-- LOGIN FORM 
-    <form id="loginForm">
-      <h2>Welcome back</h2>
-      <p class="subtitle">Log in to share your ideas.</p>
-      <div class="field">
-        <label for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" placeholder="you@gmail.com" required />
-      </div>
-      <div class="field">
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn">Log in</button>
-      <p class="switch">Don't have an account? <a id="showSignup">Sign up</a></p>
-    </form>
-
-    <!-- SIGNUP FORM 
-    <form id="signupForm" class="hidden">
-      <h2>Create your account</h2>
-      <p class="subtitle">Join IdeaHub in seconds.</p>
-      <div class="field">
-        <label for="signupName">Full name</label>
-        <input type="text" id="signupName" placeholder="Jane Doe" required />
-      </div>
-      <div class="field">
-        <label for="signupEmail">Email</label>
-        <input type="email" id="signupEmail" placeholder="you@company.com" required />
-      </div>
-      <div class="field">
-        <label for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" placeholder="••••••••" required />
-      </div>
-      <div class="field">
-        <label for="signupConfirm">Confirm password</label>
-        <input type="password" id="signupConfirm" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn">Sign up</button>
-      <p class="switch">Already have an account? <a id="showLogin">Log in</a></p>
-    </form>
-  </div>
-
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-
-    document.getElementById('showSignup').addEventListener('click', () => {
-      loginForm.classList.add('hidden');
-      signupForm.classList.remove('hidden');
-    });
-
-    document.getElementById('showLogin').addEventListener('click', () => {
-      signupForm.classList.add('hidden');
-      loginForm.classList.remove('hidden');
-    });
-
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Logging in...');
-    });
-
-    signupForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const pw = document.getElementById('signupPassword').value;
-      const confirm = document.getElementById('signupConfirm').value;
-      if (pw !== confirm) {
-        alert('Passwords do not match.');
-        return;
-      }
-      alert('Account created!');
-    });
-  </script>
-
-</body>
-</html>-->
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IdeaHub</title>
+  <title>IdeaHub - Pronto Broadband Solutions</title>
   <style>
+    /* ============================================================
+       SECTION 1: CSS VARIABLES / ROOT
+       Defines Pronto Broadband Solutions brand colors used throughout
+       the entire application. These are the official company colors.
+       ============================================================ */
     :root {
-      --bg: #121212;
-      --surface: #1e1e1e;
-      --surface-2: #2a2a2a;
-      --accent: #EF9F27;
-      --accent-hover: #d98c1a;
-      --text: #f5f5f5;
-      --muted: #9a9a9a;
-      --border: #333333;
-    }
+  --bg: #F0F4F8;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFC;
+  --accent: #00AFEF;
+  --accent-hover: #0099D3;
+  --text: #1A2332;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
 
+    /* ============================================================
+       SECTION 2: RESET & GLOBAL STYLES
+       Removes default browser margins/padding and sets base styles
+       for the entire page including background, font, and layout.
+       ============================================================ */
     * {
       margin: 0;
       padding: 0;
@@ -112,206 +34,363 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
-      line-height: 1.5;
     }
 
+    /* ============================================================
+       SECTION 3: CARD CONTAINER STYLING
+       The main white/dark card that holds all forms and content.
+       Uses surface color with border and shadow for depth.
+       ============================================================ */
     .card {
-      background-color: var(--surface);
-      width: 100%;
-      max-width: 420px;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 1.5rem;
       padding: 2.5rem 2rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      transition: all 0.2s ease;
     }
 
-    .brand {
+    /* ============================================================
+       SECTION 4: LOGO AND HEADING SECTION
+       Company logo image + IdeaHub text with "Hub" in brand accent
+       color. Tagline provides context for the platform.
+       ============================================================ */
+    .logo-container {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 0.5rem;
     }
 
-    .brand h1 {
-      font-size: 1.75rem;
+   .company-logo {
+  max-width: 60px;
+  width: 60px;
+  height: 60px;
+  display: block;
+  margin: 0 auto 0.75rem auto;
+  border-radius: 80%;
+  object-fit: contain;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  padding: 4px;
+}
+
+    .logo {
+      text-align: center;
+      font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: -0.5px;
+      margin-bottom: 0.25rem;
     }
-
-    .brand h1 span {
+    .logo .hub {
       color: var(--accent);
     }
 
-    .brand p {
+    .tagline {
+      text-align: center;
       color: var(--muted);
       font-size: 0.9rem;
-      margin-top: 0.35rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
     }
 
-    .form-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
+    /* ============================================================
+       SECTION 5: FORM STYLES (shared by both login and signup)
+       Labels, input fields, and form group spacing.
+       ============================================================ */
+    .form-group {
+      margin-bottom: 1.25rem;
     }
 
-    .field {
-      margin-bottom: 1.1rem;
-    }
-
-    .field label {
+    label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 500;
       color: var(--muted);
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.3rem;
     }
 
-    .field input {
+    input {
       width: 100%;
-      background-color: var(--surface-2);
+      padding: 0.75rem 1rem;
+      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.8rem 0.9rem;
+      border-radius: 0.75rem;
       color: var(--text);
-      font-size: 0.95rem;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .field input::placeholder {
-      color: #6e6e6e;
-    }
-
-    .field input:focus {
+      font-size: 1rem;
+      transition: border 0.2s;
       outline: none;
+    }
+    input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(239, 159, 39, 0.15);
+      box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15);
+    }
+    input::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
     }
 
-    .btn {
+    /* ============================================================
+       SECTION 6: BUTTON STYLES
+       Primary action button using Pronto's brand accent color.
+       ============================================================ */
+    .btn-primary {
       width: 100%;
-      background-color: var(--accent);
-      color: #1a1300;
+      padding: 0.8rem;
+      background: var(--accent);
       border: none;
-      border-radius: 10px;
-      padding: 0.85rem;
-      font-size: 0.95rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
       font-weight: 600;
+      color: #fff;
       cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
       margin-top: 0.5rem;
-      transition: background-color 0.15s ease;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .btn-primary:active {
+      transform: scale(0.97);
     }
 
-    .btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    .switch {
+    /* ============================================================
+       SECTION 7: TOGGLE LINK STYLING
+       Links at the bottom of forms that switch between login/signup.
+       Uses brand accent color for the clickable text.
+       ============================================================ */
+    .toggle-link {
       text-align: center;
       margin-top: 1.5rem;
-      font-size: 0.875rem;
       color: var(--muted);
+      font-size: 0.95rem;
     }
-
-    .switch a {
+    .toggle-link a {
       color: var(--accent);
       text-decoration: none;
       font-weight: 500;
       cursor: pointer;
+      transition: color 0.2s;
     }
-
-    .switch a:hover {
+    .toggle-link a:hover {
+      color: var(--accent-hover);
       text-decoration: underline;
     }
 
-    .hidden {
-      display: none;
+    /* ============================================================
+       SECTION 8: FORM CONTAINERS & TRANSITIONS
+       Each form wrapper (login/signup) uses opacity + transform
+       for smooth fade + scale transitions when toggling.
+       The .active class triggers the visible state.
+       ============================================================ */
+    .form-wrapper {
+      opacity: 0;
+      transform: scale(0.95) translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      pointer-events: none;      /* prevents clicks when hidden */
+      max-height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+
+    .form-wrapper.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      max-height: 800px;         /* large enough for form content */
+      visibility: visible;
+      overflow: visible;
+    }
+
+    /* ============================================================
+       SECTION 9: RESPONSIVE ADJUSTMENTS
+       Smaller padding on mobile devices for better fit.
+       ============================================================ */
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.75rem 1.25rem;
+      }
+      .logo {
+        font-size: 1.8rem;
+      }
+      .company-logo {
+        max-width: 50px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="brand">
-      <h1>Idea<span>Hub</span></h1>
-      <p>Capture, organize, and grow your ideas</p>
+
+  <!-- ============================================================
+       SECTION 10: MAIN CARD CONTAINER
+       Holds both login and signup forms with smooth toggle.
+       ============================================================ -->
+  <div class="card">
+
+    <!-- ==========================================================
+         SECTION 11: LOGO AND HEADER
+         Company logo image + IdeaHub branding with tagline.
+         ========================================================== -->
+    <div class="logo-container">
+      <img 
+        src="../Images/logo.png" 
+        alt="Pronto Broadband Solutions logo"
+        class="company-logo" 
+      />
+    </div>
+    <div class="logo">
+      Pronto<span class="hub">X</span>
+    </div>
+    <p class="tagline">Capture, organize, and grow your ideas</p>
+
+    <!-- ==========================================================
+         SECTION 12: LOGIN FORM
+         Uses Staff ID instead of email. Includes password field
+         and toggle link to switch to signup.
+         ========================================================== -->
+    <div id="loginForm" class="form-wrapper active">
+      <div class="form-group">
+        <label for="loginStaffId">Staff ID</label>
+        <input 
+          type="text" 
+          id="loginStaffId" 
+          placeholder="Enter your Staff ID" 
+        />
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input 
+          type="password" 
+          id="loginPassword" 
+          placeholder="••••••••" 
+        />
+      </div>
+      <button class="btn-primary" id="loginBtn">Log in</button>
+      <div class="toggle-link">
+        Don't have an account? <a id="showSignup">Sign up</a>
+      </div>
     </div>
 
-    <!-- Login Form -->
-    <form id="login-form" autocomplete="off">
-      <h2 class="form-title">Log in</h2>
-      <div class="field">
-        <label for="login-email">Email</label>
-        <input type="email" id="login-email" placeholder="you@example.com" required />
+    <!-- ==========================================================
+         SECTION 13: SIGNUP FORM
+         Includes: Name, Staff ID, Email, Password, Confirm Password.
+         All required fields for new user registration.
+         ========================================================== -->
+    <div id="signupForm" class="form-wrapper">
+      <div class="form-group">
+        <label for="signupName">Full name</label>
+        <input 
+          type="text" 
+          id="signupName" 
+          placeholder="Chidi Okafor" 
+        />
       </div>
-      <div class="field">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="Enter your password" required />
+      <div class="form-group">
+        <label for="signupStaffId">Staff ID</label>
+        <input 
+          type="text" 
+          id="signupStaffId" 
+          placeholder="Enter your Staff ID" 
+        />
       </div>
-      <button type="submit" class="btn">Log in</button>
-      <p class="switch">Don't have an account? <a id="show-signup">Sign up</a></p>
-    </form>
+      <div class="form-group">
+        <label for="signupEmail">Email address</label>
+        <input 
+          type="email" 
+          id="signupEmail" 
+          placeholder="you@gmail.com" 
+        />
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input 
+          type="password" 
+          id="signupPassword" 
+          placeholder="••••••••" 
+        />
+      </div>
+      <div class="form-group">
+        <label for="signupConfirm">Confirm password</label>
+        <input 
+          type="password" 
+          id="signupConfirm" 
+          placeholder="••••••••" 
+        />
+      </div>
+      <button class="btn-primary" id="signupBtn">Sign up</button>
+      <div class="toggle-link">
+        Already have an account? <a id="showLogin">Log in</a>
+      </div>
+    </div>
 
-    <!-- Signup Form -->
-    <form id="signup-form" class="hidden" autocomplete="off">
-      <h2 class="form-title">Create account</h2>
-      <div class="field">
-        <label for="signup-name">Name</label>
-        <input type="text" id="signup-name" placeholder="Your full name" required />
-      </div>
-      <div class="field">
-        <label for="signup-email">Email</label>
-        <input type="email" id="signup-email" placeholder="you@example.com" required />
-      </div>
-      <div class="field">
-        <label for="signup-password">Password</label>
-        <input type="password" id="signup-password" placeholder="Create a password" required />
-      </div>
-      <div class="field">
-        <label for="signup-confirm">Confirm password</label>
-        <input type="password" id="signup-confirm" placeholder="Re-enter your password" required />
-      </div>
-      <button type="submit" class="btn">Sign up</button>
-      <p class="switch">Already have an account? <a id="show-login">Log in</a></p>
-    </form>
-  </main>
+  </div>
 
+  <!-- ============================================================
+       SECTION 14: JAVASCRIPT TOGGLE FUNCTION
+       Handles smooth switching between login and signup forms
+       by adding/removing the 'active' class on form wrappers.
+       ============================================================ -->
   <script>
-    var loginForm = document.getElementById("login-form");
-    var signupForm = document.getElementById("signup-form");
-    var showSignup = document.getElementById("show-signup");
-    var showLogin = document.getElementById("show-login");
+    // Get references to both form wrapper elements
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
 
-    showSignup.addEventListener("click", function () {
-      loginForm.classList.add("hidden");
-      signupForm.classList.remove("hidden");
-    });
+    // Get the toggle link elements
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
 
-    showLogin.addEventListener("click", function () {
-      signupForm.classList.add("hidden");
-      loginForm.classList.remove("hidden");
-    });
+    /**
+     * Switch to the login form
+     * Removes 'active' class from signup, adds it to login
+     */
+    function showLoginForm() {
+      loginForm.classList.add('active');
+      signupForm.classList.remove('active');
+    }
 
-    loginForm.addEventListener("submit", function (e) {
+    /**
+     * Switch to the signup form
+     * Removes 'active' class from login, adds it to signup
+     */
+    function showSignupForm() {
+      loginForm.classList.remove('active');
+      signupForm.classList.add('active');
+    }
+
+    // Event listeners for toggle links
+    showSignup.addEventListener('click', (e) => {
       e.preventDefault();
-      alert("Logged in successfully!");
+      showSignupForm();
     });
 
-    signupForm.addEventListener("submit", function (e) {
+    showLogin.addEventListener('click', (e) => {
       e.preventDefault();
-      var password = document.getElementById("signup-password").value;
-      var confirm = document.getElementById("signup-confirm").value;
-      if (password !== confirm) {
-        alert("Passwords do not match.");
-        return;
-      }
-      alert("Account created successfully!");
+      showLoginForm();
+    });
+
+    // ============================================================
+    // SECTION 15: PLACEHOLDER BUTTON ACTIONS
+    // These will be replaced with actual authentication logic later.
+    // ============================================================
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      alert('Login functionality coming soon — redirect to dashboard.');
+      // window.location.href = 'dashboard.html';
+    });
+
+    document.getElementById('signupBtn').addEventListener('click', () => {
+      alert('Signup functionality coming soon — redirect to dashboard.');
+      // window.location.href = 'dashboard.html';
     });
   </script>
-</body>
-</html>
+
 </body>
 </html>
