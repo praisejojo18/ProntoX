@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Idea</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #ECEEF4;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* ── Floating Tab ── */
+    .fab-tab {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4F6EF7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(79,110,247,0.4);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      z-index: 200;
+      user-select: none;
+    }
+
+    .fab-tab:hover {
+      background: #3A57E8;
+      transform: translateX(-50%) translateY(-3px);
+      box-shadow: 0 6px 22px rgba(79,110,247,0.5);
+    }
+
+    .fab-tab svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .fab-tab span {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    /* ── Modal Overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    /* ── Card ── */
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(30, 40, 90, 0.16);
+      padding: 20px 22px 16px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 92vh;
+      overflow-y: auto;
+      animation: slideUp 0.28s ease;
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .card-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9CA3AF;
+      transition: color 0.2s;
+      padding: 2px;
+      line-height: 1;
+    }
+
+    .card-close:hover { color: #374151; }
+    .card-close svg { width: 18px; height: 18px; }
+
+    .card-header { margin-bottom: 12px; padding-right: 24px; }
+
+    .card-header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1B2151;
+    }
+
+    .card-header p {
+      font-size: 0.76rem;
+      color: #6B7280;
+      margin-top: 2px;
+    }
+
+    .divider {
+      width: 30px;
+      height: 3px;
+      background: #4F6EF7;
+      border-radius: 2px;
+      margin-top: 7px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      color: #111827;
+      background: #F9FAFB;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder { color: #9CA3AF; }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236B7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+      cursor: pointer;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #4F6EF7;
+      box-shadow: 0 0 0 2px rgba(79, 110, 247, 0.12);
+      background: #fff;
+    }
+
+    textarea { resize: vertical; min-height: 56px; }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 6px;
+    }
+
+    button.submit-btn {
+      background: #4F6EF7;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 22px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 6px rgba(79, 110, 247, 0.25);
+    }
+
+    button.submit-btn:hover { background: #3A57E8; }
+    button.submit-btn:active { transform: scale(0.98); }
+
+    /* ── Success Popup ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      z-index: 400;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-overlay.active { display: flex; }
+
+    .popup {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 12px 40px rgba(30, 40, 90, 0.18);
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .popup-icon {
+      width: 46px;
+      height: 46px;
+      background: #EEF2FF;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .popup-icon svg { width: 22px; height: 22px; }
+    .popup h2 { font-size: 1rem; font-weight: 700; color: #1B2151; margin-bottom: 6px; }
+    .popup p  { font-size: 0.82rem; color: #6B7280; line-height: 1.5; }
+
+    .popup-close {
+      margin-top: 18px;
+      background: #4F6EF7;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 22px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .popup-close:hover { background: #3A57E8; }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Tab -->
+  <div class="fab-tab" id="fabTab">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.8"/>
+      <path d="M12 8v4m0 4h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Submit Idea</span>
+  </div>
+
+  <!-- Form Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="card">
+      <button class="card-close" id="cardClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="card-header">
+        <h1>Submit Idea</h1>
+        <p>Share a problem and your proposed solution.</p>
+        <div class="divider"></div>
+      </div>
+
+      <form id="ideaForm" novalidate>
+
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Give your idea a short, clear title" required />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category / Department</label>
+          <select id="category" required>
+            <option value="" disabled selected>Select a department</option>
+            <option value="hr">HR — Human Resources</option>
+            <option value="it">IT — Information Technology</option>
+            <option value="finance">Finance &amp; Accounting</option>
+            <option value="ops">Operations</option>
+            <option value="marketing">Marketing &amp; Communications</option>
+            <option value="legal">Legal &amp; Compliance</option>
+            <option value="sales">Sales &amp; Business Development</option>
+            <option value="product">Product &amp; Design</option>
+            <option value="engineering">Engineering</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="problem">Problem</label>
+          <textarea id="problem" placeholder="Describe the problem or challenge you've identified…" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="solution">Solution</label>
+          <textarea id="solution" placeholder="What's your proposed fix or improvement?" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Solution Description</label>
+          <textarea id="description" placeholder="Walk us through how this solution would work…" rows="3" required></textarea>
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" class="submit-btn">Submit Idea</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Popup -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="popup">
+      <div class="popup-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" fill="#4F6EF7"/>
+          <path d="M7 12.5l3.5 3.5 6-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Idea Submitted!</h2>
+      <p>Thank you! Your idea has been received and will be reviewed by the relevant team.</p>
+      <button class="popup-close" id="popupClose">Done</button>
+    </div>
+  </div>
+
+  <script>
+    const fabTab         = document.getElementById('fabTab');
+    const modalOverlay   = document.getElementById('modalOverlay');
+    const cardClose      = document.getElementById('cardClose');
+    const ideaForm       = document.getElementById('ideaForm');
+    const successOverlay = document.getElementById('successOverlay');
+    const popupClose     = document.getElementById('popupClose');
+
+    fabTab.addEventListener('click', () => modalOverlay.classList.add('active'));
+    cardClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+    function closeModal() { modalOverlay.classList.remove('active'); }
+
+    ideaForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const fields = ['title', 'category', 'problem', 'solution', 'description'];
+      let valid = true;
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.style.borderColor = '#EF4444'; valid = false; }
+        else { el.style.borderColor = ''; }
+      });
+      if (!valid) return;
+      modalOverlay.classList.remove('active');
+      successOverlay.classList.add('active');
+    });
+
+    popupClose.addEventListener('click', () => {
+      successOverlay.classList.remove('active');
+      ideaForm.reset();
+    });
+
+    successOverlay.addEventListener('click', (e) => {
+      if (e.target === successOverlay) {
+        successOverlay.classList.remove('active');
+        ideaForm.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>
