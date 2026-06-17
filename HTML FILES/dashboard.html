@@ -1280,6 +1280,11 @@
                     this.classList.add('active');
                     this.setAttribute('aria-current', 'page');
 
+                     if (this.dataset.nav === 'leaderboard') {
+                        window.location.href = 'leaderboard.html';
+                        return; // stop further execution
+                    }
+
                     if (this.dataset.nav === 'logout') {
                         e.preventDefault();
                         const label = this.querySelector('.label');
