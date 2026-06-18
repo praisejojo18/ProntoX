@@ -10,18 +10,31 @@
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
     <style>
-        /* ============================================================
-                   GLOBAL RESET & BASE
-                   ============================================================ */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
+            --bg: #f6f8fc;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --text-muted: #8e8ea8;
+            --border: #edf2f7;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            --bg-dark: #0E0F11;
+            --surface-dark: #1A1E21;
+            --surface-2-dark: #24292E;
+            --text-primary-dark: #E7E9EB;
+            --text-secondary-dark: #AAB0B6;
+            --text-muted-dark: #888E99;
+            --border-dark: #353E46;
+
             --sidebar-bg: #172554;
             --sidebar-active: #93c5fd;
             --sidebar-active-bg: rgba(96, 165, 250, 0.15);
@@ -29,51 +42,39 @@
             --sidebar-divider: rgba(147, 197, 253, 0.12);
             --sidebar-text: #b0aec8;
 
-            --header-bg: #ffffff;
-            --header-border: #edf2f7;
-            --body-bg: #f6f8fc;
-            --card-bg: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
-
-            --text-primary: #1a1a2e;
-            --text-secondary: #5a5a7a;
-            --text-muted: #8e8ea8;
-
             --radius: 14px;
             --radius-sm: 10px;
             --radius-xs: 8px;
-
             --transition: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --transition-sidebar: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
             --sidebar-width: 260px;
         }
 
-        html {
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        body.dark-mode {
+            --bg: var(--bg-dark);
+            --surface: var(--surface-dark);
+            --surface-2: var(--surface-2-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
 
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--body-bg);
+            background: var(--bg);
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
         }
 
-        :focus-visible {
-            outline: 2px solid var(--sidebar-active);
-            outline-offset: 2px;
-            border-radius: 4px;
-        }
+        :focus-visible { outline: 2px solid var(--sidebar-active); outline-offset: 2px; border-radius: 4px; }
 
-        /* ============================================================
-                   SIDEBAR
-                   ============================================================ */
         .sidebar {
             position: fixed;
             top: 0;
@@ -93,20 +94,11 @@
             scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 4px;
-        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
 
-        .sidebar.collapsed {
-            transform: translateX(calc(-1 * var(--sidebar-width)));
-        }
+        .sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-width))); }
 
         .sidebar-header {
             display: flex;
@@ -121,15 +113,21 @@
         .sidebar-header .brand-icon {
             width: 36px;
             height: 36px;
-            background: #1e3a8a;
             border-radius: var(--radius-xs);
+            flex-shrink: 0;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #bfdbfe;
-            font-weight: 700;
-            font-size: 18px;
-            flex-shrink: 0;
+            background: #1e3a8a;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+        }
+
+        .sidebar-header .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .sidebar-header .brand-text {
@@ -167,48 +165,14 @@
             white-space: nowrap;
         }
 
-        .sidebar-nav .nav-item .ph {
-            font-size: 22px;
-            flex-shrink: 0;
-            width: 24px;
-            text-align: center;
-        }
+        .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
+        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: #ffffff; }
+        .sidebar-nav .nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
+        .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
+        .sidebar-divider { height: 1px; background: var(--sidebar-divider); margin: 10px 14px 12px; flex-shrink: 0; }
+        .sidebar-nav .nav-item.logout { margin-top: auto; color: #f87171; }
+        .sidebar-nav .nav-item.logout:hover { background: rgba(248, 113, 113, 0.08); color: #fca5a5; }
 
-        .sidebar-nav .nav-item:hover {
-            background: var(--sidebar-hover-bg);
-            color: #ffffff;
-        }
-
-        .sidebar-nav .nav-item.active {
-            background: var(--sidebar-active-bg);
-            color: var(--sidebar-active);
-            font-weight: 600;
-        }
-
-        .sidebar-nav .nav-item.active .ph {
-            color: var(--sidebar-active);
-        }
-
-        .sidebar-divider {
-            height: 1px;
-            background: var(--sidebar-divider);
-            margin: 10px 14px 12px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-nav .nav-item.logout {
-            margin-top: auto;
-            color: #f87171;
-        }
-
-        .sidebar-nav .nav-item.logout:hover {
-            background: rgba(248, 113, 113, 0.08);
-            color: #fca5a5;
-        }
-
-        /* ============================================================
-                   BACKDROP (mobile)
-                   ============================================================ */
         .sidebar-backdrop {
             position: fixed;
             inset: 0;
@@ -220,15 +184,8 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
+        .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
 
-        .sidebar-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ============================================================
-                   MAIN CONTENT
-                   ============================================================ */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -237,20 +194,14 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
+        .main-content.expanded { margin-left: 0; }
 
-        .main-content.expanded {
-            margin-left: 0;
-        }
-
-        /* ============================================================
-                   TOP HEADER
-                   ============================================================ */
         .top-header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--header-border);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
             padding: 0 32px;
             height: 72px;
             display: flex;
@@ -261,13 +212,12 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             background: rgba(255, 255, 255, 0.92);
+            transition: background var(--transition), border-color var(--transition);
         }
 
-        .top-header .left-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
+
+        .top-header .left-section { display: flex; align-items: center; gap: 16px; }
 
         .top-header .hamburger-btn {
             background: transparent;
@@ -277,19 +227,15 @@
             cursor: pointer;
             padding: 6px;
             border-radius: var(--radius-xs);
-            transition: background var(--transition), transform var(--transition);
+            transition: all var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
         }
 
-        .top-header .hamburger-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
-        }
-        .top-header .hamburger-btn:active {
-            transform: scale(0.92);
-        }
+        .top-header .hamburger-btn:hover { background: rgba(0, 0, 0, 0.04); }
+        .top-header .hamburger-btn:active { transform: scale(0.92); }
 
         .top-header .brand-mobile {
             font-size: 20px;
@@ -319,52 +265,43 @@
         .top-header .search-wrap input {
             width: 100%;
             padding: 10px 16px 10px 48px;
-            border: 1.5px solid #e2e8f0;
+            border: 1.5px solid var(--border);
             border-radius: 50px;
             font-size: 15px;
-            background: #f7fafc;
+            background: var(--bg);
             color: var(--text-primary);
-            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            transition: all var(--transition);
             outline: none;
             font-weight: 450;
         }
 
-        .top-header .search-wrap input::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
+        .top-header .search-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
 
         .top-header .search-wrap input:focus {
             border-color: #3b82f6;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
-            background: #ffffff;
+            background: var(--surface);
         }
+        .top-header .search-wrap input:focus~.ph { color: #3b82f6; }
 
-        .top-header .search-wrap input:focus~.ph {
-            color: #3b82f6;
-        }
+        .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
-        .top-header .right-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        .top-header .avatar {
+        .top-header .profile-image-wrap {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color var(--transition), transform var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-            flex-shrink: 0;
-            user-select: none;
         }
+
+        .top-header .profile-image-wrap:hover { border-color: #3b82f6; transform: scale(1.04); }
+        .top-header .profile-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .top-header .user-name {
             font-size: 15px;
@@ -373,9 +310,6 @@
             white-space: nowrap;
         }
 
-        /* ============================================================
-                   PAGE CONTENT – PROFILE
-                   ============================================================ */
         .page-content {
             padding: 32px 40px 48px;
             flex: 1;
@@ -395,25 +329,21 @@
             color: var(--text-primary);
         }
 
-        /* ============================================================
-                   PROFILE CARD
-                   ============================================================ */
         .profile-card {
-            background: var(--card-bg);
+            background: var(--surface);
             border-radius: var(--radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             padding: 32px 36px 36px;
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            transition: box-shadow var(--transition), transform var(--transition);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
             max-width: 820px;
         }
 
         .profile-card:hover {
-            box-shadow: var(--card-shadow-hover);
+            box-shadow: var(--shadow-hover);
             transform: translateY(-2px);
         }
 
-        /* Profile top row: avatar + info */
         .profile-top {
             display: flex;
             align-items: center;
@@ -472,11 +402,8 @@
             gap: 6px;
         }
 
-        .profile-info .profile-joined .ph {
-            font-size: 16px;
-        }
+        .profile-info .profile-joined .ph { font-size: 16px; }
 
-        /* Token points */
         .profile-tokens {
             display: inline-flex;
             align-items: center;
@@ -491,19 +418,14 @@
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
         }
 
-        .profile-tokens .ph {
-            font-size: 20px;
-            color: #fbbf24;
-        }
+        .profile-tokens .ph { font-size: 20px; color: #fbbf24; }
 
-        /* Divider */
         .profile-divider {
             height: 1px;
-            background: #edf2f7;
+            background: var(--border);
             margin: 20px 0 24px;
         }
 
-        /* Stats grid */
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -514,12 +436,12 @@
             text-align: center;
             padding: 12px 8px;
             border-radius: var(--radius-sm);
-            background: #f8fafc;
-            transition: background var(--transition), transform var(--transition);
+            background: var(--surface-2);
+            transition: all var(--transition);
         }
 
         .stat-item:hover {
-            background: #f1f4f9;
+            background: var(--border);
             transform: translateY(-2px);
         }
 
@@ -539,214 +461,99 @@
             margin-top: 2px;
         }
 
-        /* ============================================================
-                   RESPONSIVE
-                   ============================================================ */
         @media (max-width: 900px) {
-            .top-header {
-                padding: 0 20px;
-            }
-            .page-content {
-                padding: 24px 20px 36px;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
-            .top-header .left-section .brand-text {
-                display: none;
-            }
-            .top-header .user-name {
-                display: none;
-            }
-            .top-header .search-wrap {
-                max-width: 300px;
-            }
-            .profile-card {
-                padding: 24px 24px 28px;
-            }
-            .profile-avatar-large {
-                width: 80px;
-                height: 80px;
-                font-size: 28px;
-            }
-            .profile-info .profile-name {
-                font-size: 22px;
-            }
-            .profile-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
+            .top-header { padding: 0 20px; }
+            .page-content { padding: 24px 20px 36px; }
+            .top-header .brand-mobile { display: block; }
+            .top-header .left-section .brand-text { display: none; }
+            .top-header .user-name { display: none; }
+            .top-header .search-wrap { max-width: 300px; }
+            .profile-card { padding: 24px 24px 28px; }
+            .profile-avatar-large { width: 80px; height: 80px; font-size: 28px; }
+            .profile-info .profile-name { font-size: 22px; }
+            .profile-stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
 
         @media (max-width: 640px) {
-            :root {
-                --sidebar-width: 280px;
-            }
-            .top-header {
-                padding: 0 14px;
-                height: 64px;
-                gap: 12px;
-            }
-            .top-header .search-wrap {
-                max-width: 180px;
-            }
-            .top-header .search-wrap input {
-                padding: 8px 12px 8px 40px;
-                font-size: 14px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 18px;
-                left: 12px;
-            }
-            .top-header .hamburger-btn {
-                font-size: 24px;
-                padding: 4px;
-            }
-            .top-header .avatar {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
-            }
-            .page-content {
-                padding: 18px 14px 32px;
-            }
-            .profile-header h1 {
-                font-size: 24px;
-            }
-            .profile-card {
-                padding: 20px 16px 24px;
-            }
-            .profile-top {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 16px;
-            }
-            .profile-avatar-large {
-                width: 72px;
-                height: 72px;
-                font-size: 24px;
-            }
-            .profile-info .profile-name {
-                font-size: 20px;
-            }
-            .profile-info .profile-title {
-                font-size: 15px;
-            }
-            .profile-tokens {
-                font-size: 16px;
-                padding: 6px 16px;
-            }
-            .profile-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            .stat-item .stat-number {
-                font-size: 22px;
-            }
-            .stat-item .stat-label {
-                font-size: 11px;
-            }
-            .main-content {
-                margin-left: 0 !important;
-            }
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-backdrop.visible {
-                opacity: 1;
-                visibility: visible;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
+            :root { --sidebar-width: 280px; }
+            .top-header { padding: 0 14px; height: 64px; gap: 12px; }
+            .top-header .search-wrap { max-width: 180px; }
+            .top-header .search-wrap input { padding: 8px 12px 8px 40px; font-size: 14px; }
+            .top-header .search-wrap .ph { font-size: 18px; left: 12px; }
+            .top-header .hamburger-btn { font-size: 24px; padding: 4px; }
+            .top-header .profile-image-wrap { width: 34px; height: 34px; }
+            .page-content { padding: 18px 14px 32px; }
+            .profile-header h1 { font-size: 24px; }
+            .profile-card { padding: 20px 16px 24px; }
+            .profile-top { flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+            .profile-avatar-large { width: 72px; height: 72px; font-size: 24px; }
+            .profile-info .profile-name { font-size: 20px; }
+            .profile-info .profile-title { font-size: 15px; }
+            .profile-tokens { font-size: 16px; padding: 6px 16px; }
+            .profile-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-item .stat-number { font-size: 22px; }
+            .stat-item .stat-label { font-size: 11px; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
+            .top-header .brand-mobile { display: block; }
         }
 
         @media (max-width: 400px) {
-            .top-header .search-wrap {
-                max-width: 120px;
-            }
-            .top-header .search-wrap input {
-                font-size: 13px;
-                padding: 6px 10px 6px 34px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 16px;
-                left: 10px;
-            }
-            .profile-stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
+            .top-header .search-wrap { max-width: 120px; }
+            .top-header .search-wrap input { font-size: 13px; padding: 6px 10px 6px 34px; }
+            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
+            .profile-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- ============================================================
-    SIDEBAR BACKDROP (mobile)
-    ============================================================ -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
-    <!-- ============================================================
-    SIDEBAR
-    ============================================================ -->
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <div class="sidebar-header">
-            <div class="brand-icon" aria-hidden="true">P</div>
+            <div class="brand-icon">
+                <img src="../Images/logo.png" alt="ProntoX Logo" />
+            </div>
             <span class="brand-text">ProntoX</span>
         </div>
 
         <nav class="sidebar-nav">
-            <!-- Dashboard -->
             <button class="nav-item" data-nav="dashboard">
                 <i class="ph ph-house" aria-hidden="true"></i>
                 <span class="label">Dashboard</span>
             </button>
 
-            <!-- Ideas -->
             <button class="nav-item" data-nav="ideas">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
                 <span class="label">Ideas</span>
             </button>
 
-            <!-- Leaderboard -->
             <button class="nav-item" data-nav="leaderboard">
                 <i class="ph ph-trophy" aria-hidden="true"></i>
                 <span class="label">Leaderboard</span>
             </button>
 
-            <!-- Rewards -->
             <button class="nav-item" data-nav="rewards">
                 <i class="ph ph-gift" aria-hidden="true"></i>
                 <span class="label">Rewards</span>
             </button>
 
-            <!-- Builders Hub -->
-            <button class="nav-item" data-nav="builders">
-                <i class="ph ph-users" aria-hidden="true"></i>
-                <span class="label">Builders Hub</span>
-            </button>
-
             <div class="sidebar-divider" role="separator"></div>
 
-            <!-- Profile (active) -->
             <button class="nav-item active" data-nav="profile" aria-current="page">
                 <i class="ph ph-user" aria-hidden="true"></i>
                 <span class="label">Profile</span>
             </button>
 
-            <!-- Settings -->
             <button class="nav-item" data-nav="settings">
                 <i class="ph ph-gear" aria-hidden="true"></i>
                 <span class="label">Settings</span>
             </button>
 
-            <!-- Logout -->
             <button class="nav-item logout" data-nav="logout">
                 <i class="ph ph-sign-out" aria-hidden="true"></i>
                 <span class="label">Log out</span>
@@ -754,18 +561,12 @@
         </nav>
     </aside>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
     <div class="main-content" id="mainContent" role="main">
 
-        <!-- ============================================================
-        TOP HEADER
-        ============================================================ -->
         <header class="top-header" role="banner">
             <div class="left-section">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
-                    <i class="ph ph-list" aria-hidden="true"></i>
+                    <i class="ph ph-list" id="hamburgerIcon" aria-hidden="true"></i>
                 </button>
                 <span class="brand-mobile">ProntoX</span>
             </div>
@@ -776,24 +577,21 @@
             </div>
 
             <div class="right-section">
-                <div class="avatar" aria-hidden="true">JD</div>
+                <div class="profile-image-wrap" id="profileImageWrap" title="Go to Profile">
+                    <img src="../Images/profile-placeholder.png" alt="Profile" id="profileImage" />
+                </div>
                 <span class="user-name">John Doe</span>
             </div>
         </header>
 
-        <!-- ============================================================
-        PAGE CONTENT – PROFILE
-        ============================================================ -->
         <div class="page-content">
 
             <div class="profile-header">
                 <h1>Profile</h1>
             </div>
 
-            <!-- Profile Card -->
             <div class="profile-card">
 
-                <!-- Top row: avatar + info -->
                 <div class="profile-top">
                     <div class="profile-avatar-large" aria-hidden="true">AJ</div>
 
@@ -812,10 +610,8 @@
                     </div>
                 </div>
 
-                <!-- Divider -->
                 <div class="profile-divider"></div>
 
-                <!-- Stats grid -->
                 <div class="profile-stats">
                     <div class="stat-item">
                         <div class="stat-number">0</div>
@@ -835,46 +631,32 @@
                     </div>
                 </div>
 
-            </div><!-- /profile-card -->
+            </div>
 
-        </div><!-- /page-content -->
-    </div><!-- /main-content -->
+        </div>
+    </div>
 
-
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
     <script>
         (function() {
             'use strict';
 
-            // ------------------------------------------------------------
-            // DOM refs
-            // ------------------------------------------------------------
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const hamburgerIcon = document.getElementById('hamburgerIcon');
             const mainContent = document.getElementById('mainContent');
             const searchInput = document.getElementById('searchInput');
             const navItems = document.querySelectorAll('.nav-item');
+            const profileImageWrap = document.getElementById('profileImageWrap');
 
-            // ------------------------------------------------------------
-            // STATE
-            // ------------------------------------------------------------
             let isSidebarOpen = true;
             let isMobile = window.innerWidth <= 640;
 
-            // ------------------------------------------------------------
-            // HELPER: detect mobile
-            // ------------------------------------------------------------
             function checkMobile() {
                 isMobile = window.innerWidth <= 640;
                 return isMobile;
             }
 
-            // ------------------------------------------------------------
-            // SIDEBAR TOGGLE
-            // ------------------------------------------------------------
             function toggleSidebar(forceState) {
                 const open = (typeof forceState === 'boolean') ? forceState : !isSidebarOpen;
                 if (isMobile) {
@@ -882,10 +664,12 @@
                         sidebar.classList.add('open');
                         backdrop.classList.add('visible');
                         hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        hamburgerIcon.className = 'ph ph-x';
                     } else {
                         sidebar.classList.remove('open');
                         backdrop.classList.remove('visible');
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        hamburgerIcon.className = 'ph ph-list';
                     }
                     isSidebarOpen = open;
                 } else {
@@ -893,25 +677,21 @@
                         sidebar.classList.remove('collapsed');
                         mainContent.classList.remove('expanded');
                         hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        hamburgerIcon.className = 'ph ph-x';
                     } else {
                         sidebar.classList.add('collapsed');
                         mainContent.classList.add('expanded');
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        hamburgerIcon.className = 'ph ph-list';
                     }
                     isSidebarOpen = open;
                 }
             }
 
-            // ------------------------------------------------------------
-            // CLOSE SIDEBAR (mobile)
-            // ------------------------------------------------------------
             function closeSidebarMobile() {
                 if (isMobile) toggleSidebar(false);
             }
 
-            // ------------------------------------------------------------
-            // SIDEBAR NAVIGATION
-            // ------------------------------------------------------------
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
                     navItems.forEach(function(nav) {
@@ -925,21 +705,16 @@
 
                     if (nav === 'logout') {
                         e.preventDefault();
-                        const label = this.querySelector('.label');
-                        if (label) {
-                            const original = label.textContent;
-                            label.textContent = 'Logging out…';
-                            setTimeout(function() {
-                                label.textContent = original;
-                            }, 800);
-                        }
-                        closeSidebarMobile();
+                        window.location.href = 'index.html';
                         return;
                     }
 
-                    // Navigate to other pages
                     if (nav === 'dashboard') {
                         window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (nav === 'ideas') {
+                        window.location.href = 'ideas.html';
                         return;
                     }
                     if (nav === 'leaderboard') {
@@ -950,42 +725,32 @@
                         window.location.href = 'rewards.html';
                         return;
                     }
-                    if (nav === 'ideas') {
-                        window.location.href = 'ideas.html';
-                        return;
-                    }
-                    if (nav === 'builders') {
-                        window.location.href = 'builders.html';
-                        return;
-                    }
                     if (nav === 'settings') {
                         window.location.href = 'settings.html';
                         return;
                     }
+                    if (nav === 'profile') {
+                        closeSidebarMobile();
+                        return;
+                    }
 
                     closeSidebarMobile();
-                    console.log('Navigated to: ' + nav);
                 });
             });
 
-            // ------------------------------------------------------------
-            // HAMBURGER
-            // ------------------------------------------------------------
+            profileImageWrap.addEventListener('click', function() {
+                window.location.href = 'profile.html';
+            });
+
             hamburgerBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleSidebar();
             });
 
-            // ------------------------------------------------------------
-            // BACKDROP
-            // ------------------------------------------------------------
             backdrop.addEventListener('click', function() {
                 if (isMobile) toggleSidebar(false);
             });
 
-            // ------------------------------------------------------------
-            // ESC KEY
-            // ------------------------------------------------------------
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     if (isMobile && isSidebarOpen) toggleSidebar(false);
@@ -993,9 +758,6 @@
                 }
             });
 
-            // ------------------------------------------------------------
-            // SEARCH FOCUS
-            // ------------------------------------------------------------
             searchInput.addEventListener('focus', function() {
                 this.closest('.search-wrap').classList.add('focused');
             });
@@ -1003,9 +765,13 @@
                 this.closest('.search-wrap').classList.remove('focused');
             });
 
-            // ------------------------------------------------------------
-            // WINDOW RESIZE
-            // ------------------------------------------------------------
+            function applyDarkMode() {
+                const darkMode = localStorage.getItem('prontox-dark-mode');
+                if (darkMode === 'true') {
+                    document.body.classList.add('dark-mode');
+                }
+            }
+
             let resizeTimer;
 
             function handleResize() {
@@ -1037,10 +803,12 @@
                             sidebar.classList.remove('collapsed');
                             mainContent.classList.remove('expanded');
                             hamburgerBtn.setAttribute('aria-expanded', 'true');
+                            hamburgerIcon.className = 'ph ph-x';
                         } else {
                             sidebar.classList.add('collapsed');
                             mainContent.classList.add('expanded');
                             hamburgerBtn.setAttribute('aria-expanded', 'false');
+                            hamburgerIcon.className = 'ph ph-list';
                         }
                         sidebar.classList.remove('open');
                         backdrop.classList.remove('visible');
@@ -1050,13 +818,11 @@
 
             window.addEventListener('resize', handleResize);
 
-            // ------------------------------------------------------------
-            // INIT
-            // ------------------------------------------------------------
             function init() {
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
+                applyDarkMode();
             }
 
             if (document.readyState === 'loading') {

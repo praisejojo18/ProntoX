@@ -22,25 +22,9 @@
   --border: #E2E8F0;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
        }
-    /*:root {
-      --bg: #0E0F11;
-      --surface: #1A1E21;
-      --surface-2: #24292E;
-      --accent: #00AFEF;
-      --accent-hover: #0099D3;
-      --text: #E7E9EB;
-      --muted: #888E99;
-      --border: #353E46;
-    }*/
-
-
-
-
 
     /* ============================================================
        SECTION 2: RESET & GLOBAL STYLES
-       Removes default browser margins/padding and sets base styles
-       for the entire page including background, font, and layout.
        ============================================================ */
     * {
       margin: 0;
@@ -61,8 +45,6 @@
 
     /* ============================================================
        SECTION 3: CARD CONTAINER STYLING
-       The main white/dark card that holds all forms and content.
-       Uses surface color with border and shadow for depth.
        ============================================================ */
     .card {
       background: var(--surface);
@@ -77,8 +59,6 @@
 
     /* ============================================================
        SECTION 4: LOGO AND HEADING SECTION
-       Company logo image + IdeaHub text with "Hub" in brand accent
-       color. Tagline provides context for the platform.
        ============================================================ */
     .logo-container {
       text-align: center;
@@ -111,7 +91,7 @@
 
     .tagline {
       text-align: center;
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 0.9rem;
       margin-bottom: 2rem;
       border-bottom: 1px solid var(--border);
@@ -119,8 +99,7 @@
     }
 
     /* ============================================================
-       SECTION 5: FORM STYLES (shared by both login and signup)
-       Labels, input fields, and form group spacing.
+       SECTION 5: FORM STYLES
        ============================================================ */
     .form-group {
       margin-bottom: 1.25rem;
@@ -130,7 +109,7 @@
       display: block;
       font-size: 0.85rem;
       font-weight: 500;
-      color: var(--muted);
+      color: var(--text-muted);
       margin-bottom: 0.3rem;
     }
 
@@ -150,13 +129,12 @@
       box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15);
     }
     input::placeholder {
-      color: var(--muted);
+      color: var(--text-muted);
       opacity: 0.6;
     }
 
     /* ============================================================
        SECTION 6: BUTTON STYLES
-       Primary action button using Pronto's brand accent color.
        ============================================================ */
     .btn-primary {
       width: 100%;
@@ -180,13 +158,11 @@
 
     /* ============================================================
        SECTION 7: TOGGLE LINK STYLING
-       Links at the bottom of forms that switch between login/signup.
-       Uses brand accent color for the clickable text.
        ============================================================ */
     .toggle-link {
       text-align: center;
       margin-top: 1.5rem;
-      color: var(--muted);
+      color: var(--text-muted);
       font-size: 0.95rem;
     }
     .toggle-link a {
@@ -203,15 +179,12 @@
 
     /* ============================================================
        SECTION 8: FORM CONTAINERS & TRANSITIONS
-       Each form wrapper (login/signup) uses opacity + transform
-       for smooth fade + scale transitions when toggling.
-       The .active class triggers the visible state.
        ============================================================ */
     .form-wrapper {
       opacity: 0;
       transform: scale(0.95) translateY(8px);
       transition: opacity 0.18s ease, transform 0.18s ease;
-      pointer-events: none;      /* prevents clicks when hidden */
+      pointer-events: none;
       max-height: 0;
       overflow: hidden;
       visibility: hidden;
@@ -221,14 +194,13 @@
       opacity: 1;
       transform: scale(1) translateY(0);
       pointer-events: auto;
-      max-height: 800px;         /* large enough for form content */
+      max-height: 800px;
       visibility: visible;
       overflow: visible;
     }
 
     /* ============================================================
        SECTION 9: RESPONSIVE ADJUSTMENTS
-       Smaller padding on mobile devices for better fit.
        ============================================================ */
     @media (max-width: 480px) {
       .card {
@@ -245,21 +217,13 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       SECTION 10: MAIN CARD CONTAINER
-       Holds both login and signup forms with smooth toggle.
-       ============================================================ -->
   <div class="card">
 
-    <!-- ==========================================================
-         SECTION 11: LOGO AND HEADER
-         Company logo image + IdeaHub branding with tagline.
-         ========================================================== -->
     <div class="logo-container">
-      <img 
-        src="../Images/logo.png" 
+      <img
+        src="../Images/logo.png"
         alt="Pronto Broadband Solutions logo"
-        class="company-logo" 
+        class="company-logo"
       />
     </div>
     <div class="logo">
@@ -267,26 +231,22 @@
     </div>
     <p class="tagline">Capture, organize, and grow your ideas</p>
 
-    <!-- ==========================================================
-         SECTION 12: LOGIN FORM
-         Uses Staff ID instead of email. Includes password field
-         and toggle link to switch to signup.
-         ========================================================== -->
+    <!-- Login Form -->
     <div id="loginForm" class="form-wrapper active">
       <div class="form-group">
         <label for="loginStaffId">Staff ID</label>
-        <input 
-          type="text" 
-          id="loginStaffId" 
-          placeholder="Enter your Staff ID" 
+        <input
+          type="text"
+          id="loginStaffId"
+          placeholder="Enter your Staff ID"
         />
       </div>
       <div class="form-group">
         <label for="loginPassword">Password</label>
-        <input 
-          type="password" 
-          id="loginPassword" 
-          placeholder="••••••••" 
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="••••••••"
         />
       </div>
       <button class="btn-primary" id="loginBtn">Log in</button>
@@ -295,50 +255,46 @@
       </div>
     </div>
 
-    <!-- ==========================================================
-         SECTION 13: SIGNUP FORM
-         Includes: Name, Staff ID, Email, Password, Confirm Password.
-         All required fields for new user registration.
-         ========================================================== -->
+    <!-- Signup Form -->
     <div id="signupForm" class="form-wrapper">
       <div class="form-group">
         <label for="signupName">Full name</label>
-        <input 
-          type="text" 
-          id="signupName" 
-          placeholder="Chidi Okafor" 
+        <input
+          type="text"
+          id="signupName"
+          placeholder="Chidi Okafor"
         />
       </div>
       <div class="form-group">
         <label for="signupStaffId">Staff ID</label>
-        <input 
-          type="text" 
-          id="signupStaffId" 
-          placeholder="Enter your Staff ID" 
+        <input
+          type="text"
+          id="signupStaffId"
+          placeholder="Enter your Staff ID"
         />
       </div>
       <div class="form-group">
         <label for="signupEmail">Email address</label>
-        <input 
-          type="email" 
-          id="signupEmail" 
-          placeholder="you@gmail.com" 
+        <input
+          type="email"
+          id="signupEmail"
+          placeholder="you@gmail.com"
         />
       </div>
       <div class="form-group">
         <label for="signupPassword">Password</label>
-        <input 
-          type="password" 
-          id="signupPassword" 
-          placeholder="••••••••" 
+        <input
+          type="password"
+          id="signupPassword"
+          placeholder="••••••••"
         />
       </div>
       <div class="form-group">
         <label for="signupConfirm">Confirm password</label>
-        <input 
-          type="password" 
-          id="signupConfirm" 
-          placeholder="••••••••" 
+        <input
+          type="password"
+          id="signupConfirm"
+          placeholder="••••••••"
         />
       </div>
       <button class="btn-primary" id="signupBtn">Sign up</button>
@@ -349,39 +305,23 @@
 
   </div>
 
-  <!-- ============================================================
-       SECTION 14: JAVASCRIPT TOGGLE FUNCTION
-       Handles smooth switching between login and signup forms
-       by adding/removing the 'active' class on form wrappers.
-       ============================================================ -->
   <script>
-    // Get references to both form wrapper elements
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
 
-    // Get the toggle link elements
     const showSignup = document.getElementById('showSignup');
     const showLogin = document.getElementById('showLogin');
 
-    /**
-     * Switch to the login form
-     * Removes 'active' class from signup, adds it to login
-     */
     function showLoginForm() {
       loginForm.classList.add('active');
       signupForm.classList.remove('active');
     }
 
-    /**
-     * Switch to the signup form
-     * Removes 'active' class from login, adds it to signup
-     */
     function showSignupForm() {
       loginForm.classList.remove('active');
       signupForm.classList.add('active');
     }
 
-    // Event listeners for toggle links
     showSignup.addEventListener('click', (e) => {
       e.preventDefault();
       showSignupForm();
@@ -392,18 +332,12 @@
       showLoginForm();
     });
 
-    // ============================================================
-    // SECTION 15: PLACEHOLDER BUTTON ACTIONS
-    // These will be replaced with actual authentication logic later.
-    // ============================================================
     document.getElementById('loginBtn').addEventListener('click', () => {
-      alert('Login functionality coming soon — redirect to dashboard.');
-      // window.location.href = 'dashboard.html';
+      window.location.href = 'dashboard.html';
     });
 
     document.getElementById('signupBtn').addEventListener('click', () => {
-      alert('Signup functionality coming soon — redirect to dashboard.');
-      // window.location.href = 'dashboard.html';
+      window.location.href = 'dashboard.html';
     });
   </script>
 

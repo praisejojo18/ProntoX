@@ -13,32 +13,39 @@
         /* ============================================================
                    GLOBAL RESET & BASE
                    ============================================================ */
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
+            /* ---- LIGHT MODE (default) ---- */
+            --bg: #f6f8fc;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --text-muted: #8e8ea8;
+            --border: #edf2f7;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            /* ---- DARK MODE OVERRIDES ---- */
+            --bg-dark: #0E0F11;
+            --surface-dark: #1A1E21;
+            --surface-2-dark: #24292E;
+            --text-primary-dark: #E7E9EB;
+            --text-secondary-dark: #AAB0B6;
+            --text-muted-dark: #888E99;
+            --border-dark: #353E46;
+
             --sidebar-bg: #172554;
             --sidebar-active: #93c5fd;
             --sidebar-active-bg: rgba(96, 165, 250, 0.15);
             --sidebar-hover-bg: rgba(147, 197, 253, 0.06);
             --sidebar-divider: rgba(147, 197, 253, 0.12);
             --sidebar-text: #b0aec8;
-
-            --header-bg: #ffffff;
-            --header-border: #edf2f7;
-            --body-bg: #f6f8fc;
-            --card-bg: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
-
-            --text-primary: #1a1a2e;
-            --text-secondary: #5a5a7a;
-            --text-muted: #8e8ea8;
 
             --radius: 14px;
             --radius-sm: 10px;
@@ -58,24 +65,41 @@
             --status-submitted: #8b5cf6;
             --status-submitted-bg: #ede9fe;
 
-            /* Upvote colors */
             --upvote-color: #f59e0b;
             --upvote-bg: #fef3c7;
         }
 
-        html {
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        body.dark-mode {
+            --bg: var(--bg-dark);
+            --surface: var(--surface-dark);
+            --surface-2: var(--surface-2-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+            --status-approved-bg: #1a3a2a;
+            --status-approved: #6fcf97;
+            --status-review-bg: #3a2a1a;
+            --status-review: #f39c12;
+            --status-implemented-bg: #1a2a3a;
+            --status-implemented: #4a9cf7;
+            --status-submitted-bg: #2a1a3a;
+            --status-submitted: #a78bfa;
+            --upvote-bg: #3a2a1a;
+            --upvote-color: #fbbf24;
         }
 
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--body-bg);
+            background: var(--bg);
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
         }
 
         :focus-visible {
@@ -106,20 +130,11 @@
             scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 4px;
-        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
 
-        .sidebar.collapsed {
-            transform: translateX(calc(-1 * var(--sidebar-width)));
-        }
+        .sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-width))); }
 
         .sidebar-header {
             display: flex;
@@ -131,7 +146,6 @@
             margin-bottom: 16px;
         }
 
-        /* Logo image – same size as the previous icon */
         .sidebar-header .brand-icon {
             width: 36px;
             height: 36px;
@@ -187,44 +201,22 @@
             white-space: nowrap;
         }
 
-        .sidebar-nav .nav-item .ph {
-            font-size: 22px;
-            flex-shrink: 0;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-nav .nav-item:hover {
-            background: var(--sidebar-hover-bg);
-            color: #ffffff;
-        }
-
+        .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
+        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: #ffffff; }
         .sidebar-nav .nav-item.active {
             background: var(--sidebar-active-bg);
             color: var(--sidebar-active);
             font-weight: 600;
         }
-
-        .sidebar-nav .nav-item.active .ph {
-            color: var(--sidebar-active);
-        }
-
+        .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
         .sidebar-divider {
             height: 1px;
             background: var(--sidebar-divider);
             margin: 10px 14px 12px;
             flex-shrink: 0;
         }
-
-        .sidebar-nav .nav-item.logout {
-            margin-top: auto;
-            color: #f87171;
-        }
-
-        .sidebar-nav .nav-item.logout:hover {
-            background: rgba(248, 113, 113, 0.08);
-            color: #fca5a5;
-        }
+        .sidebar-nav .nav-item.logout { margin-top: auto; color: #f87171; }
+        .sidebar-nav .nav-item.logout:hover { background: rgba(248, 113, 113, 0.08); color: #fca5a5; }
 
         /* ============================================================
                    BACKDROP (mobile)
@@ -240,11 +232,7 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
-
-        .sidebar-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
+        .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
 
         /* ============================================================
                    MAIN CONTENT
@@ -257,10 +245,7 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
-
-        .main-content.expanded {
-            margin-left: 0;
-        }
+        .main-content.expanded { margin-left: 0; }
 
         /* ============================================================
                    TOP HEADER
@@ -269,8 +254,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--header-border);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
             padding: 0 32px;
             height: 72px;
             display: flex;
@@ -281,13 +266,12 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             background: rgba(255, 255, 255, 0.92);
+            transition: background var(--transition), border-color var(--transition);
         }
 
-        .top-header .left-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
+
+        .top-header .left-section { display: flex; align-items: center; gap: 16px; }
 
         .top-header .hamburger-btn {
             background: transparent;
@@ -297,19 +281,15 @@
             cursor: pointer;
             padding: 6px;
             border-radius: var(--radius-xs);
-            transition: background var(--transition), transform var(--transition);
+            transition: all var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
         }
 
-        .top-header .hamburger-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
-        }
-        .top-header .hamburger-btn:active {
-            transform: scale(0.92);
-        }
+        .top-header .hamburger-btn:hover { background: rgba(0, 0, 0, 0.04); }
+        .top-header .hamburger-btn:active { transform: scale(0.92); }
 
         .top-header .brand-mobile {
             font-size: 20px;
@@ -339,52 +319,43 @@
         .top-header .search-wrap input {
             width: 100%;
             padding: 10px 16px 10px 48px;
-            border: 1.5px solid #e2e8f0;
+            border: 1.5px solid var(--border);
             border-radius: 50px;
             font-size: 15px;
-            background: #f7fafc;
+            background: var(--bg);
             color: var(--text-primary);
-            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            transition: all var(--transition);
             outline: none;
             font-weight: 450;
         }
 
-        .top-header .search-wrap input::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
+        .top-header .search-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
 
         .top-header .search-wrap input:focus {
             border-color: #3b82f6;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
-            background: #ffffff;
+            background: var(--surface);
         }
+        .top-header .search-wrap input:focus~.ph { color: #3b82f6; }
 
-        .top-header .search-wrap input:focus~.ph {
-            color: #3b82f6;
-        }
+        .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
-        .top-header .right-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        .top-header .avatar {
+        .top-header .profile-image-wrap {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color var(--transition), transform var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-            flex-shrink: 0;
-            user-select: none;
         }
+
+        .top-header .profile-image-wrap:hover { border-color: #3b82f6; transform: scale(1.04); }
+        .top-header .profile-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .top-header .user-name {
             font-size: 15px;
@@ -445,14 +416,8 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
         }
-
-        .ideas-header .btn-submit-small:active {
-            transform: scale(0.94);
-        }
-
-        .ideas-header .btn-submit-small .ph {
-            font-size: 16px;
-        }
+        .ideas-header .btn-submit-small:active { transform: scale(0.94); }
+        .ideas-header .btn-submit-small .ph { font-size: 16px; }
 
         .ideas-header .header-actions {
             display: flex;
@@ -465,9 +430,10 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #f1f4f9;
+            background: var(--surface-2);
             padding: 4px;
             border-radius: 50px;
+            border: 1px solid var(--border);
         }
 
         .ideas-header .filter-btn {
@@ -482,12 +448,9 @@
             transition: all var(--transition);
         }
 
-        .ideas-header .filter-btn:hover {
-            color: var(--text-primary);
-        }
-
+        .ideas-header .filter-btn:hover { color: var(--text-primary); }
         .ideas-header .filter-btn.active {
-            background: #ffffff;
+            background: var(--surface);
             color: var(--text-primary);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
@@ -502,11 +465,11 @@
         }
 
         .idea-card {
-            background: var(--card-bg);
+            background: var(--surface);
             border-radius: var(--radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             padding: 24px 24px 20px;
-            border: 1px solid rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
             transition: all var(--transition);
             display: flex;
             flex-direction: column;
@@ -524,15 +487,10 @@
         .idea-card:nth-child(7) { animation-delay: 0.35s; }
         .idea-card:nth-child(8) { animation-delay: 0.40s; }
 
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
         .idea-card:hover {
-            box-shadow: var(--card-shadow-hover);
+            box-shadow: var(--shadow-hover);
             transform: translateY(-4px);
         }
 
@@ -557,39 +515,23 @@
             flex-shrink: 0;
         }
 
-        .idea-card .status-badge .ph {
-            font-size: 14px;
-        }
+        .idea-card .status-badge .ph { font-size: 14px; }
 
-        .status-badge.approved {
-            background: var(--status-approved-bg);
-            color: var(--status-approved);
-        }
-
-        .status-badge.review {
-            background: var(--status-review-bg);
-            color: var(--status-review);
-        }
-
-        .status-badge.implemented {
-            background: var(--status-implemented-bg);
-            color: var(--status-implemented);
-        }
-
-        .status-badge.submitted {
-            background: var(--status-submitted-bg);
-            color: var(--status-submitted);
-        }
+        .status-badge.approved { background: var(--status-approved-bg); color: var(--status-approved); }
+        .status-badge.review { background: var(--status-review-bg); color: var(--status-review); }
+        .status-badge.implemented { background: var(--status-implemented-bg); color: var(--status-implemented); }
+        .status-badge.submitted { background: var(--status-submitted-bg); color: var(--status-submitted); }
 
         .idea-card .dept-tag {
             font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
-            background: #f1f4f9;
+            background: var(--surface-2);
             padding: 2px 12px;
             border-radius: 50px;
             letter-spacing: 0.3px;
             text-transform: uppercase;
+            border: 1px solid var(--border);
         }
 
         .idea-card .idea-title {
@@ -617,7 +559,7 @@
             align-items: center;
             justify-content: space-between;
             padding-top: 14px;
-            border-top: 1px solid #f0f2f5;
+            border-top: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -631,18 +573,15 @@
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 6px;
-            transition: background var(--transition), color var(--transition);
+            transition: all var(--transition);
             user-select: none;
         }
 
         .idea-card .card-footer .meta-item:hover {
-            background: #f1f4f9;
+            background: var(--surface-2);
             color: var(--text-primary);
         }
-
-        .idea-card .card-footer .meta-item:active {
-            transform: scale(0.92);
-        }
+        .idea-card .card-footer .meta-item:active { transform: scale(0.92); }
 
         .idea-card .card-footer .meta-item .ph {
             font-size: 18px;
@@ -656,7 +595,6 @@
             text-align: center;
         }
 
-        /* Upvoted state – yellow highlight */
         .idea-card .card-footer .meta-item.upvoted {
             background: var(--upvote-bg);
             color: var(--upvote-color);
@@ -666,10 +604,7 @@
             color: var(--upvote-color);
             font-weight: 700;
         }
-
-        .idea-card .card-footer .meta-item.upvoted .count {
-            color: var(--upvote-color);
-        }
+        .idea-card .card-footer .meta-item.upvoted .count { color: var(--upvote-color); }
 
         .idea-card .card-footer .meta-item .pop-feedback {
             animation: popFeedback 0.4s ease;
@@ -682,13 +617,218 @@
         }
 
         /* ============================================================
+                   SUBMIT MODAL (same as dashboard)
+                   ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 24px 28px 20px;
+            width: 100%;
+            max-width: 440px;
+            max-height: 92vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px) scale(0.98); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            font-size: 22px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color var(--transition), transform var(--transition);
+            padding: 4px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--text-primary); transform: rotate(90deg); }
+
+        .modal-header { margin-bottom: 14px; padding-right: 30px; }
+        .modal-header h2 { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+        .modal-header p { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+        .modal-divider { width: 36px; height: 3px; background: #2563eb; border-radius: 2px; margin-top: 6px; }
+
+        .modal-form .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .modal-form label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .modal-form input,
+        .modal-form select,
+        .modal-form textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg);
+            transition: all var(--transition);
+            outline: none;
+            font-family: inherit;
+        }
+        .modal-form input:focus,
+        .modal-form select:focus,
+        .modal-form textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
+            background: var(--surface);
+        }
+        .modal-form input::placeholder,
+        .modal-form textarea::placeholder { color: var(--text-muted); }
+
+        .modal-form select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236B7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+            cursor: pointer;
+        }
+        .modal-form textarea { resize: vertical; min-height: 50px; }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 8px;
+            gap: 10px;
+        }
+
+        .modal-footer .btn-submit {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
+        }
+        .modal-footer .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+        }
+        .modal-footer .btn-submit:active { transform: scale(0.96); }
+
+        .modal-footer .btn-cancel {
+            background: transparent;
+            border: 1.5px solid var(--border);
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .modal-footer .btn-cancel:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+
+        /* ============================================================
+                   SUCCESS POPUP
+                   ============================================================ */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .success-overlay.active { display: flex; }
+
+        .success-popup {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            text-align: center;
+            max-width: 340px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .success-popup .icon-wrap {
+            width: 56px;
+            height: 56px;
+            background: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+        }
+
+        body.dark-mode .success-popup .icon-wrap { background: #1a3a5a; }
+        .success-popup .icon-wrap .ph { font-size: 28px; color: #2563eb; }
+
+        .success-popup h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .success-popup p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+        .success-popup .btn-done {
+            margin-top: 18px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #fff;
+            border: none;
+            padding: 8px 28px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .success-popup .btn-done:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* ============================================================
                    TOAST NOTIFICATION
                    ============================================================ */
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #1a1a2e;
+            background: var(--surface-dark);
             color: #fff;
             padding: 14px 24px;
             border-radius: var(--radius-sm);
@@ -704,16 +844,8 @@
             z-index: 9999;
             max-width: 400px;
         }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast .ph {
-            font-size: 20px;
-            color: #34d399;
-        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast .ph { font-size: 20px; color: #34d399; }
 
         /* ============================================================
                    EMPTY STATE
@@ -724,174 +856,59 @@
             color: var(--text-muted);
             grid-column: 1 / -1;
         }
-
-        .empty-state .ph {
-            font-size: 64px;
-            color: #d1d5db;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .empty-state h3 {
-            font-size: 24px;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .empty-state p {
-            font-size: 16px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
+        .empty-state .ph { font-size: 64px; color: var(--text-muted); margin-bottom: 16px; display: block; }
+        .empty-state h3 { font-size: 24px; color: var(--text-primary); margin-bottom: 8px; }
+        .empty-state p { font-size: 16px; max-width: 400px; margin: 0 auto; }
 
         /* ============================================================
                    RESPONSIVE
                    ============================================================ */
         @media (max-width: 900px) {
-            .top-header {
-                padding: 0 20px;
-            }
-            .page-content {
-                padding: 24px 20px 36px;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
-            .top-header .left-section .brand-text {
-                display: none;
-            }
-            .top-header .user-name {
-                display: none;
-            }
-            .top-header .search-wrap {
-                max-width: 300px;
-            }
-            .ideas-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-            .ideas-header .header-left {
-                justify-content: space-between;
-                width: 100%;
-            }
-            .ideas-header .header-actions {
-                flex-direction: column;
-                align-items: stretch;
-                width: 100%;
-            }
-            .ideas-header .filter-group {
-                border-radius: var(--radius-sm);
-                overflow-x: auto;
-                padding: 6px;
-                justify-content: center;
-            }
-            .ideas-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .top-header { padding: 0 20px; }
+            .page-content { padding: 24px 20px 36px; }
+            .top-header .brand-mobile { display: block; }
+            .top-header .left-section .brand-text { display: none; }
+            .top-header .user-name { display: none; }
+            .top-header .search-wrap { max-width: 300px; }
+            .ideas-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .ideas-header .header-left { justify-content: space-between; width: 100%; }
+            .ideas-header .header-actions { flex-direction: column; align-items: stretch; width: 100%; }
+            .ideas-header .filter-group { border-radius: var(--radius-sm); overflow-x: auto; padding: 6px; justify-content: center; }
+            .ideas-grid { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 640px) {
-            :root {
-                --sidebar-width: 280px;
-            }
-            .top-header {
-                padding: 0 14px;
-                height: 64px;
-                gap: 12px;
-            }
-            .top-header .search-wrap {
-                max-width: 180px;
-            }
-            .top-header .search-wrap input {
-                padding: 8px 12px 8px 40px;
-                font-size: 14px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 18px;
-                left: 12px;
-            }
-            .top-header .hamburger-btn {
-                font-size: 24px;
-                padding: 4px;
-            }
-            .top-header .avatar {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
-            }
-            .page-content {
-                padding: 18px 14px 32px;
-            }
-            .ideas-header h1 {
-                font-size: 24px;
-            }
-            .ideas-header .btn-submit-small {
-                font-size: 12px;
-                padding: 4px 12px;
-            }
-            .ideas-header .btn-submit-small .ph {
-                font-size: 14px;
-            }
-            .ideas-grid {
-                grid-template-columns: 1fr;
-            }
-            .idea-card {
-                padding: 18px 16px 16px;
-            }
-            .idea-card .idea-title {
-                font-size: 16px;
-            }
-            .idea-card .card-footer .meta-item {
-                font-size: 13px;
-                padding: 2px 6px;
-            }
-            .main-content {
-                margin-left: 0 !important;
-            }
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-backdrop.visible {
-                opacity: 1;
-                visibility: visible;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
-            .toast {
-                bottom: 16px;
-                right: 16px;
-                left: 16px;
-                max-width: none;
-                font-size: 13px;
-                padding: 12px 18px;
-            }
+            :root { --sidebar-width: 280px; }
+            .top-header { padding: 0 14px; height: 64px; gap: 12px; }
+            .top-header .search-wrap { max-width: 180px; }
+            .top-header .search-wrap input { padding: 8px 12px 8px 40px; font-size: 14px; }
+            .top-header .search-wrap .ph { font-size: 18px; left: 12px; }
+            .top-header .hamburger-btn { font-size: 24px; padding: 4px; }
+            .top-header .profile-image-wrap { width: 34px; height: 34px; }
+            .page-content { padding: 18px 14px 32px; }
+            .ideas-header h1 { font-size: 24px; }
+            .ideas-header .btn-submit-small { font-size: 12px; padding: 4px 12px; }
+            .ideas-header .btn-submit-small .ph { font-size: 14px; }
+            .ideas-grid { grid-template-columns: 1fr; }
+            .idea-card { padding: 18px 16px 16px; }
+            .idea-card .idea-title { font-size: 16px; }
+            .idea-card .card-footer .meta-item { font-size: 13px; padding: 2px 6px; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
+            .top-header .brand-mobile { display: block; }
+            .toast { bottom: 16px; right: 16px; left: 16px; max-width: none; font-size: 13px; padding: 12px 18px; }
+            .modal-card { padding: 18px 16px 16px; max-width: 100%; margin: 8px; }
+            .modal-header h2 { font-size: 17px; }
         }
 
         @media (max-width: 400px) {
-            .top-header .search-wrap {
-                max-width: 120px;
-            }
-            .top-header .search-wrap input {
-                font-size: 13px;
-                padding: 6px 10px 6px 34px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 16px;
-                left: 10px;
-            }
-            .ideas-header .filter-btn {
-                font-size: 11px;
-                padding: 4px 10px;
-            }
-            .ideas-header .header-left {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
+            .top-header .search-wrap { max-width: 120px; }
+            .top-header .search-wrap input { font-size: 13px; padding: 6px 10px 6px 34px; }
+            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
+            .ideas-header .filter-btn { font-size: 11px; padding: 4px 10px; }
+            .ideas-header .header-left { flex-wrap: wrap; gap: 10px; }
         }
     </style>
 </head>
@@ -908,7 +925,6 @@
     ============================================================ -->
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <div class="sidebar-header">
-            <!-- Logo as <img> – replace src with your actual logo path -->
             <div class="brand-icon">
                 <img src="../Images/logo.png" alt="ProntoX Logo" />
             </div>
@@ -934,11 +950,6 @@
             <button class="nav-item" data-nav="rewards">
                 <i class="ph ph-gift" aria-hidden="true"></i>
                 <span class="label">Rewards</span>
-            </button>
-
-            <button class="nav-item" data-nav="builders">
-                <i class="ph ph-users" aria-hidden="true"></i>
-                <span class="label">Builders Hub</span>
             </button>
 
             <div class="sidebar-divider" role="separator"></div>
@@ -971,7 +982,7 @@
         <header class="top-header" role="banner">
             <div class="left-section">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
-                    <i class="ph ph-list" aria-hidden="true"></i>
+                    <i class="ph ph-list" id="hamburgerIcon" aria-hidden="true"></i>
                 </button>
                 <span class="brand-mobile">ProntoX</span>
             </div>
@@ -982,7 +993,9 @@
             </div>
 
             <div class="right-section">
-                <div class="avatar" aria-hidden="true">JD</div>
+                <div class="profile-image-wrap" id="profileImageWrap" title="Go to Profile">
+                    <img src="../Images/profile-placeholder.png" alt="Profile" id="profileImage" />
+                </div>
                 <span class="user-name">John Doe</span>
             </div>
         </header>
@@ -1025,6 +1038,80 @@
         <span id="toastMessage">Action completed!</span>
     </div>
 
+    <!-- ============================================================
+    SUBMIT MODAL
+    ============================================================ -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal-card">
+            <button class="modal-close" id="modalClose" aria-label="Close">
+                <i class="ph ph-x" aria-hidden="true"></i>
+            </button>
+
+            <div class="modal-header">
+                <h2>Submit Idea</h2>
+                <p>Share a problem and your proposed solution.</p>
+                <div class="modal-divider"></div>
+            </div>
+
+            <form class="modal-form" id="ideaForm" novalidate>
+                <div class="form-group">
+                    <label for="modalTitle">Title</label>
+                    <input type="text" id="modalTitle" placeholder="Give your idea a short, clear title" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="modalCategory">Category / Department</label>
+                    <select id="modalCategory" required>
+                        <option value="" disabled selected>Select a department</option>
+                        <option value="hr">HR — Human Resources</option>
+                        <option value="it">IT — Information Technology</option>
+                        <option value="finance">Finance &amp; Accounting</option>
+                        <option value="ops">Operations</option>
+                        <option value="marketing">Marketing &amp; Communications</option>
+                        <option value="legal">Legal &amp; Compliance</option>
+                        <option value="sales">Sales &amp; Business Development</option>
+                        <option value="product">Product &amp; Design</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalProblem">Problem</label>
+                    <textarea id="modalProblem" placeholder="Describe the problem or challenge you've identified…" rows="2" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalSolution">Solution</label>
+                    <textarea id="modalSolution" placeholder="What's your proposed fix or improvement?" rows="2" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalDescription">Solution Description</label>
+                    <textarea id="modalDescription" placeholder="Walk us through how this solution would work…" rows="3" required></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit" id="modalSubmitBtn">Submit Idea</button>
+                    <button type="button" class="btn-cancel" id="modalCancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    SUCCESS POPUP
+    ============================================================ -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-popup">
+            <div class="icon-wrap">
+                <i class="ph ph-check-circle" aria-hidden="true"></i>
+            </div>
+            <h3>Idea Submitted!</h3>
+            <p>Thank you! Your idea has been received and will be reviewed by the relevant team.</p>
+            <button class="btn-done" id="popupDone">Done</button>
+        </div>
+    </div>
 
     <!-- ============================================================
     JAVASCRIPT
@@ -1119,14 +1206,27 @@
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const hamburgerIcon = document.getElementById('hamburgerIcon');
             const mainContent = document.getElementById('mainContent');
             const searchInput = document.getElementById('searchInput');
             const navItems = document.querySelectorAll('.nav-item');
             const ideasGrid = document.getElementById('ideasGrid');
             const filterBtns = document.querySelectorAll('.filter-btn');
             const submitBtn = document.getElementById('submitIdeaBtn');
+            const profileImageWrap = document.getElementById('profileImageWrap');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
+
+            // Modal refs
+            const submitModal = document.getElementById('submitModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalCancel = document.getElementById('modalCancel');
+            const ideaForm = document.getElementById('ideaForm');
+            const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+
+            // Success popup
+            const successOverlay = document.getElementById('successOverlay');
+            const popupDone = document.getElementById('popupDone');
 
             let currentFilter = 'all';
             let currentSearch = '';
@@ -1170,10 +1270,12 @@
                         sidebar.classList.add('open');
                         backdrop.classList.add('visible');
                         hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        hamburgerIcon.className = 'ph ph-x';
                     } else {
                         sidebar.classList.remove('open');
                         backdrop.classList.remove('visible');
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        hamburgerIcon.className = 'ph ph-list';
                     }
                     isSidebarOpen = open;
                 } else {
@@ -1181,10 +1283,12 @@
                         sidebar.classList.remove('collapsed');
                         mainContent.classList.remove('expanded');
                         hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        hamburgerIcon.className = 'ph ph-x';
                     } else {
                         sidebar.classList.add('collapsed');
                         mainContent.classList.add('expanded');
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        hamburgerIcon.className = 'ph ph-list';
                     }
                     isSidebarOpen = open;
                 }
@@ -1213,15 +1317,7 @@
 
                     if (nav === 'logout') {
                         e.preventDefault();
-                        const label = this.querySelector('.label');
-                        if (label) {
-                            const original = label.textContent;
-                            label.textContent = 'Logging out…';
-                            setTimeout(function() {
-                                label.textContent = original;
-                            }, 800);
-                        }
-                        closeSidebarMobile();
+                        window.location.href = 'index.html';
                         return;
                     }
 
@@ -1235,10 +1331,6 @@
                     }
                     if (nav === 'rewards') {
                         window.location.href = 'rewards.html';
-                        return;
-                    }
-                    if (nav === 'builders') {
-                        window.location.href = 'builders.html';
                         return;
                     }
                     if (nav === 'profile') {
@@ -1280,7 +1372,15 @@
                 if (e.key === 'Escape') {
                     if (isMobile && isSidebarOpen) toggleSidebar(false);
                     if (document.activeElement === searchInput) searchInput.blur();
+                    closeModal();
                 }
+            });
+
+            // ------------------------------------------------------------
+            // PROFILE IMAGE CLICK
+            // ------------------------------------------------------------
+            profileImageWrap.addEventListener('click', function() {
+                window.location.href = 'profile.html';
             });
 
             // ------------------------------------------------------------
@@ -1319,12 +1419,10 @@
                 const isUpvoted = upvotedIdeas.has(ideaId);
 
                 if (isUpvoted) {
-                    // Unvote – remove from set, decrement count
                     upvotedIdeas.delete(ideaId);
                     idea.upvotes -= 1;
                     showToast('You removed your upvote from "' + idea.title + '"', 'ph-arrow-down');
                 } else {
-                    // Upvote – add to set, increment count
                     upvotedIdeas.add(ideaId);
                     idea.upvotes += 1;
                     showToast('You upvoted "' + idea.title + '"', 'ph-arrow-up');
@@ -1385,7 +1483,6 @@
                     };
                     const icon = iconMap[idea.status] || 'ph-circle';
 
-                    // Check if this idea is upvoted by the current user
                     const isUpvoted = upvotedIdeas.has(idea.id);
                     const upvoteClass = isUpvoted ? 'upvoted' : '';
 
@@ -1420,7 +1517,6 @@
 
                 ideasGrid.innerHTML = html;
 
-                // Attach event listeners to meta items
                 document.querySelectorAll('.meta-item[data-action]').forEach(function(el) {
                     el.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -1428,7 +1524,6 @@
                         const id = parseInt(this.dataset.id);
                         if (action === 'upvote') {
                             toggleUpvote(id);
-                            // Visual pop feedback on the icon
                             const icon = this.querySelector('.ph');
                             if (icon) {
                                 icon.classList.add('pop-feedback');
@@ -1448,32 +1543,90 @@
             }
 
             // ------------------------------------------------------------
-            // SUBMIT IDEA (demo)
+            // MODAL FUNCTIONS
             // ------------------------------------------------------------
-            submitBtn.addEventListener('click', function() {
-                const original = this.innerHTML;
-                this.innerHTML = '<i class="ph ph-check" aria-hidden="true"></i> Done!';
-                this.style.background = 'linear-gradient(135deg, #059669, #047857)';
+            function openModal() {
+                submitModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
-                const newIdea = {
-                    id: Date.now(),
-                    title: 'New idea from user',
-                    description: 'This is a sample idea submitted through the "Submit" button. You can replace this with real data.',
-                    status: 'submitted',
-                    department: 'General',
-                    upvotes: 0,
-                    comments: 0,
-                    date: new Date().toISOString().split('T')[0]
-                };
-                ideasData.push(newIdea);
+            function closeModal() {
+                submitModal.classList.remove('active');
+                document.body.style.overflow = '';
+                ideaForm.reset();
+                document.querySelectorAll('.modal-form input, .modal-form select, .modal-form textarea').forEach(function(el) {
+                    el.style.borderColor = '';
+                });
+            }
 
-                setTimeout(function() {
-                    this.innerHTML = original;
-                    this.style.background = '';
-                    renderIdeas();
-                    showToast('New idea submitted!', 'ph-lightbulb');
-                }.bind(this), 1500);
+            // ------------------------------------------------------------
+            // SUBMIT BUTTON (Ideas page)
+            // ------------------------------------------------------------
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
             });
+
+            modalClose.addEventListener('click', closeModal);
+            modalCancel.addEventListener('click', closeModal);
+
+            submitModal.addEventListener('click', function(e) {
+                if (e.target === submitModal) {
+                    closeModal();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // FORM SUBMISSION
+            // ------------------------------------------------------------
+            ideaForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const fields = ['modalTitle', 'modalCategory', 'modalProblem', 'modalSolution', 'modalDescription'];
+                let valid = true;
+
+                fields.forEach(function(id) {
+                    const el = document.getElementById(id);
+                    if (!el.value.trim()) {
+                        el.style.borderColor = '#EF4444';
+                        valid = false;
+                    } else {
+                        el.style.borderColor = '';
+                    }
+                });
+
+                if (!valid) return;
+
+                closeModal();
+                successOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            // ------------------------------------------------------------
+            // SUCCESS POPUP
+            // ------------------------------------------------------------
+            function closeSuccess() {
+                successOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                ideaForm.reset();
+            }
+
+            popupDone.addEventListener('click', closeSuccess);
+            successOverlay.addEventListener('click', function(e) {
+                if (e.target === successOverlay) {
+                    closeSuccess();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // DARK MODE: Check localStorage on load
+            // ------------------------------------------------------------
+            function applyDarkMode() {
+                const darkMode = localStorage.getItem('prontox-dark-mode');
+                if (darkMode === 'true') {
+                    document.body.classList.add('dark-mode');
+                }
+            }
 
             // ------------------------------------------------------------
             // WINDOW RESIZE
@@ -1509,10 +1662,12 @@
                             sidebar.classList.remove('collapsed');
                             mainContent.classList.remove('expanded');
                             hamburgerBtn.setAttribute('aria-expanded', 'true');
+                            hamburgerIcon.className = 'ph ph-x';
                         } else {
                             sidebar.classList.add('collapsed');
                             mainContent.classList.add('expanded');
                             hamburgerBtn.setAttribute('aria-expanded', 'false');
+                            hamburgerIcon.className = 'ph ph-list';
                         }
                         sidebar.classList.remove('open');
                         backdrop.classList.remove('visible');
@@ -1529,6 +1684,7 @@
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
+                applyDarkMode();
                 renderIdeas();
             }
 

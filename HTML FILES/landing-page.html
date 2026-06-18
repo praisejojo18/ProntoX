@@ -93,6 +93,14 @@
             font-size: 20px;
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
             transition: transform var(--transition);
+            overflow: hidden;
+        }
+
+        .header .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
         }
 
         .header .logo-icon:hover {
@@ -518,12 +526,11 @@
 
 <body>
 
-    <!-- ============================================================
-    HEADER
-    ============================================================ -->
     <header class="header">
         <div class="logo">
-            <div class="logo-icon" aria-hidden="true">P</div>
+            <div class="logo-icon" aria-hidden="true">
+                <img src="../Images/logo.png" alt="ProntoX Logo" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
             <span class="logo-text">Pronto<span>X</span></span>
         </div>
         <div class="nav-actions">
@@ -532,9 +539,6 @@
         </div>
     </header>
 
-    <!-- ============================================================
-    HERO
-    ============================================================ -->
     <section class="hero">
         <div class="hero-content">
             <div class="hero-badge">🚀 Launching soon</div>
@@ -554,9 +558,6 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    FEATURES
-    ============================================================ -->
     <section class="features" id="features">
         <div class="section-header">
             <h2>Everything You Need to Innovate</h2>
@@ -586,18 +587,12 @@
         </div>
     </section>
 
-    <!-- ============================================================
-    CTA
-    ============================================================ -->
     <section class="cta-section">
         <h2>Ready to Start Innovating?</h2>
         <p>Join thousands of teams already using ProntoX to bring their best ideas to life.</p>
         <button class="btn-cta" id="ctaBtn">Create Your Account</button>
     </section>
 
-    <!-- ============================================================
-    FOOTER
-    ============================================================ -->
     <footer class="footer">
         <div class="footer-links">
             <a href="#">About</a>
@@ -609,12 +604,8 @@
         <div class="footer-copy">&copy; 2026 ProntoX. All rights reserved.</div>
     </footer>
 
-    <!-- ============================================================
-    JAVASCRIPT – simple interactions
-    ============================================================ -->
     <script>
         (function() {
-            // Buttons that show a demo action (can be linked to login/signup later)
             const loginBtn = document.getElementById('loginBtn');
             const signupBtn = document.getElementById('signupBtn');
             const getStartedBtn = document.getElementById('getStartedBtn');
@@ -625,16 +616,14 @@
                 alert(message);
             }
 
-            loginBtn.addEventListener('click', () => showAlert('Redirecting to login page… (demo)'));
-            signupBtn.addEventListener('click', () => showAlert('Redirecting to sign-up page… (demo)'));
-            getStartedBtn.addEventListener('click', () => showAlert('Welcome! Let’s get started. (demo)'));
+            loginBtn.addEventListener('click', () => window.location.href = 'index.html');
+            signupBtn.addEventListener('click', () => window.location.href = 'index.html');
+            getStartedBtn.addEventListener('click', () => window.location.href = 'index.html');
             learnMoreBtn.addEventListener('click', () => {
                 document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
             });
-            ctaBtn.addEventListener('click', () => showAlert('Account creation flow would start here. (demo)'));
+            ctaBtn.addEventListener('click', () => window.location.href = 'index.html');
 
-            // Optional: add a subtle parallax or reveal effect on scroll
-            // (we already have fade-up animations)
             console.log('ProntoX landing page ready.');
         })();
     </script>
