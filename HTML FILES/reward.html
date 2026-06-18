@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProntoX · Rewards</title>
+
+    <!-- Phosphor Icons CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+    <style>
+        /* ============================================================
+                   GLOBAL RESET & BASE (same palette as dashboard)
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark blue palette */
+            --sidebar-bg: #172554;
+            --sidebar-active: #93c5fd;
+            --sidebar-active-bg: rgba(96, 165, 250, 0.15);
+            --sidebar-hover-bg: rgba(147, 197, 253, 0.06);
+            --sidebar-divider: rgba(147, 197, 253, 0.12);
+            --sidebar-text: #b0aec8;
+
+            --header-bg: #ffffff;
+            --header-border: #edf2f7;
+            --body-bg: #f6f8fc;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --text-muted: #8e8ea8;
+
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+
+            --transition: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-sidebar: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --sidebar-width: 260px;
+
+            /* Reward card colors */
+            --reward-blue: #2563eb;
+            --reward-blue-light: #dbeafe;
+            --reward-gold: #f59e0b;
+            --reward-gold-light: #fef3c7;
+            --reward-green: #10b981;
+            --reward-green-light: #d1fae5;
+            --reward-disabled: #9ca3af;
+            --reward-disabled-light: #f3f4f6;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--body-bg);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--sidebar-active);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+                   SIDEBAR
+                   ============================================================ */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 0 16px 24px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            transition: transform var(--transition-sidebar), width var(--transition-sidebar);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 12px 28px 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--sidebar-divider);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: #1e3a8a;
+            border-radius: var(--radius-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bfdbfe;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header .brand-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 4px 0;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--sidebar-text);
+            font-size: 15px;
+            font-weight: 500;
+            transition: background var(--transition), color var(--transition);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav .nav-item .ph {
+            font-size: 22px;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--sidebar-hover-bg);
+            color: #ffffff;
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active);
+            font-weight: 600;
+        }
+
+        .sidebar-nav .nav-item.active .ph {
+            color: var(--sidebar-active);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--sidebar-divider);
+            margin: 10px 14px 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav .nav-item.logout {
+            margin-top: auto;
+            color: #f87171;
+        }
+
+        .sidebar-nav .nav-item.logout:hover {
+            background: rgba(248, 113, 113, 0.08);
+            color: #fca5a5;
+        }
+
+        /* ============================================================
+                   BACKDROP (mobile)
+                   ============================================================ */
+        .sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .sidebar-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================================
+                   MAIN CONTENT
+                   ============================================================ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition-sidebar);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* ============================================================
+                   TOP HEADER
+                   ============================================================ */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--header-border);
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-shrink: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .top-header .left-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .top-header .hamburger-btn {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-xs);
+            transition: background var(--transition), transform var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .top-header .hamburger-btn:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        .top-header .hamburger-btn:active {
+            transform: scale(0.92);
+        }
+
+        .top-header .brand-mobile {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: none;
+            letter-spacing: -0.3px;
+        }
+
+        .top-header .search-wrap {
+            flex: 1;
+            max-width: 460px;
+            position: relative;
+        }
+
+        .top-header .search-wrap .ph {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            pointer-events: none;
+        }
+
+        .top-header .search-wrap input {
+            width: 100%;
+            padding: 10px 16px 10px 48px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 15px;
+            background: #f7fafc;
+            color: var(--text-primary);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            outline: none;
+            font-weight: 450;
+        }
+
+        .top-header .search-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .top-header .search-wrap input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            background: #ffffff;
+        }
+
+        .top-header .search-wrap input:focus~.ph {
+            color: #3b82f6;
+        }
+
+        .top-header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .top-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .top-header .user-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        /* ============================================================
+                   PAGE CONTENT – REWARDS
+                   ============================================================ */
+        .page-content {
+            padding: 32px 40px 48px;
+            flex: 1;
+        }
+
+        /* Rewards header */
+        .rewards-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .rewards-header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        /* Balance bar */
+        .balance-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            padding: 18px 28px;
+            border-radius: var(--radius);
+            margin: 16px 0 24px 0;
+            color: #ffffff;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .balance-bar .balance-label {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .balance-bar .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-left: 4px;
+        }
+
+        .balance-bar .balance-sub {
+            margin-left: auto;
+            font-size: 15px;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .balance-bar .balance-sub .ph {
+            font-size: 18px;
+        }
+
+        /* Rewards grid */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        /* Reward card */
+        .reward-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 24px 24px 28px;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: box-shadow var(--transition), transform var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reward-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        /* Card color accents */
+        .reward-card .card-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .reward-card.accent-blue .card-accent {
+            background: linear-gradient(90deg, #2563eb, #60a5fa);
+        }
+        .reward-card.accent-gold .card-accent {
+            background: linear-gradient(90deg, #d97706, #fbbf24);
+        }
+        .reward-card.accent-green .card-accent {
+            background: linear-gradient(90deg, #059669, #34d399);
+        }
+
+        .reward-card .card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+        }
+
+        .reward-card.accent-blue .card-icon {
+            background: var(--reward-blue-light);
+            color: var(--reward-blue);
+        }
+        .reward-card.accent-gold .card-icon {
+            background: var(--reward-gold-light);
+            color: var(--reward-gold);
+        }
+        .reward-card.accent-green .card-icon {
+            background: var(--reward-green-light);
+            color: var(--reward-green);
+        }
+
+        .reward-card .reward-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .reward-card .reward-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .reward-card .reward-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding-top: 14px;
+            border-top: 1px solid #f0f2f5;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .reward-card .reward-points {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .reward-card .reward-points .ph {
+            font-size: 18px;
+            color: var(--reward-gold);
+        }
+
+        .reward-card .reward-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reward-card .reward-btn .ph {
+            font-size: 16px;
+        }
+
+        .reward-card .reward-btn.primary {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        .reward-card .reward-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+        }
+
+        .reward-card .reward-btn.primary:active {
+            transform: scale(0.96);
+        }
+
+        .reward-card .reward-btn.disabled {
+            background: var(--reward-disabled-light);
+            color: var(--reward-disabled);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .reward-card .reward-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .reward-card .reward-status {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .reward-card .reward-status .ph {
+            font-size: 14px;
+        }
+
+        .reward-card .reward-status.insufficient {
+            color: #ef4444;
+        }
+        .reward-card .reward-status.available {
+            color: #10b981;
+        }
+
+        /* ============================================================
+                   RESPONSIVE
+                   ============================================================ */
+        @media (max-width: 1100px) {
+            .rewards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .top-header {
+                padding: 0 20px;
+            }
+            .page-content {
+                padding: 24px 20px 36px;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
+            .top-header .left-section .brand-text {
+                display: none;
+            }
+            .top-header .user-name {
+                display: none;
+            }
+            .top-header .search-wrap {
+                max-width: 300px;
+            }
+            .balance-bar {
+                padding: 14px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .balance-bar .balance-sub {
+                margin-left: 0;
+            }
+            .balance-bar .balance-amount {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .rewards-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+            .top-header {
+                padding: 0 14px;
+                height: 64px;
+                gap: 12px;
+            }
+            .top-header .search-wrap {
+                max-width: 180px;
+            }
+            .top-header .search-wrap input {
+                padding: 8px 12px 8px 40px;
+                font-size: 14px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 18px;
+                left: 12px;
+            }
+            .top-header .hamburger-btn {
+                font-size: 24px;
+                padding: 4px;
+            }
+            .top-header .avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .page-content {
+                padding: 18px 14px 32px;
+            }
+            .rewards-header h1 {
+                font-size: 24px;
+            }
+            .balance-bar {
+                padding: 14px 16px;
+                border-radius: var(--radius-sm);
+            }
+            .balance-bar .balance-amount {
+                font-size: 22px;
+            }
+            .reward-card {
+                padding: 18px 18px 22px;
+            }
+            .reward-card .card-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
+            .reward-card .reward-title {
+                font-size: 16px;
+            }
+            .reward-card .reward-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .reward-card .reward-btn {
+                justify-content: center;
+                padding: 10px 16px;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-backdrop.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .top-header .search-wrap {
+                max-width: 120px;
+            }
+            .top-header .search-wrap input {
+                font-size: 13px;
+                padding: 6px 10px 6px 34px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 16px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    SIDEBAR BACKDROP (mobile)
+    ============================================================ -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <div class="brand-icon" aria-hidden="true">P</div>
+            <span class="brand-text">ProntoX</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <!-- Dashboard -->
+            <button class="nav-item" data-nav="dashboard">
+                <i class="ph ph-house" aria-hidden="true"></i>
+                <span class="label">Dashboard</span>
+            </button>
+
+            <!-- Ideas -->
+            <button class="nav-item" data-nav="ideas">
+                <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                <span class="label">Ideas</span>
+            </button>
+
+            <!-- Leaderboard -->
+            <button class="nav-item" data-nav="leaderboard">
+                <i class="ph ph-trophy" aria-hidden="true"></i>
+                <span class="label">Leaderboard</span>
+            </button>
+
+            <!-- Rewards (active) -->
+            <button class="nav-item active" data-nav="rewards" aria-current="page">
+                <i class="ph ph-gift" aria-hidden="true"></i>
+                <span class="label">Rewards</span>
+            </button>
+
+            <!-- Builders Hub -->
+            <button class="nav-item" data-nav="builders">
+                <i class="ph ph-users" aria-hidden="true"></i>
+                <span class="label">Builders Hub</span>
+            </button>
+
+            <div class="sidebar-divider" role="separator"></div>
+
+            <!-- Profile -->
+            <button class="nav-item" data-nav="profile">
+                <i class="ph ph-user" aria-hidden="true"></i>
+                <span class="label">Profile</span>
+            </button>
+
+            <!-- Settings -->
+            <button class="nav-item" data-nav="settings">
+                <i class="ph ph-gear" aria-hidden="true"></i>
+                <span class="label">Settings</span>
+            </button>
+
+            <!-- Logout -->
+            <button class="nav-item logout" data-nav="logout">
+                <i class="ph ph-sign-out" aria-hidden="true"></i>
+                <span class="label">Log out</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="main-content" id="mainContent" role="main">
+
+        <!-- ============================================================
+        TOP HEADER
+        ============================================================ -->
+        <header class="top-header" role="banner">
+            <div class="left-section">
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
+                    <i class="ph ph-list" aria-hidden="true"></i>
+                </button>
+                <span class="brand-mobile">ProntoX</span>
+            </div>
+
+            <div class="search-wrap" role="search">
+                <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" placeholder="Search rewards..." id="searchInput" aria-label="Search rewards" />
+            </div>
+
+            <div class="right-section">
+                <div class="avatar" aria-hidden="true">JD</div>
+                <span class="user-name">John Doe</span>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        PAGE CONTENT – REWARDS
+        ============================================================ -->
+        <div class="page-content">
+
+            <div class="rewards-header">
+                <h1>Rewards</h1>
+            </div>
+
+            <!-- Balance Bar -->
+            <div class="balance-bar">
+                <span class="balance-label">Available Balance:</span>
+                <span class="balance-amount">1,250 pts</span>
+                <span class="balance-sub">
+                    <i class="ph ph-coins" aria-hidden="true"></i>
+                    Redeem your hard-earned points for perks.
+                </span>
+            </div>
+
+            <!-- Rewards Grid -->
+            <div class="rewards-grid">
+
+                <!-- Card 1: Extra Day Off (5,000 pts – insufficient) -->
+                <div class="reward-card accent-blue">
+                    <div class="card-accent"></div>
+                    <div class="card-icon">
+                        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="reward-title">Extra Day Off</h3>
+                    <p class="reward-desc">Take an extra day off on us. Recharge and come back stronger.</p>
+                    <div class="reward-footer">
+                        <span class="reward-points">
+                            <i class="ph ph-coins" aria-hidden="true"></i>
+                            5,000 pts
+                        </span>
+                        <button class="reward-btn disabled" disabled>
+                            <i class="ph ph-x-circle" aria-hidden="true"></i>
+                            Not enough pts
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Certification Exams (2,000 pts – insufficient) -->
+                <div class="reward-card accent-gold">
+                    <div class="card-accent"></div>
+                    <div class="card-icon">
+                        <i class="ph ph-certificate" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="reward-title">Certification Exams</h3>
+                    <p class="reward-desc">Get certified in your field. We'll cover the exam fees for you.</p>
+                    <div class="reward-footer">
+                        <span class="reward-points">
+                            <i class="ph ph-coins" aria-hidden="true"></i>
+                            2,000 pts
+                        </span>
+                        <button class="reward-btn disabled" disabled>
+                            <i class="ph ph-x-circle" aria-hidden="true"></i>
+                            Not enough pts
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Redeem to Cash (1,000 pts – eligible) -->
+                <div class="reward-card accent-green">
+                    <div class="card-accent"></div>
+                    <div class="card-icon">
+                        <i class="ph ph-currency-dollar" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="reward-title">Redeem to Cash</h3>
+                    <p class="reward-desc">Turn your points into real money. Withdraw directly to your account.</p>
+                    <div class="reward-footer">
+                        <span class="reward-points">
+                            <i class="ph ph-coins" aria-hidden="true"></i>
+                            1,000 pts
+                        </span>
+                        <button class="reward-btn primary" id="redeemCashBtn">
+                            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                            Redeem
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /rewards-grid -->
+
+        </div><!-- /page-content -->
+    </div><!-- /main-content -->
+
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ------------------------------------------------------------
+            // DOM refs
+            // ------------------------------------------------------------
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mainContent = document.getElementById('mainContent');
+            const searchInput = document.getElementById('searchInput');
+            const navItems = document.querySelectorAll('.nav-item');
+            const redeemBtn = document.getElementById('redeemCashBtn');
+
+            // ------------------------------------------------------------
+            // STATE
+            // ------------------------------------------------------------
+            let isSidebarOpen = true;
+            let isMobile = window.innerWidth <= 640;
+
+            // ------------------------------------------------------------
+            // HELPER: detect mobile
+            // ------------------------------------------------------------
+            function checkMobile() {
+                isMobile = window.innerWidth <= 640;
+                return isMobile;
+            }
+
+            // ------------------------------------------------------------
+            // SIDEBAR TOGGLE
+            // ------------------------------------------------------------
+            function toggleSidebar(forceState) {
+                const open = (typeof forceState === 'boolean') ? forceState : !isSidebarOpen;
+                if (isMobile) {
+                    if (open) {
+                        sidebar.classList.add('open');
+                        backdrop.classList.add('visible');
+                        hamburgerBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        sidebar.classList.remove('open');
+                        backdrop.classList.remove('visible');
+                        hamburgerBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    isSidebarOpen = open;
+                } else {
+                    if (open) {
+                        sidebar.classList.remove('collapsed');
+                        mainContent.classList.remove('expanded');
+                        hamburgerBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        sidebar.classList.add('collapsed');
+                        mainContent.classList.add('expanded');
+                        hamburgerBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    isSidebarOpen = open;
+                }
+            }
+
+            // ------------------------------------------------------------
+            // CLOSE SIDEBAR (mobile)
+            // ------------------------------------------------------------
+            function closeSidebarMobile() {
+                if (isMobile) toggleSidebar(false);
+            }
+
+            // ------------------------------------------------------------
+            // SIDEBAR NAVIGATION
+            // ------------------------------------------------------------
+            navItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    navItems.forEach(function(nav) {
+                        nav.classList.remove('active');
+                        nav.removeAttribute('aria-current');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-current', 'page');
+
+                    const nav = this.dataset.nav;
+
+                    if (nav === 'logout') {
+                        e.preventDefault();
+                        const label = this.querySelector('.label');
+                        if (label) {
+                            const original = label.textContent;
+                            label.textContent = 'Logging out…';
+                            setTimeout(function() {
+                                label.textContent = original;
+                            }, 800);
+                        }
+                        closeSidebarMobile();
+                        return;
+                    }
+
+                    // Navigate to other pages
+                    if (nav === 'dashboard') {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (nav === 'leaderboard') {
+                        window.location.href = 'leaderboard.html';
+                        return;
+                    }
+                    if (nav === 'ideas') {
+                        window.location.href = 'ideas.html';
+                        return;
+                    }
+                    if (nav === 'builders') {
+                        window.location.href = 'builders.html';
+                        return;
+                    }
+
+                    closeSidebarMobile();
+                    console.log('Navigated to: ' + nav);
+                });
+            });
+
+            // ------------------------------------------------------------
+            // HAMBURGER
+            // ------------------------------------------------------------
+            hamburgerBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+
+            // ------------------------------------------------------------
+            // BACKDROP
+            // ------------------------------------------------------------
+            backdrop.addEventListener('click', function() {
+                if (isMobile) toggleSidebar(false);
+            });
+
+            // ------------------------------------------------------------
+            // ESC KEY
+            // ------------------------------------------------------------
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (isMobile && isSidebarOpen) toggleSidebar(false);
+                    if (document.activeElement === searchInput) searchInput.blur();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // SEARCH FOCUS
+            // ------------------------------------------------------------
+            searchInput.addEventListener('focus', function() {
+                this.closest('.search-wrap').classList.add('focused');
+            });
+            searchInput.addEventListener('blur', function() {
+                this.closest('.search-wrap').classList.remove('focused');
+            });
+
+            // ------------------------------------------------------------
+            // REDEEM BUTTON INTERACTION
+            // ------------------------------------------------------------
+            if (redeemBtn) {
+                redeemBtn.addEventListener('click', function() {
+                    const original = this.innerHTML;
+                    this.innerHTML = '<i class="ph ph-check-circle" aria-hidden="true"></i> Redeemed!';
+                    this.style.background = 'linear-gradient(135deg, #059669, #047857)';
+                    this.style.boxShadow = '0 4px 14px rgba(5, 150, 105, 0.4)';
+                    this.disabled = true;
+
+                    setTimeout(function() {
+                        this.innerHTML = original;
+                        this.style.background = '';
+                        this.style.boxShadow = '';
+                        this.disabled = false;
+                    }.bind(this), 2500);
+                });
+            }
+
+            // ------------------------------------------------------------
+            // WINDOW RESIZE
+            // ------------------------------------------------------------
+            let resizeTimer;
+
+            function handleResize() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    const wasMobile = isMobile;
+                    const nowMobile = checkMobile();
+
+                    if (nowMobile && !wasMobile) {
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            toggleSidebar(false);
+                        } else {
+                            toggleSidebar(false);
+                        }
+                    } else if (!nowMobile && wasMobile) {
+                        if (sidebar.classList.contains('open')) {
+                            sidebar.classList.remove('open');
+                            backdrop.classList.remove('visible');
+                            toggleSidebar(true);
+                        } else {
+                            toggleSidebar(false);
+                        }
+                    }
+
+                    if (!nowMobile) {
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        } else {
+                            sidebar.classList.add('collapsed');
+                            mainContent.classList.add('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        }
+                        sidebar.classList.remove('open');
+                        backdrop.classList.remove('visible');
+                    }
+                }, 120);
+            }
+
+            window.addEventListener('resize', handleResize);
+
+            // ------------------------------------------------------------
+            // INIT
+            // ------------------------------------------------------------
+            function init() {
+                checkMobile();
+                if (isMobile) toggleSidebar(false);
+                else toggleSidebar(true);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

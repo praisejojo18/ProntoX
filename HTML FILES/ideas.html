@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProntoX · Ideas</title>
+
+    <!-- Phosphor Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+    <style>
+        /* ============================================================
+                   GLOBAL RESET & BASE
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sidebar-bg: #172554;
+            --sidebar-active: #93c5fd;
+            --sidebar-active-bg: rgba(96, 165, 250, 0.15);
+            --sidebar-hover-bg: rgba(147, 197, 253, 0.06);
+            --sidebar-divider: rgba(147, 197, 253, 0.12);
+            --sidebar-text: #b0aec8;
+
+            --header-bg: #ffffff;
+            --header-border: #edf2f7;
+            --body-bg: #f6f8fc;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --text-muted: #8e8ea8;
+
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+
+            --transition: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-sidebar: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --sidebar-width: 260px;
+
+            --status-approved: #10b981;
+            --status-approved-bg: #d1fae5;
+            --status-review: #f59e0b;
+            --status-review-bg: #fef3c7;
+            --status-implemented: #3b82f6;
+            --status-implemented-bg: #dbeafe;
+            --status-submitted: #8b5cf6;
+            --status-submitted-bg: #ede9fe;
+
+            /* Upvote colors */
+            --upvote-color: #f59e0b;
+            --upvote-bg: #fef3c7;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--body-bg);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--sidebar-active);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* ============================================================
+                   SIDEBAR
+                   ============================================================ */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 0 16px 24px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            transition: transform var(--transition-sidebar), width var(--transition-sidebar);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 12px 28px 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--sidebar-divider);
+            margin-bottom: 16px;
+        }
+
+        /* Logo image – same size as the previous icon */
+        .sidebar-header .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-xs);
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e3a8a;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+        }
+
+        .sidebar-header .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .sidebar-header .brand-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 4px 0;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--sidebar-text);
+            font-size: 15px;
+            font-weight: 500;
+            transition: background var(--transition), color var(--transition);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar-nav .nav-item .ph {
+            font-size: 22px;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--sidebar-hover-bg);
+            color: #ffffff;
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active);
+            font-weight: 600;
+        }
+
+        .sidebar-nav .nav-item.active .ph {
+            color: var(--sidebar-active);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--sidebar-divider);
+            margin: 10px 14px 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav .nav-item.logout {
+            margin-top: auto;
+            color: #f87171;
+        }
+
+        .sidebar-nav .nav-item.logout:hover {
+            background: rgba(248, 113, 113, 0.08);
+            color: #fca5a5;
+        }
+
+        /* ============================================================
+                   BACKDROP (mobile)
+                   ============================================================ */
+        .sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .sidebar-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================================
+                   MAIN CONTENT
+                   ============================================================ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition-sidebar);
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* ============================================================
+                   TOP HEADER
+                   ============================================================ */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--header-border);
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-shrink: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .top-header .left-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .top-header .hamburger-btn {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-xs);
+            transition: background var(--transition), transform var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .top-header .hamburger-btn:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        .top-header .hamburger-btn:active {
+            transform: scale(0.92);
+        }
+
+        .top-header .brand-mobile {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: none;
+            letter-spacing: -0.3px;
+        }
+
+        .top-header .search-wrap {
+            flex: 1;
+            max-width: 460px;
+            position: relative;
+        }
+
+        .top-header .search-wrap .ph {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: color var(--transition);
+            pointer-events: none;
+        }
+
+        .top-header .search-wrap input {
+            width: 100%;
+            padding: 10px 16px 10px 48px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 15px;
+            background: #f7fafc;
+            color: var(--text-primary);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            outline: none;
+            font-weight: 450;
+        }
+
+        .top-header .search-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .top-header .search-wrap input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            background: #ffffff;
+        }
+
+        .top-header .search-wrap input:focus~.ph {
+            color: #3b82f6;
+        }
+
+        .top-header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .top-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .top-header .user-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        /* ============================================================
+                   PAGE CONTENT – IDEAS
+                   ============================================================ */
+        .page-content {
+            padding: 32px 40px 48px;
+            flex: 1;
+        }
+
+        .ideas-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .ideas-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ideas-header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .ideas-header .btn-submit-small {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform var(--transition), box-shadow var(--transition);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+            white-space: nowrap;
+        }
+
+        .ideas-header .btn-submit-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+        }
+
+        .ideas-header .btn-submit-small:active {
+            transform: scale(0.94);
+        }
+
+        .ideas-header .btn-submit-small .ph {
+            font-size: 16px;
+        }
+
+        .ideas-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .ideas-header .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f4f9;
+            padding: 4px;
+            border-radius: 50px;
+        }
+
+        .ideas-header .filter-btn {
+            padding: 5px 16px;
+            border: none;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all var(--transition);
+        }
+
+        .ideas-header .filter-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .ideas-header .filter-btn.active {
+            background: #ffffff;
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ============================================================
+                   IDEAS GRID
+                   ============================================================ */
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .idea-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 24px 24px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: all var(--transition);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .idea-card:nth-child(1) { animation-delay: 0.05s; }
+        .idea-card:nth-child(2) { animation-delay: 0.10s; }
+        .idea-card:nth-child(3) { animation-delay: 0.15s; }
+        .idea-card:nth-child(4) { animation-delay: 0.20s; }
+        .idea-card:nth-child(5) { animation-delay: 0.25s; }
+        .idea-card:nth-child(6) { animation-delay: 0.30s; }
+        .idea-card:nth-child(7) { animation-delay: 0.35s; }
+        .idea-card:nth-child(8) { animation-delay: 0.40s; }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .idea-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .idea-card .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .idea-card .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            flex-shrink: 0;
+        }
+
+        .idea-card .status-badge .ph {
+            font-size: 14px;
+        }
+
+        .status-badge.approved {
+            background: var(--status-approved-bg);
+            color: var(--status-approved);
+        }
+
+        .status-badge.review {
+            background: var(--status-review-bg);
+            color: var(--status-review);
+        }
+
+        .status-badge.implemented {
+            background: var(--status-implemented-bg);
+            color: var(--status-implemented);
+        }
+
+        .status-badge.submitted {
+            background: var(--status-submitted-bg);
+            color: var(--status-submitted);
+        }
+
+        .idea-card .dept-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f4f9;
+            padding: 2px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .idea-card .idea-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .idea-card .idea-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .idea-card .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid #f0f2f5;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .idea-card .card-footer .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background var(--transition), color var(--transition);
+            user-select: none;
+        }
+
+        .idea-card .card-footer .meta-item:hover {
+            background: #f1f4f9;
+            color: var(--text-primary);
+        }
+
+        .idea-card .card-footer .meta-item:active {
+            transform: scale(0.92);
+        }
+
+        .idea-card .card-footer .meta-item .ph {
+            font-size: 18px;
+            transition: color var(--transition);
+        }
+
+        .idea-card .card-footer .meta-item .count {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 12px;
+            text-align: center;
+        }
+
+        /* Upvoted state – yellow highlight */
+        .idea-card .card-footer .meta-item.upvoted {
+            background: var(--upvote-bg);
+            color: var(--upvote-color);
+        }
+
+        .idea-card .card-footer .meta-item.upvoted .ph {
+            color: var(--upvote-color);
+            font-weight: 700;
+        }
+
+        .idea-card .card-footer .meta-item.upvoted .count {
+            color: var(--upvote-color);
+        }
+
+        .idea-card .card-footer .meta-item .pop-feedback {
+            animation: popFeedback 0.4s ease;
+        }
+
+        @keyframes popFeedback {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); color: var(--upvote-color); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================================
+                   TOAST NOTIFICATION
+                   ============================================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast .ph {
+            font-size: 20px;
+            color: #34d399;
+        }
+
+        /* ============================================================
+                   EMPTY STATE
+                   ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state .ph {
+            font-size: 64px;
+            color: #d1d5db;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+                   RESPONSIVE
+                   ============================================================ */
+        @media (max-width: 900px) {
+            .top-header {
+                padding: 0 20px;
+            }
+            .page-content {
+                padding: 24px 20px 36px;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
+            .top-header .left-section .brand-text {
+                display: none;
+            }
+            .top-header .user-name {
+                display: none;
+            }
+            .top-header .search-wrap {
+                max-width: 300px;
+            }
+            .ideas-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .ideas-header .header-left {
+                justify-content: space-between;
+                width: 100%;
+            }
+            .ideas-header .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+            .ideas-header .filter-group {
+                border-radius: var(--radius-sm);
+                overflow-x: auto;
+                padding: 6px;
+                justify-content: center;
+            }
+            .ideas-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+            .top-header {
+                padding: 0 14px;
+                height: 64px;
+                gap: 12px;
+            }
+            .top-header .search-wrap {
+                max-width: 180px;
+            }
+            .top-header .search-wrap input {
+                padding: 8px 12px 8px 40px;
+                font-size: 14px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 18px;
+                left: 12px;
+            }
+            .top-header .hamburger-btn {
+                font-size: 24px;
+                padding: 4px;
+            }
+            .top-header .avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .page-content {
+                padding: 18px 14px 32px;
+            }
+            .ideas-header h1 {
+                font-size: 24px;
+            }
+            .ideas-header .btn-submit-small {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+            .ideas-header .btn-submit-small .ph {
+                font-size: 14px;
+            }
+            .ideas-grid {
+                grid-template-columns: 1fr;
+            }
+            .idea-card {
+                padding: 18px 16px 16px;
+            }
+            .idea-card .idea-title {
+                font-size: 16px;
+            }
+            .idea-card .card-footer .meta-item {
+                font-size: 13px;
+                padding: 2px 6px;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-backdrop.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
+            .toast {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                font-size: 13px;
+                padding: 12px 18px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .top-header .search-wrap {
+                max-width: 120px;
+            }
+            .top-header .search-wrap input {
+                font-size: 13px;
+                padding: 6px 10px 6px 34px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 16px;
+                left: 10px;
+            }
+            .ideas-header .filter-btn {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+            .ideas-header .header-left {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    SIDEBAR BACKDROP (mobile)
+    ============================================================ -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <!-- Logo as <img> – replace src with your actual logo path -->
+            <div class="brand-icon">
+                <img src="../Images/logo.png" alt="ProntoX Logo" />
+            </div>
+            <span class="brand-text">ProntoX</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item" data-nav="dashboard">
+                <i class="ph ph-house" aria-hidden="true"></i>
+                <span class="label">Dashboard</span>
+            </button>
+
+            <button class="nav-item active" data-nav="ideas" aria-current="page">
+                <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                <span class="label">Ideas</span>
+            </button>
+
+            <button class="nav-item" data-nav="leaderboard">
+                <i class="ph ph-trophy" aria-hidden="true"></i>
+                <span class="label">Leaderboard</span>
+            </button>
+
+            <button class="nav-item" data-nav="rewards">
+                <i class="ph ph-gift" aria-hidden="true"></i>
+                <span class="label">Rewards</span>
+            </button>
+
+            <button class="nav-item" data-nav="builders">
+                <i class="ph ph-users" aria-hidden="true"></i>
+                <span class="label">Builders Hub</span>
+            </button>
+
+            <div class="sidebar-divider" role="separator"></div>
+
+            <button class="nav-item" data-nav="profile">
+                <i class="ph ph-user" aria-hidden="true"></i>
+                <span class="label">Profile</span>
+            </button>
+
+            <button class="nav-item" data-nav="settings">
+                <i class="ph ph-gear" aria-hidden="true"></i>
+                <span class="label">Settings</span>
+            </button>
+
+            <button class="nav-item logout" data-nav="logout">
+                <i class="ph ph-sign-out" aria-hidden="true"></i>
+                <span class="label">Log out</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="main-content" id="mainContent" role="main">
+
+        <!-- ============================================================
+        TOP HEADER
+        ============================================================ -->
+        <header class="top-header" role="banner">
+            <div class="left-section">
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
+                    <i class="ph ph-list" aria-hidden="true"></i>
+                </button>
+                <span class="brand-mobile">ProntoX</span>
+            </div>
+
+            <div class="search-wrap" role="search">
+                <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                <input type="text" placeholder="Search ideas..." id="searchInput" aria-label="Search ideas" />
+            </div>
+
+            <div class="right-section">
+                <div class="avatar" aria-hidden="true">JD</div>
+                <span class="user-name">John Doe</span>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        PAGE CONTENT – IDEAS
+        ============================================================ -->
+        <div class="page-content">
+
+            <div class="ideas-header">
+                <div class="header-left">
+                    <h1>Ideas</h1>
+                    <button class="btn-submit-small" id="submitIdeaBtn">
+                        <i class="ph ph-plus" aria-hidden="true"></i>
+                        Submit
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="approved">Approved</button>
+                        <button class="filter-btn" data-filter="review">Review</button>
+                        <button class="filter-btn" data-filter="implemented">Done</button>
+                        <button class="filter-btn" data-filter="submitted">Submitted</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ideas Grid -->
+            <div class="ideas-grid" id="ideasGrid"></div>
+
+        </div><!-- /page-content -->
+    </div><!-- /main-content -->
+
+    <!-- ============================================================
+    TOAST NOTIFICATION
+    ============================================================ -->
+    <div class="toast" id="toast">
+        <i class="ph ph-check-circle" aria-hidden="true"></i>
+        <span id="toastMessage">Action completed!</span>
+    </div>
+
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ------------------------------------------------------------
+            // DATA – sample ideas
+            // ------------------------------------------------------------
+            let ideasData = [{
+                id: 1,
+                title: 'Self-service password reset',
+                description: 'Cuts down helpdesk tickets by allowing users to reset their own passwords securely.',
+                status: 'approved',
+                department: 'IT',
+                upvotes: 24,
+                comments: 2,
+                date: '2024-05-10'
+            }, {
+                id: 2,
+                title: 'OLT offline auto-alert',
+                description: 'SMS alert to NOC team when an OLT goes offline to speed up response times.',
+                status: 'review',
+                department: 'OLS',
+                upvotes: 17,
+                comments: 1,
+                date: '2024-05-08'
+            }, {
+                id: 3,
+                title: 'Flexible Friday hours',
+                description: 'Rolled out last month. Core hours 10-2, flexible otherwise.',
+                status: 'implemented',
+                department: 'HR',
+                upvotes: 41,
+                comments: 1,
+                date: '2024-05-01'
+            }, {
+                id: 4,
+                title: 'Live chat support',
+                description: 'Faster than email tickets for quick customer queries. Real-time assistance for customers.',
+                status: 'submitted',
+                department: 'CS',
+                upvotes: 8,
+                comments: 0,
+                date: '2024-05-12'
+            }, {
+                id: 5,
+                title: 'AI-powered code review',
+                description: 'Automated code review suggestions to catch bugs early and improve code quality across teams.',
+                status: 'approved',
+                department: 'Engineering',
+                upvotes: 32,
+                comments: 5,
+                date: '2024-05-06'
+            }, {
+                id: 6,
+                title: 'Employee wellness program',
+                description: 'Monthly wellness challenges and mental health support sessions for all staff.',
+                status: 'review',
+                department: 'HR',
+                upvotes: 19,
+                comments: 3,
+                date: '2024-05-09'
+            }, {
+                id: 7,
+                title: 'Automated deployment pipeline',
+                description: 'Streamline deployments with CI/CD pipelines that reduce manual errors and speed up releases.',
+                status: 'implemented',
+                department: 'DevOps',
+                upvotes: 56,
+                comments: 7,
+                date: '2024-04-28'
+            }, {
+                id: 8,
+                title: 'Customer feedback dashboard',
+                description: 'Real-time dashboard aggregating feedback from surveys, support tickets, and social media.',
+                status: 'submitted',
+                department: 'Product',
+                upvotes: 12,
+                comments: 2,
+                date: '2024-05-11'
+            }];
+
+            // Track which ideas the current user has upvoted
+            const upvotedIdeas = new Set();
+
+            // ------------------------------------------------------------
+            // DOM refs
+            // ------------------------------------------------------------
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mainContent = document.getElementById('mainContent');
+            const searchInput = document.getElementById('searchInput');
+            const navItems = document.querySelectorAll('.nav-item');
+            const ideasGrid = document.getElementById('ideasGrid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const submitBtn = document.getElementById('submitIdeaBtn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            let currentFilter = 'all';
+            let currentSearch = '';
+            let toastTimer = null;
+
+            // ------------------------------------------------------------
+            // STATE
+            // ------------------------------------------------------------
+            let isSidebarOpen = true;
+            let isMobile = window.innerWidth <= 640;
+
+            // ------------------------------------------------------------
+            // TOAST
+            // ------------------------------------------------------------
+            function showToast(message, icon = 'ph-check-circle') {
+                toastMessage.textContent = message;
+                const iconEl = toast.querySelector('.ph');
+                iconEl.className = `ph ${icon}`;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 2500);
+            }
+
+            // ------------------------------------------------------------
+            // HELPER: detect mobile
+            // ------------------------------------------------------------
+            function checkMobile() {
+                isMobile = window.innerWidth <= 640;
+                return isMobile;
+            }
+
+            // ------------------------------------------------------------
+            // SIDEBAR TOGGLE
+            // ------------------------------------------------------------
+            function toggleSidebar(forceState) {
+                const open = (typeof forceState === 'boolean') ? forceState : !isSidebarOpen;
+                if (isMobile) {
+                    if (open) {
+                        sidebar.classList.add('open');
+                        backdrop.classList.add('visible');
+                        hamburgerBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        sidebar.classList.remove('open');
+                        backdrop.classList.remove('visible');
+                        hamburgerBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    isSidebarOpen = open;
+                } else {
+                    if (open) {
+                        sidebar.classList.remove('collapsed');
+                        mainContent.classList.remove('expanded');
+                        hamburgerBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        sidebar.classList.add('collapsed');
+                        mainContent.classList.add('expanded');
+                        hamburgerBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    isSidebarOpen = open;
+                }
+            }
+
+            // ------------------------------------------------------------
+            // CLOSE SIDEBAR (mobile)
+            // ------------------------------------------------------------
+            function closeSidebarMobile() {
+                if (isMobile) toggleSidebar(false);
+            }
+
+            // ------------------------------------------------------------
+            // SIDEBAR NAVIGATION
+            // ------------------------------------------------------------
+            navItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    navItems.forEach(function(nav) {
+                        nav.classList.remove('active');
+                        nav.removeAttribute('aria-current');
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-current', 'page');
+
+                    const nav = this.dataset.nav;
+
+                    if (nav === 'logout') {
+                        e.preventDefault();
+                        const label = this.querySelector('.label');
+                        if (label) {
+                            const original = label.textContent;
+                            label.textContent = 'Logging out…';
+                            setTimeout(function() {
+                                label.textContent = original;
+                            }, 800);
+                        }
+                        closeSidebarMobile();
+                        return;
+                    }
+
+                    if (nav === 'dashboard') {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (nav === 'leaderboard') {
+                        window.location.href = 'leaderboard.html';
+                        return;
+                    }
+                    if (nav === 'rewards') {
+                        window.location.href = 'rewards.html';
+                        return;
+                    }
+                    if (nav === 'builders') {
+                        window.location.href = 'builders.html';
+                        return;
+                    }
+                    if (nav === 'profile') {
+                        window.location.href = 'profile.html';
+                        return;
+                    }
+                    if (nav === 'settings') {
+                        window.location.href = 'settings.html';
+                        return;
+                    }
+                    if (nav === 'ideas') {
+                        closeSidebarMobile();
+                        return;
+                    }
+
+                    closeSidebarMobile();
+                });
+            });
+
+            // ------------------------------------------------------------
+            // HAMBURGER
+            // ------------------------------------------------------------
+            hamburgerBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+
+            // ------------------------------------------------------------
+            // BACKDROP
+            // ------------------------------------------------------------
+            backdrop.addEventListener('click', function() {
+                if (isMobile) toggleSidebar(false);
+            });
+
+            // ------------------------------------------------------------
+            // ESC KEY
+            // ------------------------------------------------------------
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (isMobile && isSidebarOpen) toggleSidebar(false);
+                    if (document.activeElement === searchInput) searchInput.blur();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // SEARCH
+            // ------------------------------------------------------------
+            searchInput.addEventListener('focus', function() {
+                this.closest('.search-wrap').classList.add('focused');
+            });
+            searchInput.addEventListener('blur', function() {
+                this.closest('.search-wrap').classList.remove('focused');
+            });
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.trim().toLowerCase();
+                renderIdeas();
+            });
+
+            // ------------------------------------------------------------
+            // FILTERS
+            // ------------------------------------------------------------
+            filterBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderIdeas();
+                });
+            });
+
+            // ------------------------------------------------------------
+            // UPVOTE TOGGLE
+            // ------------------------------------------------------------
+            function toggleUpvote(ideaId) {
+                const idea = ideasData.find(function(i) { return i.id === ideaId; });
+                if (!idea) return;
+
+                const isUpvoted = upvotedIdeas.has(ideaId);
+
+                if (isUpvoted) {
+                    // Unvote – remove from set, decrement count
+                    upvotedIdeas.delete(ideaId);
+                    idea.upvotes -= 1;
+                    showToast('You removed your upvote from "' + idea.title + '"', 'ph-arrow-down');
+                } else {
+                    // Upvote – add to set, increment count
+                    upvotedIdeas.add(ideaId);
+                    idea.upvotes += 1;
+                    showToast('You upvoted "' + idea.title + '"', 'ph-arrow-up');
+                }
+
+                renderIdeas();
+            }
+
+            // ------------------------------------------------------------
+            // COMMENT
+            // ------------------------------------------------------------
+            function handleComment(ideaId) {
+                const idea = ideasData.find(function(i) { return i.id === ideaId; });
+                if (!idea) return;
+                const comment = prompt('Add a comment to "' + idea.title + '":');
+                if (comment && comment.trim() !== '') {
+                    idea.comments += 1;
+                    renderIdeas();
+                    showToast('Comment added to "' + idea.title + '"', 'ph-chat-circle');
+                }
+            }
+
+            // ------------------------------------------------------------
+            // RENDER IDEAS
+            // ------------------------------------------------------------
+            function renderIdeas() {
+                const filtered = ideasData.filter(function(idea) {
+                    if (currentFilter !== 'all' && idea.status !== currentFilter) return false;
+                    if (currentSearch) {
+                        const titleMatch = idea.title.toLowerCase().includes(currentSearch);
+                        const descMatch = idea.description.toLowerCase().includes(currentSearch);
+                        const deptMatch = idea.department.toLowerCase().includes(currentSearch);
+                        if (!titleMatch && !descMatch && !deptMatch) return false;
+                    }
+                    return true;
+                });
+
+                if (filtered.length === 0) {
+                    ideasGrid.innerHTML = `
+                                <div class="empty-state">
+                                    <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                                    <h3>No ideas found</h3>
+                                    <p>Try adjusting your filters or search terms. Or submit a new idea!</p>
+                                </div>
+                            `;
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(function(idea, index) {
+                    const statusClass = idea.status;
+                    const statusLabel = idea.status.charAt(0).toUpperCase() + idea.status.slice(1);
+                    const iconMap = {
+                        'approved': 'ph-check-circle',
+                        'review': 'ph-clock',
+                        'implemented': 'ph-check',
+                        'submitted': 'ph-paper-plane'
+                    };
+                    const icon = iconMap[idea.status] || 'ph-circle';
+
+                    // Check if this idea is upvoted by the current user
+                    const isUpvoted = upvotedIdeas.has(idea.id);
+                    const upvoteClass = isUpvoted ? 'upvoted' : '';
+
+                    html += `
+                                <div class="idea-card" style="animation-delay: ${(index % 4) * 0.06}s">
+                                    <div class="card-top">
+                                        <span class="status-badge ${statusClass}">
+                                            <i class="ph ${icon}" aria-hidden="true"></i>
+                                            ${statusLabel}
+                                        </span>
+                                        <span class="dept-tag">${idea.department}</span>
+                                    </div>
+                                    <h3 class="idea-title">${idea.title}</h3>
+                                    <p class="idea-desc">${idea.description}</p>
+                                    <div class="card-footer">
+                                        <span class="meta-item ${upvoteClass}" data-action="upvote" data-id="${idea.id}" title="Click to toggle upvote">
+                                            <i class="ph ph-arrow-up" aria-hidden="true"></i>
+                                            <span class="count">${idea.upvotes}</span>
+                                        </span>
+                                        <span class="meta-item" data-action="comment" data-id="${idea.id}" title="Click to comment">
+                                            <i class="ph ph-chat-circle" aria-hidden="true"></i>
+                                            <span class="count">${idea.comments}</span>
+                                        </span>
+                                        <span class="meta-item" style="cursor:default;">
+                                            <i class="ph ph-calendar" aria-hidden="true"></i>
+                                            ${idea.date}
+                                        </span>
+                                    </div>
+                                </div>
+                            `;
+                });
+
+                ideasGrid.innerHTML = html;
+
+                // Attach event listeners to meta items
+                document.querySelectorAll('.meta-item[data-action]').forEach(function(el) {
+                    el.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const action = this.dataset.action;
+                        const id = parseInt(this.dataset.id);
+                        if (action === 'upvote') {
+                            toggleUpvote(id);
+                            // Visual pop feedback on the icon
+                            const icon = this.querySelector('.ph');
+                            if (icon) {
+                                icon.classList.add('pop-feedback');
+                                setTimeout(function() {
+                                    icon.classList.remove('pop-feedback');
+                                }, 400);
+                            }
+                        } else if (action === 'comment') {
+                            handleComment(id);
+                            this.classList.add('commented');
+                            setTimeout(function() {
+                                el.classList.remove('commented');
+                            }, 600);
+                        }
+                    });
+                });
+            }
+
+            // ------------------------------------------------------------
+            // SUBMIT IDEA (demo)
+            // ------------------------------------------------------------
+            submitBtn.addEventListener('click', function() {
+                const original = this.innerHTML;
+                this.innerHTML = '<i class="ph ph-check" aria-hidden="true"></i> Done!';
+                this.style.background = 'linear-gradient(135deg, #059669, #047857)';
+
+                const newIdea = {
+                    id: Date.now(),
+                    title: 'New idea from user',
+                    description: 'This is a sample idea submitted through the "Submit" button. You can replace this with real data.',
+                    status: 'submitted',
+                    department: 'General',
+                    upvotes: 0,
+                    comments: 0,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                ideasData.push(newIdea);
+
+                setTimeout(function() {
+                    this.innerHTML = original;
+                    this.style.background = '';
+                    renderIdeas();
+                    showToast('New idea submitted!', 'ph-lightbulb');
+                }.bind(this), 1500);
+            });
+
+            // ------------------------------------------------------------
+            // WINDOW RESIZE
+            // ------------------------------------------------------------
+            let resizeTimer;
+
+            function handleResize() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    const wasMobile = isMobile;
+                    const nowMobile = checkMobile();
+
+                    if (nowMobile && !wasMobile) {
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            toggleSidebar(false);
+                        } else {
+                            toggleSidebar(false);
+                        }
+                    } else if (!nowMobile && wasMobile) {
+                        if (sidebar.classList.contains('open')) {
+                            sidebar.classList.remove('open');
+                            backdrop.classList.remove('visible');
+                            toggleSidebar(true);
+                        } else {
+                            toggleSidebar(false);
+                        }
+                    }
+
+                    if (!nowMobile) {
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'true');
+                        } else {
+                            sidebar.classList.add('collapsed');
+                            mainContent.classList.add('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'false');
+                        }
+                        sidebar.classList.remove('open');
+                        backdrop.classList.remove('visible');
+                    }
+                }, 120);
+            }
+
+            window.addEventListener('resize', handleResize);
+
+            // ------------------------------------------------------------
+            // INIT
+            // ------------------------------------------------------------
+            function init() {
+                checkMobile();
+                if (isMobile) toggleSidebar(false);
+                else toggleSidebar(true);
+                renderIdeas();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
