@@ -11,24 +11,32 @@
 
     <style>
         /* ============================================================
-                   GLOBAL RESET & BASE
-                   ============================================================ */
-        *, *::before, *::after {
+           GLOBAL RESET & BASE (Pronto Cyan Palette)
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         :root {
-            --bg: #f6f8fc;
-            --surface: #ffffff;
-            --surface-2: #f8fafc;
-            --text-primary: #1a1a2e;
-            --text-secondary: #5a5a7a;
-            --text-muted: #8e8ea8;
-            --border: #edf2f7;
+            --bg: #F0F4F8;
+            --surface: #FFFFFF;
+            --surface-2: #F8FAFC;
+            --text-primary: #1A2332;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+            --accent: #00AFEF;
+            --accent-hover: #0099D3;
+            --accent-dark: #0088CC;
+            --accent-light: #E6F6FE;
+            --accent-mid: #B3E5FC;
 
             --bg-dark: #0E0F11;
             --surface-dark: #1A1E21;
@@ -38,12 +46,12 @@
             --text-muted-dark: #888E99;
             --border-dark: #353E46;
 
-            --sidebar-bg: #172554;
-            --sidebar-active: #93c5fd;
-            --sidebar-active-bg: rgba(96, 165, 250, 0.15);
-            --sidebar-hover-bg: rgba(147, 197, 253, 0.06);
-            --sidebar-divider: rgba(147, 197, 253, 0.12);
-            --sidebar-text: #b0aec8;
+            --sidebar-bg: #007CB0;
+            --sidebar-active: #FFFFFF;
+            --sidebar-active-bg: rgba(255, 255, 255, 0.15);
+            --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+            --sidebar-divider: rgba(255, 255, 255, 0.15);
+            --sidebar-text: #E6F6FE;
 
             --radius: 14px;
             --radius-sm: 10px;
@@ -65,7 +73,11 @@
             --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
 
-        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: var(--bg);
@@ -76,18 +88,22 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        :focus-visible { outline: 2px solid var(--sidebar-active); outline-offset: 2px; border-radius: 4px; }
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
 
         /* ============================================================
-                   SIDEBAR
-                   ============================================================ */
+           SIDEBAR (Pronto Cyan)
+           ============================================================ */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: var(--sidebar-bg);
+            background: #007CB0;
             color: var(--sidebar-text);
             padding: 0 16px 24px;
             display: flex;
@@ -97,14 +113,23 @@
             z-index: 1000;
             transition: transform var(--transition-sidebar), width var(--transition-sidebar);
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
 
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-track { background: transparent; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
 
-        .sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-width))); }
+        .sidebar.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
 
         .sidebar-header {
             display: flex;
@@ -125,8 +150,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #1e3a8a;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-header .brand-icon img {
@@ -171,17 +196,46 @@
             white-space: nowrap;
         }
 
-        .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
-        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: #ffffff; }
-        .sidebar-nav .nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
-        .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
-        .sidebar-divider { height: 1px; background: var(--sidebar-divider); margin: 10px 14px 12px; flex-shrink: 0; }
-        .sidebar-nav .nav-item.logout { margin-top: auto; color: #f87171; }
-        .sidebar-nav .nav-item.logout:hover { background: rgba(248, 113, 113, 0.08); color: #fca5a5; }
+        .sidebar-nav .nav-item .ph {
+            font-size: 22px;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+        }
 
-        /* ============================================================
-                   BACKDROP (mobile)
-                   ============================================================ */
+        .sidebar-nav .nav-item:hover {
+            background: var(--sidebar-hover-bg);
+            color: #ffffff;
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active);
+            font-weight: 600;
+        }
+
+        .sidebar-nav .nav-item.active .ph {
+            color: var(--sidebar-active);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--sidebar-divider);
+            margin: 10px 14px 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav .nav-item.logout {
+            margin-top: auto;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .sidebar-nav .nav-item.logout:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        /* ---- BACKDROP ---- */
         .sidebar-backdrop {
             position: fixed;
             inset: 0;
@@ -193,11 +247,15 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
-        .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
+
+        .sidebar-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
 
         /* ============================================================
-                   MAIN CONTENT
-                   ============================================================ */
+           MAIN CONTENT
+           ============================================================ */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -206,11 +264,14 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
-        .main-content.expanded { margin-left: 0; }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
 
         /* ============================================================
-                   TOP HEADER
-                   ============================================================ */
+           TOP HEADER
+           ============================================================ */
         .top-header {
             position: sticky;
             top: 0;
@@ -230,9 +291,15 @@
             transition: background var(--transition), border-color var(--transition);
         }
 
-        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
+        body.dark-mode .top-header {
+            background: rgba(26, 30, 33, 0.92);
+        }
 
-        .top-header .left-section { display: flex; align-items: center; gap: 16px; }
+        .top-header .left-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
         .top-header .hamburger-btn {
             background: transparent;
@@ -249,8 +316,12 @@
             line-height: 1;
         }
 
-        .top-header .hamburger-btn:hover { background: rgba(0, 0, 0, 0.04); }
-        .top-header .hamburger-btn:active { transform: scale(0.92); }
+        .top-header .hamburger-btn:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+        .top-header .hamburger-btn:active {
+            transform: scale(0.92);
+        }
 
         .top-header .brand-mobile {
             font-size: 20px;
@@ -290,16 +361,27 @@
             font-weight: 450;
         }
 
-        .top-header .search-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
+        .top-header .search-wrap input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
 
         .top-header .search-wrap input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 175, 239, 0.12);
             background: var(--surface);
         }
-        .top-header .search-wrap input:focus~.ph { color: #3b82f6; }
 
-        .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+        .top-header .search-wrap input:focus~.ph {
+            color: var(--accent);
+        }
+
+        .top-header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
 
         .top-header .profile-image-wrap {
             width: 40px;
@@ -315,8 +397,17 @@
             justify-content: center;
         }
 
-        .top-header .profile-image-wrap:hover { border-color: #3b82f6; transform: scale(1.04); }
-        .top-header .profile-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .top-header .profile-image-wrap:hover {
+            border-color: var(--accent);
+            transform: scale(1.04);
+        }
+
+        .top-header .profile-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
         .top-header .user-name {
             font-size: 15px;
@@ -325,19 +416,48 @@
             white-space: nowrap;
         }
 
+        /* ---- DARK MODE TOGGLE (icon only) ---- */
+        .dark-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color var(--transition), transform var(--transition);
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            line-height: 1;
+        }
+
+        .dark-toggle:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+        .dark-toggle:active {
+            transform: scale(0.9);
+        }
+
         /* ============================================================
-                   PAGE CONTENT – LEADERBOARD
-                   ============================================================ */
+           PAGE CONTENT – LEADERBOARD (centred card)
+           ============================================================ */
         .page-content {
             padding: 32px 40px 48px;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .leaderboard-header {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
+            width: 100%;
+            max-width: 900px;
         }
 
         .leaderboard-header h1 {
@@ -353,9 +473,7 @@
             font-weight: 450;
         }
 
-        /* ============================================================
-                   TABLE CARD
-                   ============================================================ */
+        /* ---- TABLE CARD (centred) ---- */
         .table-card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -363,6 +481,8 @@
             padding: 24px 28px 28px;
             border: 1px solid var(--border);
             transition: all var(--transition);
+            max-width: 900px;
+            width: 100%;
         }
 
         .table-card:hover {
@@ -392,8 +512,13 @@
             border-bottom: 2px solid var(--border);
         }
 
-        .leaderboard-table thead th:first-child { padding-left: 0; }
-        .leaderboard-table thead th:last-child { padding-right: 0; text-align: right; }
+        .leaderboard-table thead th:first-child {
+            padding-left: 0;
+        }
+        .leaderboard-table thead th:last-child {
+            padding-right: 0;
+            text-align: right;
+        }
 
         .leaderboard-table tbody td {
             padding: 16px 12px 16px 0;
@@ -401,10 +526,17 @@
             vertical-align: middle;
         }
 
-        .leaderboard-table tbody td:first-child { padding-left: 0; }
-        .leaderboard-table tbody td:last-child { padding-right: 0; text-align: right; }
+        .leaderboard-table tbody td:first-child {
+            padding-left: 0;
+        }
+        .leaderboard-table tbody td:last-child {
+            padding-right: 0;
+            text-align: right;
+        }
 
-        .leaderboard-table tbody tr:last-child td { border-bottom: none; }
+        .leaderboard-table tbody tr:last-child td {
+            border-bottom: none;
+        }
 
         .rank-cell {
             font-weight: 700;
@@ -423,7 +555,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -461,45 +593,123 @@
         }
 
         /* ============================================================
-                   RESPONSIVE
-                   ============================================================ */
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 900px) {
-            .top-header { padding: 0 20px; }
-            .page-content { padding: 24px 20px 36px; }
-            .top-header .brand-mobile { display: block; }
-            .top-header .left-section .brand-text { display: none; }
-            .top-header .user-name { display: none; }
-            .top-header .search-wrap { max-width: 300px; }
+            .top-header {
+                padding: 0 20px;
+            }
+            .page-content {
+                padding: 24px 20px 36px;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
+            .top-header .left-section .brand-text {
+                display: none;
+            }
+            .top-header .user-name {
+                display: none;
+            }
+            .top-header .search-wrap {
+                max-width: 300px;
+            }
+            .table-card {
+                padding: 20px 18px;
+            }
         }
 
         @media (max-width: 640px) {
-            :root { --sidebar-width: 280px; }
-            .top-header { padding: 0 14px; height: 64px; gap: 12px; }
-            .top-header .search-wrap { max-width: 180px; }
-            .top-header .search-wrap input { padding: 8px 12px 8px 40px; font-size: 14px; }
-            .top-header .search-wrap .ph { font-size: 18px; left: 12px; }
-            .top-header .hamburger-btn { font-size: 24px; padding: 4px; }
-            .top-header .profile-image-wrap { width: 34px; height: 34px; }
-            .page-content { padding: 18px 14px 32px; }
-            .leaderboard-header h1 { font-size: 24px; }
-            .table-card { padding: 18px 14px 20px; }
-            .leaderboard-table { font-size: 14px; }
-            .staff-avatar { width: 34px; height: 34px; font-size: 12px; }
-            .staff-name { font-size: 14px; }
-            .staff-dept { font-size: 12px; }
-            .rank-cell { font-size: 14px; width: 36px; }
-            .points-cell { font-size: 14px; }
-            .main-content { margin-left: 0 !important; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
-            .top-header .brand-mobile { display: block; }
+            :root {
+                --sidebar-width: 280px;
+            }
+            .top-header {
+                padding: 0 14px;
+                height: 64px;
+                gap: 12px;
+            }
+            .top-header .search-wrap {
+                max-width: 180px;
+            }
+            .top-header .search-wrap input {
+                padding: 8px 12px 8px 40px;
+                font-size: 14px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 18px;
+                left: 12px;
+            }
+            .top-header .hamburger-btn {
+                font-size: 24px;
+                padding: 4px;
+            }
+            .top-header .profile-image-wrap {
+                width: 34px;
+                height: 34px;
+            }
+            .dark-toggle {
+                font-size: 20px;
+            }
+            .page-content {
+                padding: 18px 14px 32px;
+            }
+            .leaderboard-header h1 {
+                font-size: 24px;
+            }
+            .table-card {
+                padding: 18px 14px 20px;
+            }
+            .leaderboard-table {
+                font-size: 14px;
+            }
+            .staff-avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 12px;
+            }
+            .staff-name {
+                font-size: 14px;
+            }
+            .staff-dept {
+                font-size: 12px;
+            }
+            .rank-cell {
+                font-size: 14px;
+                width: 36px;
+            }
+            .points-cell {
+                font-size: 14px;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-backdrop.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            .top-header .brand-mobile {
+                display: block;
+            }
         }
 
         @media (max-width: 400px) {
-            .top-header .search-wrap { max-width: 120px; }
-            .top-header .search-wrap input { font-size: 13px; padding: 6px 10px 6px 34px; }
-            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
+            .top-header .search-wrap {
+                max-width: 120px;
+            }
+            .top-header .search-wrap input {
+                font-size: 13px;
+                padding: 6px 10px 6px 34px;
+            }
+            .top-header .search-wrap .ph {
+                font-size: 16px;
+                left: 10px;
+            }
         }
     </style>
 </head>
@@ -527,34 +737,27 @@
                 <i class="ph ph-house" aria-hidden="true"></i>
                 <span class="label">Dashboard</span>
             </button>
-
             <button class="nav-item" data-nav="ideas">
                 <i class="ph ph-lightbulb" aria-hidden="true"></i>
                 <span class="label">Ideas</span>
             </button>
-
             <button class="nav-item active" data-nav="leaderboard" aria-current="page">
                 <i class="ph ph-trophy" aria-hidden="true"></i>
                 <span class="label">Leaderboard</span>
             </button>
-
             <button class="nav-item" data-nav="rewards">
                 <i class="ph ph-gift" aria-hidden="true"></i>
                 <span class="label">Rewards</span>
             </button>
-
             <div class="sidebar-divider" role="separator"></div>
-
             <button class="nav-item" data-nav="profile">
                 <i class="ph ph-user" aria-hidden="true"></i>
                 <span class="label">Profile</span>
             </button>
-
             <button class="nav-item" data-nav="settings">
                 <i class="ph ph-gear" aria-hidden="true"></i>
                 <span class="label">Settings</span>
             </button>
-
             <button class="nav-item logout" data-nav="logout">
                 <i class="ph ph-sign-out" aria-hidden="true"></i>
                 <span class="label">Log out</span>
@@ -584,6 +787,11 @@
             </div>
 
             <div class="right-section">
+                <!-- Dark mode toggle (icon only) -->
+                <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+                    <i class="ph ph-sun" id="darkIcon"></i>
+                </button>
+
                 <div class="profile-image-wrap" id="profileImageWrap" title="Go to Profile">
                     <img src="../Images/profile-placeholder.png" alt="Profile" id="profileImage" />
                 </div>
@@ -592,7 +800,7 @@
         </header>
 
         <!-- ============================================================
-        PAGE CONTENT – LEADERBOARD
+        PAGE CONTENT – LEADERBOARD (centred)
         ============================================================ -->
         <div class="page-content">
 
@@ -614,6 +822,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Row 1 -->
                             <tr>
                                 <td class="rank-cell">1</td>
                                 <td>
@@ -629,6 +838,7 @@
                                 <td class="num-cell">5</td>
                                 <td class="points-cell">3,450</td>
                             </tr>
+                            <!-- Row 2 -->
                             <tr>
                                 <td class="rank-cell">2</td>
                                 <td>
@@ -644,6 +854,7 @@
                                 <td class="num-cell">8</td>
                                 <td class="points-cell">2,800</td>
                             </tr>
+                            <!-- Row 3 -->
                             <tr>
                                 <td class="rank-cell">3</td>
                                 <td>
@@ -659,6 +870,7 @@
                                 <td class="num-cell">10</td>
                                 <td class="points-cell">2,100</td>
                             </tr>
+                            <!-- Row 4 -->
                             <tr>
                                 <td class="rank-cell">4</td>
                                 <td>
@@ -674,6 +886,7 @@
                                 <td class="num-cell">4</td>
                                 <td class="points-cell">1,850</td>
                             </tr>
+                            <!-- Row 5 -->
                             <tr>
                                 <td class="rank-cell">5</td>
                                 <td>
@@ -699,7 +912,7 @@
 
 
     <!-- ============================================================
-    JAVASCRIPT
+    JAVASCRIPT (sidebar, dark mode, navigation)
     ============================================================ -->
     <script>
         (function() {
@@ -713,6 +926,8 @@
             const searchInput = document.getElementById('searchInput');
             const navItems = document.querySelectorAll('.nav-item');
             const profileImageWrap = document.getElementById('profileImageWrap');
+            const darkToggle = document.getElementById('darkToggle');
+            const darkIcon = document.getElementById('darkIcon');
 
             let isSidebarOpen = true;
             let isMobile = window.innerWidth <= 640;
@@ -757,6 +972,7 @@
                 if (isMobile) toggleSidebar(false);
             }
 
+            // Navigation
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
                     navItems.forEach(function(nav) {
@@ -767,13 +983,11 @@
                     this.setAttribute('aria-current', 'page');
 
                     const nav = this.dataset.nav;
-
                     if (nav === 'logout') {
                         e.preventDefault();
                         window.location.href = 'index.html';
                         return;
                     }
-
                     if (nav === 'dashboard') {
                         window.location.href = 'dashboard.html';
                         return;
@@ -798,7 +1012,6 @@
                         closeSidebarMobile();
                         return;
                     }
-
                     closeSidebarMobile();
                 });
             });
@@ -830,13 +1043,32 @@
                 this.closest('.search-wrap').classList.remove('focused');
             });
 
+            // Dark mode (icon only)
             function applyDarkMode() {
                 const darkMode = localStorage.getItem('prontox-dark-mode');
                 if (darkMode === 'true') {
                     document.body.classList.add('dark-mode');
+                    darkIcon.className = 'ph ph-moon';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    darkIcon.className = 'ph ph-sun';
                 }
             }
 
+            darkToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.contains('dark-mode');
+                if (isDark) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('prontox-dark-mode', 'false');
+                    darkIcon.className = 'ph ph-sun';
+                } else {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('prontox-dark-mode', 'true');
+                    darkIcon.className = 'ph ph-moon';
+                }
+            });
+
+            // Resize
             let resizeTimer;
 
             function handleResize() {

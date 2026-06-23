@@ -22,87 +22,79 @@
         }
 
         :root {
-            /* Primary Backgrounds - Brighter and more inviting */
+            /* ---- LIGHT MODE (default) ---- */
             --bg: #F0F4F8;
             --bg-card: #FFFFFF;
             --bg-surface: #F8FAFC;
-
-            /* Secondary Backgrounds */
             --surface: #FFFFFF;
             --surface-2: #F1F5F9;
             --surface-hover: #E8EDF3;
+            --text: #1A2332;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --text-inverse: #FFFFFF;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --border-accent: #00AFEF;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
 
-            /* Brand Colors - Using your data values */
+            /* ---- BRAND COLORS ---- */
             --accent: #00AFEF;
             --accent-light: #E6F6FE;
             --accent-mid: #B3E5FC;
             --accent-dark: #0088CC;
             --accent-hover: #0099D3;
 
-            /* Text Colors - Darker for better readability */
-            --text: #1A2332;
-            --text-secondary: #475569;
-            --text-muted: #94A3B8;
-            --text-inverse: #FFFFFF;
+            /* ---- SIDEBAR (sky blue in both modes) ---- */
+            --sidebar-bg: var(--accent);
+            --sidebar-text: #FFFFFF;
+            --sidebar-active: #FFFFFF;
+            --sidebar-active-bg: rgba(255, 255, 255, 0.15);
+            --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+            --sidebar-divider: rgba(255, 255, 255, 0.2);
 
-            /* Borders & Dividers */
-            --border: #E2E8F0;
-            --border-light: #F1F5F9;
-            --border-accent: #00AFEF;
+            /* ---- DARK MODE OVERRIDES (applied via body.dark-mode) ---- */
+            --bg-dark: #0E0F11;
+            --surface-dark: #1A1E21;
+            --surface-2-dark: #24292E;
+            --text-primary-dark: #E7E9EB;
+            --text-secondary-dark: #AAB0B6;
+            --text-muted-dark: #888E99;
+            --border-dark: #353E46;
 
-            /* Status Colors - Brighter variants */
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --info: #3B82F6;
-
-            /* Effects */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
-
-            /* Pronto Scale (mostly for dark mode accents) */
-            --pronto-600: #003366;
-
-            /* Sidebar – Sky Blue & White */
-            --sidebar-bg: #FFFFFF;
-            --sidebar-active: var(--accent);
-            --sidebar-active-bg: rgba(0, 175, 239, 0.12);
-            --sidebar-hover-bg: rgba(0, 175, 239, 0.06);
-            --sidebar-divider: var(--border);
-            --sidebar-text: var(--text-secondary);
-
-            /* Shared transitions */
+            /* ---- SHARED ---- */
             --radius: 14px;
             --radius-sm: 10px;
             --radius-xs: 8px;
             --transition: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --transition-sidebar: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --sidebar-width: 260px;
+
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
         }
 
-        /* Dark mode – adapted to new palette */
+        /* ---- DARK MODE (matches Dashboard, Ideas, etc.) ---- */
         body.dark-mode {
-            --bg: #0F141A;
-            --bg-card: #1A2332;
-            --bg-surface: #1E2A3A;
-            --surface: #1A2332;
-            --surface-2: #24303F;
+            --bg: var(--bg-dark);
+            --bg-card: var(--surface-dark);
+            --bg-surface: var(--surface-2-dark);
+            --surface: var(--surface-dark);
+            --surface-2: var(--surface-2-dark);
             --surface-hover: #2C3A4A;
-            --text: #E7E9EB;
-            --text-secondary: #AAB0B6;
-            --text-muted: #888E99;
-            --border: #2C3A4A;
+            --text: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
             --border-light: #1E2A3A;
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.35);
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
-            --sidebar-bg: #1A2332;
-            --sidebar-text: #AAB0B6;
-            --sidebar-active: var(--accent);
-            --sidebar-active-bg: rgba(0, 175, 239, 0.2);
-            --sidebar-hover-bg: rgba(0, 175, 239, 0.08);
-            --sidebar-divider: #2C3A4A;
+            /* Sidebar stays sky blue */
         }
 
         html { 
@@ -138,14 +130,14 @@
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 1000;
-            transition: transform var(--transition-sidebar), width var(--transition-sidebar), background var(--transition);
+            transition: background var(--transition), transform var(--transition-sidebar), width var(--transition-sidebar);
             scrollbar-width: thin;
-            scrollbar-color: rgba(0, 0, 0, 0.08) transparent;
-            border-right: 1px solid var(--border);
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            border-right: 1px solid var(--sidebar-divider);
         }
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: transparent; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.08); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
         .sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-width))); }
 
         .sidebar-header {
@@ -166,8 +158,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--accent);
-            box-shadow: 0 4px 14px rgba(0, 175, 239, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
         }
         .sidebar-header .brand-icon img {
             width: 100%;
@@ -178,7 +170,7 @@
         .sidebar-header .brand-text {
             font-size: 20px;
             font-weight: 700;
-            color: var(--text);
+            color: var(--sidebar-text);
             letter-spacing: -0.3px;
             white-space: nowrap;
         }
@@ -209,7 +201,10 @@
             white-space: nowrap;
         }
         .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
-        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: var(--text); }
+        .sidebar-nav .nav-item:hover { 
+            background: var(--sidebar-hover-bg); 
+            color: var(--sidebar-text);
+        }
         .sidebar-nav .nav-item.active {
             background: var(--sidebar-active-bg);
             color: var(--sidebar-active);
@@ -217,8 +212,7 @@
         }
         .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
         .sidebar-divider { height: 1px; background: var(--sidebar-divider); margin: 10px 14px 12px; flex-shrink: 0; }
-        .sidebar-nav .nav-item.logout { margin-top: auto; color: var(--danger); }
-        .sidebar-nav .nav-item.logout:hover { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
+        .sidebar-nav .nav-item.logout { margin-top: auto; }
 
         .sidebar-backdrop {
             position: fixed;
@@ -261,7 +255,7 @@
             background: rgba(255, 255, 255, 0.92);
             transition: background var(--transition), border-color var(--transition);
         }
-        body.dark-mode .top-header { background: rgba(26, 35, 50, 0.92); }
+        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
 
         .top-header .left-section { display: flex; align-items: center; gap: 16px; }
         .top-header .hamburger-btn {
@@ -324,6 +318,25 @@
         .top-header .search-wrap input:focus ~ .ph { color: var(--accent); }
 
         .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+
+        /* ---- DARK MODE TOGGLE (sun/moon) – identical to other pages ---- */
+        .dark-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color var(--transition), transform var(--transition);
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            line-height: 1;
+        }
+        .dark-toggle:hover { color: var(--accent); transform: scale(1.1); }
+        .dark-toggle:active { transform: scale(0.9); }
+
         .top-header .profile-image-wrap {
             width: 40px;
             height: 40px;
@@ -361,7 +374,7 @@
             flex: 1;
         }
 
-        /* --- New Profile Grid Layout --- */
+        /* --- Profile Grid Layout --- */
         .profile-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
@@ -557,33 +570,6 @@
         .btn-connect.connected:hover {
             background: #059669;
             border-color: #059669;
-        }
-
-        /* Appearance Options */
-        .appearance-options {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .appearance-options label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: all var(--transition);
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        .appearance-options label:has(input:checked) {
-            border-color: var(--accent);
-            background: var(--accent-light);
-            color: var(--accent);
-        }
-        .appearance-options input {
-            display: none;
         }
 
         /* Idea Editing */
@@ -853,8 +839,12 @@
                 <input type="text" placeholder="Search..." id="searchInput" aria-label="Search" />
             </div>
             <div class="right-section">
+                <!-- Dark mode toggle (sun/moon) – same as all other pages -->
+                <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+                    <i class="ph ph-sun" id="darkIcon"></i>
+                </button>
+
                 <div class="profile-image-wrap" id="profileImageWrap" title="Go to Profile">
-                    <!-- Placeholder icon; will be replaced by JS if image exists -->
                     <i class="ph ph-user" id="headerAvatarIcon" style="font-size:24px; color:var(--accent);"></i>
                     <img src="" alt="Profile" id="profileImage" style="display:none;" />
                 </div>
@@ -914,20 +904,12 @@
                     </div>
                 </div>
 
-                <!-- Card: Appearance -->
+                <!-- Card: Appearance (removed radio buttons, now just a message) -->
                 <div class="card">
                     <h3><i class="ph ph-palette"></i> Appearance</h3>
-                    <div class="appearance-options">
-                        <label>
-                            <input type="radio" name="theme" value="system" checked> System
-                        </label>
-                        <label>
-                            <input type="radio" name="theme" value="light"> Light
-                        </label>
-                        <label>
-                            <input type="radio" name="theme" value="dark"> Dark
-                        </label>
-                    </div>
+                    <p style="color: var(--text-secondary); font-size: 14px;">
+                        Use the sun/moon icon in the top right corner to toggle dark mode.
+                    </p>
                 </div>
 
                 <!-- Card: Connected Accounts -->
@@ -941,14 +923,6 @@
                         <div class="acc-info"><i class="ph ph-github-logo"></i> GitHub</div>
                         <button class="btn-connect" data-account="github">Connect</button>
                     </div>
-                    <div class="connected-account">
-                        <div class="acc-info"><i class="ph ph-twitter-logo"></i> Twitter</div>
-                        <button class="btn-connect" data-account="twitter">Connect</button>
-                    </div>
-                    <div class="connected-account">
-                        <div class="acc-info"><i class="ph ph-apple-logo"></i> Apple</div>
-                        <button class="btn-connect" data-account="apple">Connect</button>
-                    </div>
                 </div>
 
                 <!-- Card: Idea Editing -->
@@ -959,7 +933,6 @@
                         <button class="btn-icon btn-add" id="addIdeaBtn"><i class="ph ph-plus"></i></button>
                     </div>
                     <ul class="idea-list" id="ideaList">
-                        <!-- Sample Ideas -->
                         <li><span>AI-powered search for documents</span><button class="btn-icon btn-remove" data-index="0"><i class="ph ph-x"></i></button></li>
                         <li><span>Dark mode for mobile app</span><button class="btn-icon btn-remove" data-index="1"><i class="ph ph-x"></i></button></li>
                         <li><span>Automated weekly report generation</span><button class="btn-icon btn-remove" data-index="2"><i class="ph ph-x"></i></button></li>
@@ -987,16 +960,16 @@
                     </div>
                 </div>
 
-                <!-- Card: Danger Zone / Delete User -->
+                <!-- Card: Danger Zone -->
                 <div class="card card-full-width danger-zone">
                     <h3 style="color: var(--danger);"><i class="ph ph-warning"></i> Danger Zone</h3>
                     <p style="color: var(--text-secondary); margin-bottom: 16px;">Once you delete your account, there is no going back. Please be certain.</p>
                     <button class="btn-danger" id="deleteUserBtn"><i class="ph ph-trash"></i> Delete User</button>
                 </div>
 
-            </div> <!-- /profile-grid -->
-        </div> <!-- /page-content -->
-    </div> <!-- /main-content -->
+            </div>
+        </div>
+    </div>
 
     <!-- Hidden file input for avatar upload -->
     <input type="file" id="avatarUpload" accept="image/*" />
@@ -1005,7 +978,7 @@
         (function() {
             'use strict';
 
-            // --- Sidebar Logic --- (unchanged)
+            // --- Sidebar Logic (same as other pages) ---
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -1058,6 +1031,7 @@
                 if (isMobile) toggleSidebar(false);
             }
 
+            // Sidebar navigation – actual redirects
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
                     navItems.forEach(function(nav) {
@@ -1073,8 +1047,29 @@
                         window.location.href = 'index.html';
                         return;
                     }
-                    if (nav !== 'profile') {
-                        alert('Navigating to ' + nav + '.html (Demo)');
+                    if (nav === 'dashboard') {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (nav === 'ideas') {
+                        window.location.href = 'ideas.html';
+                        return;
+                    }
+                    if (nav === 'leaderboard') {
+                        window.location.href = 'leaderboard.html';
+                        return;
+                    }
+                    if (nav === 'rewards') {
+                        window.location.href = 'rewards.html';
+                        return;
+                    }
+                    if (nav === 'settings') {
+                        window.location.href = 'settings.html';
+                        return;
+                    }
+                    if (nav === 'profile') {
+                        closeSidebarMobile();
+                        return;
                     }
                     closeSidebarMobile();
                 });
@@ -1100,44 +1095,36 @@
                 }
             });
 
-            // --- Appearance / Theme Logic ---
-            function applyTheme(theme) {
-                const body = document.body;
-                if (theme === 'dark') {
-                    body.classList.add('dark-mode');
-                    localStorage.setItem('prontox-theme', 'dark');
-                } else if (theme === 'light') {
-                    body.classList.remove('dark-mode');
-                    localStorage.setItem('prontox-theme', 'light');
+            // --- DARK MODE (same as Dashboard, Ideas, etc.) ---
+            const darkToggle = document.getElementById('darkToggle');
+            const darkIcon = document.getElementById('darkIcon');
+
+            function applyDarkMode() {
+                const darkMode = localStorage.getItem('prontox-dark-mode');
+                if (darkMode === 'true') {
+                    document.body.classList.add('dark-mode');
+                    darkIcon.className = 'ph ph-moon';
                 } else {
-                    localStorage.setItem('prontox-theme', 'system');
-                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                        body.classList.add('dark-mode');
-                    } else {
-                        body.classList.remove('dark-mode');
-                    }
+                    document.body.classList.remove('dark-mode');
+                    darkIcon.className = 'ph ph-sun';
                 }
             }
 
-            const savedTheme = localStorage.getItem('prontox-theme') || 'system';
-            const themeRadios = document.querySelectorAll('input[name="theme"]');
-            themeRadios.forEach(radio => {
-                if (radio.value === savedTheme) radio.checked = true;
-                radio.addEventListener('change', function() {
-                    if (this.checked) applyTheme(this.value);
-                });
+            darkToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.contains('dark-mode');
+                if (isDark) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('prontox-dark-mode', 'false');
+                    darkIcon.className = 'ph ph-sun';
+                } else {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('prontox-dark-mode', 'true');
+                    darkIcon.className = 'ph ph-moon';
+                }
             });
-            applyTheme(savedTheme);
 
-            if (window.matchMedia) {
-                const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
-                darkModeMedia.addEventListener('change', function(e) {
-                    const currentTheme = localStorage.getItem('prontox-theme') || 'system';
-                    if (currentTheme === 'system') {
-                        document.body.classList.toggle('dark-mode', e.matches);
-                    }
-                });
-            }
+            // Initial apply
+            applyDarkMode();
 
             // --- General Settings Edit ---
             const editBtn = document.getElementById('editSettingsBtn');
@@ -1185,11 +1172,36 @@
                     if (this.classList.contains('connected')) {
                         this.classList.remove('connected');
                         this.innerText = 'Connect';
-                    } else {
+                        const account = this.dataset.account;
+                        localStorage.removeItem(`prontox-${account}-connected`);
+                        return;
+                    }
+
+                    const account = this.dataset.account;
+                    const displayName = account.charAt(0).toUpperCase() + account.slice(1);
+                    
+                    const userConfirmed = confirm(
+                        `You are about to connect your ${displayName} account.\n\n` +
+                        `This will redirect you to ${displayName} for authorization.\n` +
+                        `In a production app, you would be sent to the OAuth consent screen.\n\n` +
+                        `Click OK to simulate successful connection.`
+                    );
+                    
+                    if (userConfirmed) {
                         this.classList.add('connected');
                         this.innerText = 'Connected ✓';
+                        localStorage.setItem(`prontox-${account}-connected`, 'true');
                     }
                 });
+            });
+
+            // Restore connection state
+            document.querySelectorAll('.btn-connect').forEach(btn => {
+                const account = btn.dataset.account;
+                if (localStorage.getItem(`prontox-${account}-connected`) === 'true') {
+                    btn.classList.add('connected');
+                    btn.innerText = 'Connected ✓';
+                }
             });
 
             // --- Idea Editing ---
@@ -1228,7 +1240,7 @@
                 }
             });
 
-            // --- Avatar Upload & Persistence ---
+            // --- Avatar Upload ---
             const avatarInput = document.getElementById('avatarUpload');
             const mainAvatar = document.getElementById('mainAvatar');
             const mainAvatarImg = document.getElementById('mainAvatarImg');
@@ -1236,7 +1248,6 @@
             const headerProfileImg = document.getElementById('profileImage');
             const headerAvatarIcon = document.getElementById('headerAvatarIcon');
 
-            // Load saved avatar from localStorage
             function loadAvatar() {
                 const saved = localStorage.getItem('prontox-avatar');
                 if (saved) {
@@ -1247,7 +1258,6 @@
                     headerProfileImg.style.display = 'block';
                     headerAvatarIcon.style.display = 'none';
                 } else {
-                    // reset to icon
                     mainAvatarImg.style.display = 'none';
                     mainAvatarIcon.style.display = 'block';
                     headerProfileImg.style.display = 'none';
@@ -1255,13 +1265,11 @@
                 }
             }
 
-            // Click on main avatar triggers file input
             mainAvatar.addEventListener('click', function(e) {
                 e.stopPropagation();
                 avatarInput.click();
             });
 
-            // Handle file selection
             avatarInput.addEventListener('change', function(e) {
                 const file = this.files[0];
                 if (!file) return;
@@ -1272,16 +1280,13 @@
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     const dataUrl = ev.target.result;
-                    // Save to localStorage
                     localStorage.setItem('prontox-avatar', dataUrl);
-                    // Update both avatars
                     loadAvatar();
                 };
                 reader.readAsDataURL(file);
-                this.value = ''; // reset so same file can be re-uploaded
+                this.value = '';
             });
 
-            // Load avatar on page load
             loadAvatar();
 
             // --- Resize Handler ---
@@ -1333,6 +1338,24 @@
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
             }
+            // ---- Load avatar from localStorage ----
+function loadAvatar() {
+    const saved = localStorage.getItem('prontox-avatar');
+    const headerImg = document.getElementById('profileImage');
+    const headerIcon = document.getElementById('headerAvatarIcon');
+    
+    if (saved && headerImg) {
+        headerImg.src = saved;
+        headerImg.style.display = 'block';
+        if (headerIcon) headerIcon.style.display = 'none';
+    } else {
+        if (headerImg) headerImg.style.display = 'none';
+        if (headerIcon) headerIcon.style.display = 'block';
+    }
+}
+
+// Call it on page load
+loadAvatar();
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
