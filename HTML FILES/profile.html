@@ -1338,24 +1338,6 @@
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
             }
-            // ---- Load avatar from localStorage ----
-function loadAvatar() {
-    const saved = localStorage.getItem('prontox-avatar');
-    const headerImg = document.getElementById('profileImage');
-    const headerIcon = document.getElementById('headerAvatarIcon');
-    
-    if (saved && headerImg) {
-        headerImg.src = saved;
-        headerImg.style.display = 'block';
-        if (headerIcon) headerIcon.style.display = 'none';
-    } else {
-        if (headerImg) headerImg.style.display = 'none';
-        if (headerIcon) headerIcon.style.display = 'block';
-    }
-}
-
-// Call it on page load
-loadAvatar();
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
