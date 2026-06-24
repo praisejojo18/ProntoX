@@ -3,28 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IdeaHub - Pronto Broadband Solutions</title>
+  <title>ProntoX · Login</title>
+
+  <!-- Phosphor Icons -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
   <style>
     /* ============================================================
-       SECTION 1: CSS VARIABLES / ROOT
-       Defines Pronto Broadband Solutions brand colors used throughout
-       the entire application. These are the official company colors.
+       CSS VARIABLES (matches dashboard)
        ============================================================ */
-    /* so this is the light mode code*/
-       :root {
-  --bg: #F0F4F8;
-  --surface: #FFFFFF;
-  --surface-2: #F8FAFC;
-  --accent: #00AFEF;
-  --accent-hover: #0099D3;
-  --text: #1A2332;
-  --text-muted: #64748B;
-  --border: #E2E8F0;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-       }
+    :root {
+      /* ---- LIGHT MODE ---- */
+      --bg: #F0F4F8;
+      --surface: #FFFFFF;
+      --surface-2: #F8FAFC;
+      --text-primary: #1A2332;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border: #E2E8F0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+      /* Brand Colors */
+      --accent: #00AFEF;
+      --accent-hover: #0099D3;
+      --accent-light: #E6F6FE;
+      --accent-mid: #B3E5FC;
+
+      /* ---- DARK MODE OVERRIDES ---- */
+      --bg-dark: #0E0F11;
+      --surface-dark: #1A1E21;
+      --surface-2-dark: #24292E;
+      --text-primary-dark: #E7E9EB;
+      --text-secondary-dark: #AAB0B6;
+      --text-muted-dark: #888E99;
+      --border-dark: #353E46;
+    }
+
+    body.dark-mode {
+      --bg: var(--bg-dark);
+      --surface: var(--surface-dark);
+      --surface-2: var(--surface-2-dark);
+      --text-primary: var(--text-primary-dark);
+      --text-secondary: var(--text-secondary-dark);
+      --text-muted: var(--text-muted-dark);
+      --border: var(--border-dark);
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
 
     /* ============================================================
-       SECTION 2: RESET & GLOBAL STYLES
+       RESET & BASE – full viewport, no scroll
        ============================================================ */
     * {
       margin: 0;
@@ -32,58 +60,94 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      color: var(--text-primary);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* ============================================================
+       PARTICLE CANVAS (full-screen background)
+       ============================================================ */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       CARD CONTAINER – centred over particles
+       ============================================================ */
+    .card-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      z-index: 1;
+      padding: 16px;
+      pointer-events: none;
     }
 
-    /* ============================================================
-       SECTION 3: CARD CONTAINER STYLING
-       ============================================================ */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 1.5rem;
-      padding: 2.5rem 2rem;
-      max-width: 420px;
+      border-radius: 1.25rem;
+      padding: 1.75rem 1.75rem 1.5rem;
+      max-width: 400px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      transition: all 0.2s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+      pointer-events: auto;
+      max-height: 98vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ============================================================
-       SECTION 4: LOGO AND HEADING SECTION
+       LOGO & HEADER – compact
        ============================================================ */
     .logo-container {
       text-align: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
     }
 
-   .company-logo {
-  max-width: 60px;
-  width: 60px;
-  height: 60px;
-  display: block;
-  margin: 0 auto 0.75rem auto;
-  border-radius: 80%;
-  object-fit: contain;
-  border: 2px solid var(--border);
-  background: var(--surface-2);
-  padding: 4px;
-}
+    .company-logo {
+      max-width: 48px;
+      width: 48px;
+      height: 48px;
+      display: block;
+      margin: 0 auto 0.4rem auto;
+      border-radius: 80%;
+      object-fit: contain;
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      padding: 3px;
+      transition: border-color 0.4s ease;
+    }
 
     .logo {
       text-align: center;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       letter-spacing: -0.5px;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.1rem;
+      color: var(--text-primary);
+      transition: color 0.4s ease;
     }
     .logo .hub {
       color: var(--accent);
@@ -92,41 +156,102 @@
     .tagline {
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
+      font-size: 0.8rem;
+      margin-bottom: 1.2rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 1.5rem;
+      padding-bottom: 0.9rem;
+      transition: color 0.4s ease, border-color 0.4s ease;
     }
 
     /* ============================================================
-       SECTION 5: FORM STYLES
+       FORM – compact
        ============================================================ */
+    .form-wrapper {
+      opacity: 0;
+      transform: scale(0.95) translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      pointer-events: none;
+      max-height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      flex-shrink: 0;
+    }
+
+    .form-wrapper.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      max-height: 800px;
+      visibility: visible;
+      overflow: visible;
+    }
+
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ---- Password input with eye toggle ---- */
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-input-wrap input {
+      width: 100%;
+      padding-right: 2.6rem;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+    }
+
+    .password-toggle:hover {
+      color: var(--text-primary);
+      background: var(--surface-2);
     }
 
     label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
+      font-size: 0.7rem;
+      font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition: color 0.4s ease;
     }
 
     input {
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: 0.5rem 0.8rem;
       background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      color: var(--text);
-      font-size: 1rem;
-      transition: border 0.2s;
+      border: 1.5px solid var(--border);
+      border-radius: 0.6rem;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
       outline: none;
     }
     input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15);
+      box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.12);
     }
     input::placeholder {
       color: var(--text-muted);
@@ -134,20 +259,20 @@
     }
 
     /* ============================================================
-       SECTION 6: BUTTON STYLES
+       BUTTON – compact
        ============================================================ */
     .btn-primary {
       width: 100%;
-      padding: 0.8rem;
+      padding: 0.6rem;
       background: var(--accent);
       border: none;
-      border-radius: 0.75rem;
-      font-size: 1rem;
+      border-radius: 0.6rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #fff;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
-      margin-top: 0.5rem;
+      margin-top: 0.2rem;
     }
     .btn-primary:hover {
       background: var(--accent-hover);
@@ -157,13 +282,14 @@
     }
 
     /* ============================================================
-       SECTION 7: TOGGLE LINK STYLING
+       TOGGLE LINK – compact
        ============================================================ */
     .toggle-link {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 0.9rem;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
+      transition: color 0.4s ease;
     }
     .toggle-link a {
       color: var(--accent);
@@ -178,167 +304,461 @@
     }
 
     /* ============================================================
-       SECTION 8: FORM CONTAINERS & TRANSITIONS
-       ============================================================ */
-    .form-wrapper {
-      opacity: 0;
-      transform: scale(0.95) translateY(8px);
-      transition: opacity 0.18s ease, transform 0.18s ease;
-      pointer-events: none;
-      max-height: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
-
-    .form-wrapper.active {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: auto;
-      max-height: 800px;
-      visibility: visible;
-      overflow: visible;
-    }
-
-    /* ============================================================
-       SECTION 9: RESPONSIVE ADJUSTMENTS
+       RESPONSIVE
        ============================================================ */
     @media (max-width: 480px) {
       .card {
-        padding: 1.75rem 1.25rem;
+        padding: 1.25rem 1rem 1rem;
+        max-width: 100%;
+        margin: 0 8px;
+        border-radius: 1rem;
       }
       .logo {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
       }
       .company-logo {
-        max-width: 50px;
+        max-width: 40px;
+        height: 40px;
+      }
+      .tagline {
+        font-size: 0.7rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.6rem;
+      }
+      .form-group {
+        margin-bottom: 0.6rem;
+      }
+      input {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+      }
+      .password-toggle {
+        font-size: 1rem;
+        width: 28px;
+        height: 28px;
+        right: 6px;
+      }
+      .btn-primary {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      .toggle-link {
+        font-size: 0.8rem;
+        margin-top: 0.7rem;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .card {
+        padding: 1.2rem 1.5rem 1rem;
+      }
+      .company-logo {
+        max-width: 40px;
+        height: 40px;
+      }
+      .logo {
+        font-size: 1.5rem;
+      }
+      .tagline {
+        font-size: 0.7rem;
+        margin-bottom: 0.7rem;
+        padding-bottom: 0.5rem;
+      }
+      .form-group {
+        margin-bottom: 0.5rem;
+      }
+      input {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+      }
+      .password-toggle {
+        font-size: 1rem;
+        width: 28px;
+        height: 28px;
+        right: 6px;
+      }
+      .btn-primary {
+        padding: 0.45rem;
+        font-size: 0.8rem;
+      }
+      .toggle-link {
+        font-size: 0.75rem;
+        margin-top: 0.6rem;
+      }
+    }
+
+    @media (max-height: 600px) {
+      .company-logo {
+        max-width: 34px;
+        height: 34px;
+      }
+      .logo {
+        font-size: 1.3rem;
+      }
+      .tagline {
+        font-size: 0.65rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.4rem;
+      }
+      .form-group {
+        margin-bottom: 0.35rem;
+      }
+      input {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+      }
+      .password-toggle {
+        font-size: 0.9rem;
+        width: 24px;
+        height: 24px;
+        right: 4px;
+      }
+      .btn-primary {
+        padding: 0.35rem;
+        font-size: 0.75rem;
+      }
+      .toggle-link {
+        font-size: 0.7rem;
+        margin-top: 0.4rem;
+      }
+      .card {
+        padding: 0.8rem 1.2rem 0.8rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
+  <!-- ============================================================
+  PARTICLE CANVAS (background animation)
+  ============================================================ -->
+  <canvas id="particleCanvas"></canvas>
 
-    <div class="logo-container">
-      <img
-        src="../Images/logo.png"
-        alt="Pronto Broadband Solutions logo"
-        class="company-logo"
-      />
-    </div>
-    <div class="logo">
-      Pronto<span class="hub">X</span>
-    </div>
-    <p class="tagline">Capture, organize, and grow your ideas</p>
+  <!-- ============================================================
+  MAIN CARD
+  ============================================================ -->
+  <div class="card-wrapper">
+    <div class="card">
 
-    <!-- Login Form -->
-    <div id="loginForm" class="form-wrapper active">
-      <div class="form-group">
-        <label for="loginStaffId">Staff ID</label>
-        <input
-          type="text"
-          id="loginStaffId"
-          placeholder="Enter your Staff ID"
+      <!-- Logo -->
+      <div class="logo-container">
+        <img
+          src="../Images/logo.png"
+          alt="Pronto Broadband Solutions logo"
+          class="company-logo"
         />
       </div>
-      <div class="form-group">
-        <label for="loginPassword">Password</label>
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="••••••••"
-        />
+      <div class="logo">
+        Pronto<span class="hub">X</span>
       </div>
-      <button class="btn-primary" id="loginBtn">Log in</button>
-      <div class="toggle-link">
-        Don't have an account? <a id="showSignup">Sign up</a>
-      </div>
-    </div>
+      <p class="tagline">Capture, organize, and grow your ideas</p>
 
-    <!-- Signup Form -->
-    <div id="signupForm" class="form-wrapper">
-      <div class="form-group">
-        <label for="signupName">Full name</label>
-        <input
-          type="text"
-          id="signupName"
-          placeholder="Chidi Okafor"
-        />
+      <!-- Login Form -->
+      <div id="loginForm" class="form-wrapper active">
+        <div class="form-group">
+          <label for="loginStaffId">Staff ID</label>
+          <input
+            type="text"
+            id="loginStaffId"
+            placeholder="Enter your Staff ID"
+          />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="password-input-wrap">
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="••••••••"
+            />
+            <button class="password-toggle" type="button" data-target="loginPassword" aria-label="Toggle password visibility">
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary" id="loginBtn">Log in</button>
+        <div class="toggle-link">
+          Don't have an account? <a id="showSignup">Sign up</a>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="signupStaffId">Staff ID</label>
-        <input
-          type="text"
-          id="signupStaffId"
-          placeholder="Enter your Staff ID"
-        />
-      </div>
-      <div class="form-group">
-        <label for="signupEmail">Email address</label>
-        <input
-          type="email"
-          id="signupEmail"
-          placeholder="you@gmail.com"
-        />
-      </div>
-      <div class="form-group">
-        <label for="signupPassword">Password</label>
-        <input
-          type="password"
-          id="signupPassword"
-          placeholder="••••••••"
-        />
-      </div>
-      <div class="form-group">
-        <label for="signupConfirm">Confirm password</label>
-        <input
-          type="password"
-          id="signupConfirm"
-          placeholder="••••••••"
-        />
-      </div>
-      <button class="btn-primary" id="signupBtn">Sign up</button>
-      <div class="toggle-link">
-        Already have an account? <a id="showLogin">Log in</a>
-      </div>
-    </div>
 
+      <!-- Signup Form -->
+      <div id="signupForm" class="form-wrapper">
+        <div class="form-group">
+          <label for="signupName">Full name</label>
+          <input
+            type="text"
+            id="signupName"
+            placeholder="Chidi Okafor"
+          />
+        </div>
+        <div class="form-group">
+          <label for="signupStaffId">Staff ID</label>
+          <input
+            type="text"
+            id="signupStaffId"
+            placeholder="Enter your Staff ID"
+          />
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email address</label>
+          <input
+            type="email"
+            id="signupEmail"
+            placeholder="you@gmail.com"
+          />
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <div class="password-input-wrap">
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder="••••••••"
+            />
+            <button class="password-toggle" type="button" data-target="signupPassword" aria-label="Toggle password visibility">
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signupConfirm">Confirm password</label>
+          <div class="password-input-wrap">
+            <input
+              type="password"
+              id="signupConfirm"
+              placeholder="••••••••"
+            />
+            <button class="password-toggle" type="button" data-target="signupConfirm" aria-label="Toggle password visibility">
+              <i class="ph ph-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary" id="signupBtn">Sign up</button>
+        <div class="toggle-link">
+          Already have an account? <a id="showLogin">Log in</a>
+        </div>
+      </div>
+
+    </div>
   </div>
 
+  <!-- ============================================================
+  JAVASCRIPT – Particles + Form Toggle + Dark Mode Sync + Password Toggles
+  ============================================================ -->
   <script>
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
+    (function() {
+      'use strict';
 
-    const showSignup = document.getElementById('showSignup');
-    const showLogin = document.getElementById('showLogin');
+      // ------------------------------------------------------------
+      // 1. PARTICLE SYSTEM (bouncing balls – fixed colours)
+      // ------------------------------------------------------------
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let animationId = null;
+      let isDarkMode = false;
 
-    function showLoginForm() {
-      loginForm.classList.add('active');
-      signupForm.classList.remove('active');
-    }
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
 
-    function showSignupForm() {
-      loginForm.classList.remove('active');
-      signupForm.classList.add('active');
-    }
+      class Particle {
+        constructor() {
+          const size = Math.random() * 10 + 4;
+          this.x = Math.random() * (canvas.width - size);
+          this.y = Math.random() * (canvas.height - size);
+          this.size = size;
+          this.speedX = (Math.random() - 0.5) * 2.8;
+          this.speedY = (Math.random() - 0.5) * 2.8;
+          while (Math.abs(this.speedX) < 0.4) this.speedX += (Math.random() - 0.5) * 0.8;
+          while (Math.abs(this.speedY) < 0.4) this.speedY += (Math.random() - 0.5) * 0.8;
+          this.opacity = Math.random() * 0.5 + 0.25;
+          this.hue = Math.random() * 360;
+          this.lightModeSat = 25 + Math.random() * 30;
+          this.lightModeLig = 40 + Math.random() * 20;
+          this.darkModeSat = 65 + Math.random() * 30;
+          this.darkModeLig = 55 + Math.random() * 25;
+        }
 
-    showSignup.addEventListener('click', (e) => {
-      e.preventDefault();
-      showSignupForm();
-    });
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x < 0 || this.x + this.size > canvas.width) {
+            this.speedX = -this.speedX;
+            this.x = Math.max(0, Math.min(this.x, canvas.width - this.size));
+          }
+          if (this.y < 0 || this.y + this.size > canvas.height) {
+            this.speedY = -this.speedY;
+            this.y = Math.max(0, Math.min(this.y, canvas.height - this.size));
+          }
+        }
 
-    showLogin.addEventListener('click', (e) => {
-      e.preventDefault();
-      showLoginForm();
-    });
+        draw() {
+          let sat, lig;
+          if (isDarkMode) {
+            sat = this.darkModeSat;
+            lig = this.darkModeLig;
+          } else {
+            sat = this.lightModeSat;
+            lig = this.lightModeLig;
+          }
+          const color = `hsla(${this.hue}, ${sat}%, ${lig}%, ${this.opacity})`;
+          ctx.beginPath();
+          ctx.arc(this.x + this.size / 2, this.y + this.size / 2, this.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.fill();
+          if (isDarkMode) {
+            ctx.shadowColor = 'rgba(0, 175, 239, 0.08)';
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
 
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      window.location.href = 'dashboard.html';
-    });
+      function createParticles(count) {
+        particles = [];
+        for (let i = 0; i < count; i++) {
+          particles.push(new Particle());
+        }
+      }
 
-    document.getElementById('signupBtn').addEventListener('click', () => {
-      window.location.href = 'dashboard.html';
-    });
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        animationId = requestAnimationFrame(animateParticles);
+      }
+
+      function startParticles() {
+        if (animationId) cancelAnimationFrame(animationId);
+        createParticles(35);
+        animateParticles();
+      }
+
+      // ------------------------------------------------------------
+      // 2. DARK MODE SYNC
+      // ------------------------------------------------------------
+      function applyDarkMode() {
+        const darkMode = localStorage.getItem('prontox-dark-mode');
+        const body = document.body;
+        if (darkMode === 'true') {
+          body.classList.add('dark-mode');
+          isDarkMode = true;
+        } else {
+          body.classList.remove('dark-mode');
+          isDarkMode = false;
+        }
+      }
+
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'prontox-dark-mode') {
+          applyDarkMode();
+        }
+      });
+
+      // ------------------------------------------------------------
+      // 3. PASSWORD TOGGLE (eye / eye-slash)
+      // ------------------------------------------------------------
+      document.querySelectorAll('.password-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const targetId = this.dataset.target;
+          const input = document.getElementById(targetId);
+          if (!input) return;
+
+          const icon = this.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'ph ph-eye-slash';
+          } else {
+            input.type = 'password';
+            icon.className = 'ph ph-eye';
+          }
+          // Keep focus on the input
+          input.focus();
+        });
+      });
+
+      // ------------------------------------------------------------
+      // 4. FORM TOGGLE
+      // ------------------------------------------------------------
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const showSignup = document.getElementById('showSignup');
+      const showLogin = document.getElementById('showLogin');
+
+      function showLoginForm() {
+        loginForm.classList.add('active');
+        signupForm.classList.remove('active');
+      }
+
+      function showSignupForm() {
+        loginForm.classList.remove('active');
+        signupForm.classList.add('active');
+      }
+
+      showSignup.addEventListener('click', function(e) {
+        e.preventDefault();
+        showSignupForm();
+      });
+
+      showLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showLoginForm();
+      });
+
+      // ------------------------------------------------------------
+      // 5. LOGIN / SIGNUP BUTTONS
+      // ------------------------------------------------------------
+      document.getElementById('loginBtn').addEventListener('click', function() {
+        window.location.href = 'dashboard.html';
+      });
+
+      document.getElementById('signupBtn').addEventListener('click', function() {
+        window.location.href = 'dashboard.html';
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          const active = document.activeElement;
+          if (active && active.closest('#loginForm')) {
+            document.getElementById('loginBtn').click();
+          } else if (active && active.closest('#signupForm')) {
+            document.getElementById('signupBtn').click();
+          }
+        }
+      });
+
+      // ------------------------------------------------------------
+      // 6. INIT
+      // ------------------------------------------------------------
+      function init() {
+        applyDarkMode();
+        startParticles();
+
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            resizeCanvas();
+            createParticles(35);
+          }, 200);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
   </script>
 
 </body>

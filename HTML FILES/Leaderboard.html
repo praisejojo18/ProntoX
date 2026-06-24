@@ -11,7 +11,7 @@
 
     <style>
         /* ============================================================
-           GLOBAL RESET & BASE (Pronto Cyan Palette)
+           GLOBAL RESET & BASE (same as dashboard)
            ============================================================ */
         *,
         *::before,
@@ -38,6 +38,15 @@
             --accent-light: #E6F6FE;
             --accent-mid: #B3E5FC;
 
+            /* ====== SIDEBAR VARIABLES (matching dashboard) ====== */
+            --sidebar-bg: #FFFFFF;
+            --sidebar-text: var(--text-primary);
+            --sidebar-active: var(--accent);
+            --sidebar-active-bg: var(--accent-light);
+            --sidebar-hover-bg: rgba(0, 175, 239, 0.06);
+            --sidebar-divider: var(--border);
+            --sidebar-text-muted: var(--text-muted);
+
             --bg-dark: #0E0F11;
             --surface-dark: #1A1E21;
             --surface-2-dark: #24292E;
@@ -45,13 +54,8 @@
             --text-secondary-dark: #AAB0B6;
             --text-muted-dark: #888E99;
             --border-dark: #353E46;
-
-            --sidebar-bg: #007CB0;
-            --sidebar-active: #FFFFFF;
-            --sidebar-active-bg: rgba(255, 255, 255, 0.15);
-            --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
-            --sidebar-divider: rgba(255, 255, 255, 0.15);
-            --sidebar-text: #E6F6FE;
+            --accent-dark-mode: #60A5FA;
+            --accent-light-dark: #1a3a5a;
 
             --radius: 14px;
             --radius-sm: 10px;
@@ -71,6 +75,17 @@
             --border: var(--border-dark);
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
             --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+            --accent: var(--accent-dark-mode);
+            --accent-light: var(--accent-light-dark);
+            --accent-mid: #1a4a5a;
+
+            /* ====== SIDEBAR DARK OVERRIDES (matching dashboard) ====== */
+            --sidebar-bg: #1A1E21;
+            --sidebar-divider: #353E46;
+            --sidebar-active: var(--accent-dark-mode);
+            --sidebar-active-bg: var(--accent-light-dark);
+            --sidebar-hover-bg: rgba(59, 130, 246, 0.06);
+            --sidebar-text-muted: #888E99;
         }
 
         html {
@@ -95,7 +110,7 @@
         }
 
         /* ============================================================
-           SIDEBAR (Pronto Cyan)
+           SIDEBAR (improved – matching dashboard)
            ============================================================ */
         .sidebar {
             position: fixed;
@@ -103,7 +118,7 @@
             left: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: #007CB0;
+            background: var(--sidebar-bg);
             color: var(--sidebar-text);
             padding: 0 16px 24px;
             display: flex;
@@ -111,21 +126,17 @@
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 1000;
-            transition: transform var(--transition-sidebar), width var(--transition-sidebar);
+            transition: background var(--transition), transform var(--transition-sidebar),
+                        width var(--transition-sidebar), color var(--transition);
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            scrollbar-color: rgba(0, 0, 0, 0.08) transparent;
+            border-right: 1px solid var(--sidebar-divider);
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: 4px; }
+        body.dark-mode .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); }
 
         .sidebar.collapsed {
             transform: translateX(calc(-1 * var(--sidebar-width)));
@@ -150,23 +161,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            background: var(--accent-light);
+            box-shadow: 0 4px 14px rgba(0, 175, 239, 0.15);
+            transition: background var(--transition);
         }
-
         .sidebar-header .brand-icon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
-
         .sidebar-header .brand-text {
             font-size: 20px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.3px;
             white-space: nowrap;
+            transition: color var(--transition);
         }
 
         .sidebar-nav {
@@ -183,10 +194,10 @@
             gap: 14px;
             padding: 11px 14px;
             border-radius: var(--radius-sm);
-            color: var(--sidebar-text);
+            color: var(--sidebar-text-muted);
             font-size: 15px;
             font-weight: 500;
-            transition: background var(--transition), color var(--transition);
+            transition: all var(--transition);
             cursor: pointer;
             border: none;
             background: transparent;
@@ -205,7 +216,7 @@
 
         .sidebar-nav .nav-item:hover {
             background: var(--sidebar-hover-bg);
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .sidebar-nav .nav-item.active {
@@ -213,7 +224,6 @@
             color: var(--sidebar-active);
             font-weight: 600;
         }
-
         .sidebar-nav .nav-item.active .ph {
             color: var(--sidebar-active);
         }
@@ -223,19 +233,18 @@
             background: var(--sidebar-divider);
             margin: 10px 14px 12px;
             flex-shrink: 0;
+            transition: background var(--transition);
         }
 
         .sidebar-nav .nav-item.logout {
             margin-top: auto;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-muted);
         }
-
         .sidebar-nav .nav-item.logout:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+            background: rgba(239, 68, 68, 0.06);
+            color: #ef4444;
         }
 
-        /* ---- BACKDROP ---- */
         .sidebar-backdrop {
             position: fixed;
             inset: 0;
@@ -247,7 +256,6 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
-
         .sidebar-backdrop.visible {
             opacity: 1;
             visibility: visible;
@@ -264,13 +272,12 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
-
         .main-content.expanded {
             margin-left: 0;
         }
 
         /* ============================================================
-           TOP HEADER
+           TOP HEADER – compact (60px)
            ============================================================ */
         .top-header {
             position: sticky;
@@ -279,7 +286,7 @@
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             padding: 0 32px;
-            height: 72px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -290,7 +297,6 @@
             background: rgba(255, 255, 255, 0.92);
             transition: background var(--transition), border-color var(--transition);
         }
-
         body.dark-mode .top-header {
             background: rgba(26, 30, 33, 0.92);
         }
@@ -300,7 +306,6 @@
             align-items: center;
             gap: 16px;
         }
-
         .top-header .hamburger-btn {
             background: transparent;
             border: none;
@@ -315,14 +320,12 @@
             justify-content: center;
             line-height: 1;
         }
-
         .top-header .hamburger-btn:hover {
             background: rgba(0, 0, 0, 0.04);
         }
         .top-header .hamburger-btn:active {
             transform: scale(0.92);
         }
-
         .top-header .brand-mobile {
             font-size: 20px;
             font-weight: 700;
@@ -336,7 +339,6 @@
             max-width: 460px;
             position: relative;
         }
-
         .top-header .search-wrap .ph {
             position: absolute;
             left: 16px;
@@ -347,7 +349,6 @@
             transition: color var(--transition);
             pointer-events: none;
         }
-
         .top-header .search-wrap input {
             width: 100%;
             padding: 10px 16px 10px 48px;
@@ -360,19 +361,16 @@
             outline: none;
             font-weight: 450;
         }
-
         .top-header .search-wrap input::placeholder {
             color: var(--text-muted);
             font-weight: 400;
         }
-
         .top-header .search-wrap input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 175, 239, 0.12);
             background: var(--surface);
         }
-
-        .top-header .search-wrap input:focus~.ph {
+        .top-header .search-wrap input:focus ~ .ph {
             color: var(--accent);
         }
 
@@ -396,19 +394,16 @@
             align-items: center;
             justify-content: center;
         }
-
         .top-header .profile-image-wrap:hover {
             border-color: var(--accent);
             transform: scale(1.04);
         }
-
         .top-header .profile-image-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
-
         .top-header .user-name {
             font-size: 15px;
             font-weight: 500;
@@ -416,7 +411,6 @@
             white-space: nowrap;
         }
 
-        /* ---- DARK MODE TOGGLE (icon only) ---- */
         .dark-toggle {
             font-size: 24px;
             cursor: pointer;
@@ -431,7 +425,6 @@
             border: none;
             line-height: 1;
         }
-
         .dark-toggle:hover {
             color: var(--accent);
             transform: scale(1.1);
@@ -441,7 +434,7 @@
         }
 
         /* ============================================================
-           PAGE CONTENT – LEADERBOARD (centred card)
+           PAGE CONTENT – LEADERBOARD (centred)
            ============================================================ */
         .page-content {
             padding: 32px 40px 48px;
@@ -473,7 +466,6 @@
             font-weight: 450;
         }
 
-        /* ---- TABLE CARD (centred) ---- */
         .table-card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -511,32 +503,17 @@
             letter-spacing: 0.5px;
             border-bottom: 2px solid var(--border);
         }
-
-        .leaderboard-table thead th:first-child {
-            padding-left: 0;
-        }
-        .leaderboard-table thead th:last-child {
-            padding-right: 0;
-            text-align: right;
-        }
+        .leaderboard-table thead th:first-child { padding-left: 0; }
+        .leaderboard-table thead th:last-child { padding-right: 0; text-align: right; }
 
         .leaderboard-table tbody td {
             padding: 16px 12px 16px 0;
             border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
-
-        .leaderboard-table tbody td:first-child {
-            padding-left: 0;
-        }
-        .leaderboard-table tbody td:last-child {
-            padding-right: 0;
-            text-align: right;
-        }
-
-        .leaderboard-table tbody tr:last-child td {
-            border-bottom: none;
-        }
+        .leaderboard-table tbody td:first-child { padding-left: 0; }
+        .leaderboard-table tbody td:last-child { padding-right: 0; text-align: right; }
+        .leaderboard-table tbody tr:last-child td { border-bottom: none; }
 
         .rank-cell {
             font-weight: 700;
@@ -575,7 +552,6 @@
             font-weight: 600;
             color: var(--text-primary);
         }
-
         .staff-dept {
             font-size: 13px;
             color: var(--text-muted);
@@ -585,7 +561,6 @@
             font-weight: 500;
             color: var(--text-primary);
         }
-
         .points-cell {
             font-weight: 700;
             color: var(--text-primary);
@@ -596,124 +571,47 @@
            RESPONSIVE
            ============================================================ */
         @media (max-width: 900px) {
-            .top-header {
-                padding: 0 20px;
-            }
-            .page-content {
-                padding: 24px 20px 36px;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
-            .top-header .left-section .brand-text {
-                display: none;
-            }
-            .top-header .user-name {
-                display: none;
-            }
-            .top-header .search-wrap {
-                max-width: 300px;
-            }
-            .table-card {
-                padding: 20px 18px;
-            }
+            .top-header { padding: 0 20px; }
+            .page-content { padding: 24px 20px 36px; }
+            .top-header .brand-mobile { display: block; }
+            .top-header .left-section .brand-text { display: none; }
+            .top-header .user-name { display: none; }
+            .top-header .search-wrap { max-width: 300px; }
+            .table-card { padding: 20px 18px; }
         }
 
         @media (max-width: 640px) {
-            :root {
-                --sidebar-width: 280px;
-            }
-            .top-header {
-                padding: 0 14px;
-                height: 64px;
-                gap: 12px;
-            }
-            .top-header .search-wrap {
-                max-width: 180px;
-            }
-            .top-header .search-wrap input {
-                padding: 8px 12px 8px 40px;
-                font-size: 14px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 18px;
-                left: 12px;
-            }
-            .top-header .hamburger-btn {
-                font-size: 24px;
-                padding: 4px;
-            }
-            .top-header .profile-image-wrap {
-                width: 34px;
-                height: 34px;
-            }
-            .dark-toggle {
-                font-size: 20px;
-            }
-            .page-content {
-                padding: 18px 14px 32px;
-            }
-            .leaderboard-header h1 {
-                font-size: 24px;
-            }
-            .table-card {
-                padding: 18px 14px 20px;
-            }
-            .leaderboard-table {
-                font-size: 14px;
-            }
-            .staff-avatar {
-                width: 34px;
-                height: 34px;
-                font-size: 12px;
-            }
-            .staff-name {
-                font-size: 14px;
-            }
-            .staff-dept {
-                font-size: 12px;
-            }
-            .rank-cell {
-                font-size: 14px;
-                width: 36px;
-            }
-            .points-cell {
-                font-size: 14px;
-            }
-            .main-content {
-                margin-left: 0 !important;
-            }
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-backdrop.visible {
-                opacity: 1;
-                visibility: visible;
-            }
-            .top-header .brand-mobile {
-                display: block;
-            }
+            :root { --sidebar-width: 280px; }
+            .top-header { padding: 0 14px; height: 52px; gap: 12px; }
+            .top-header .search-wrap { max-width: 180px; }
+            .top-header .search-wrap input { padding: 8px 12px 8px 40px; font-size: 14px; }
+            .top-header .search-wrap .ph { font-size: 18px; left: 12px; }
+            .top-header .hamburger-btn { font-size: 24px; padding: 4px; }
+            .top-header .profile-image-wrap { width: 34px; height: 34px; }
+            .dark-toggle { font-size: 20px; }
+            .page-content { padding: 18px 14px 32px; }
+            .leaderboard-header h1 { font-size: 24px; }
+            .table-card { padding: 18px 14px 20px; }
+            .leaderboard-table { font-size: 14px; }
+            .staff-avatar { width: 34px; height: 34px; font-size: 12px; }
+            .staff-name { font-size: 14px; }
+            .staff-dept { font-size: 12px; }
+            .rank-cell { font-size: 14px; width: 36px; }
+            .points-cell { font-size: 14px; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
+            .top-header .brand-mobile { display: block; }
         }
 
         @media (max-width: 400px) {
-            .top-header .search-wrap {
-                max-width: 120px;
-            }
-            .top-header .search-wrap input {
-                font-size: 13px;
-                padding: 6px 10px 6px 34px;
-            }
-            .top-header .search-wrap .ph {
-                font-size: 16px;
-                left: 10px;
-            }
+            .top-header .search-wrap { max-width: 120px; }
+            .top-header .search-wrap input { font-size: 13px; padding: 6px 10px 6px 34px; }
+            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
         }
     </style>
 </head>
-
 <body>
 
     <!-- ============================================================
@@ -722,7 +620,7 @@
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
     <!-- ============================================================
-    SIDEBAR
+    SIDEBAR (improved – matching dashboard)
     ============================================================ -->
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <div class="sidebar-header">
@@ -787,20 +685,21 @@
             </div>
 
             <div class="right-section">
-                <!-- Dark mode toggle (icon only) -->
+                <!-- Dark mode toggle -->
                 <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
                     <i class="ph ph-sun" id="darkIcon"></i>
                 </button>
 
                 <div class="profile-image-wrap" id="profileImageWrap" title="Go to Profile">
-                    <img src="../Images/profile-placeholder.png" alt="Profile" id="profileImage" />
+                    <i class="ph ph-user" id="headerAvatarIcon" style="font-size:24px; color:var(--accent);"></i>
+                    <img src="" alt="Profile" id="profileImage" style="display:none;" />
                 </div>
                 <span class="user-name">John Doe</span>
             </div>
         </header>
 
         <!-- ============================================================
-        PAGE CONTENT – LEADERBOARD (centred)
+        PAGE CONTENT – LEADERBOARD
         ============================================================ -->
         <div class="page-content">
 
@@ -822,7 +721,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Row 1 -->
                             <tr>
                                 <td class="rank-cell">1</td>
                                 <td>
@@ -838,7 +736,6 @@
                                 <td class="num-cell">5</td>
                                 <td class="points-cell">3,450</td>
                             </tr>
-                            <!-- Row 2 -->
                             <tr>
                                 <td class="rank-cell">2</td>
                                 <td>
@@ -854,7 +751,6 @@
                                 <td class="num-cell">8</td>
                                 <td class="points-cell">2,800</td>
                             </tr>
-                            <!-- Row 3 -->
                             <tr>
                                 <td class="rank-cell">3</td>
                                 <td>
@@ -870,7 +766,6 @@
                                 <td class="num-cell">10</td>
                                 <td class="points-cell">2,100</td>
                             </tr>
-                            <!-- Row 4 -->
                             <tr>
                                 <td class="rank-cell">4</td>
                                 <td>
@@ -886,7 +781,6 @@
                                 <td class="num-cell">4</td>
                                 <td class="points-cell">1,850</td>
                             </tr>
-                            <!-- Row 5 -->
                             <tr>
                                 <td class="rank-cell">5</td>
                                 <td>
@@ -910,9 +804,8 @@
         </div><!-- /page-content -->
     </div><!-- /main-content -->
 
-
     <!-- ============================================================
-    JAVASCRIPT (sidebar, dark mode, navigation)
+    JAVASCRIPT
     ============================================================ -->
     <script>
         (function() {
@@ -972,7 +865,7 @@
                 if (isMobile) toggleSidebar(false);
             }
 
-            // Navigation
+            // Sidebar navigation
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
                     navItems.forEach(function(nav) {
@@ -996,6 +889,10 @@
                         window.location.href = 'ideas.html';
                         return;
                     }
+                    if (nav === 'leaderboard') {
+                        closeSidebarMobile();
+                        return;
+                    }
                     if (nav === 'rewards') {
                         window.location.href = 'rewards.html';
                         return;
@@ -1006,10 +903,6 @@
                     }
                     if (nav === 'settings') {
                         window.location.href = 'settings.html';
-                        return;
-                    }
-                    if (nav === 'leaderboard') {
-                        closeSidebarMobile();
                         return;
                     }
                     closeSidebarMobile();
@@ -1043,7 +936,7 @@
                 this.closest('.search-wrap').classList.remove('focused');
             });
 
-            // Dark mode (icon only)
+            // ---- Dark mode (sun/moon) ----
             function applyDarkMode() {
                 const darkMode = localStorage.getItem('prontox-dark-mode');
                 if (darkMode === 'true') {
@@ -1068,7 +961,23 @@
                 }
             });
 
-            // Resize
+            // ---- Avatar loading ----
+            function loadAvatar() {
+                const saved = localStorage.getItem('prontox-avatar');
+                const headerImg = document.getElementById('profileImage');
+                const headerIcon = document.getElementById('headerAvatarIcon');
+
+                if (saved && headerImg) {
+                    headerImg.src = saved;
+                    headerImg.style.display = 'block';
+                    if (headerIcon) headerIcon.style.display = 'none';
+                } else {
+                    if (headerImg) headerImg.style.display = 'none';
+                    if (headerIcon) headerIcon.style.display = 'block';
+                }
+            }
+
+            // ---- Resize ----
             let resizeTimer;
 
             function handleResize() {
@@ -1115,11 +1024,13 @@
 
             window.addEventListener('resize', handleResize);
 
+            // ---- Init ----
             function init() {
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
                 applyDarkMode();
+                loadAvatar();
             }
 
             if (document.readyState === 'loading') {
@@ -1127,6 +1038,16 @@
             } else {
                 init();
             }
+
+            // Listen for storage changes (avatar updated in another tab)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'prontox-avatar') {
+                    loadAvatar();
+                }
+                if (e.key === 'prontox-dark-mode') {
+                    applyDarkMode();
+                }
+            });
 
         })();
     </script>
