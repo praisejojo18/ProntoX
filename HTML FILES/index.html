@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ProntoX · Login</title>
@@ -759,6 +760,14 @@
       }
 
     })();
+    // --- Auto-show signup form if URL has ?signup=true ---
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('signup') === 'true') {
+    // Wait a tiny bit for the DOM to be ready
+    setTimeout(() => {
+        showSignupForm();
+    }, 100);
+}
   </script>
 
 </body>

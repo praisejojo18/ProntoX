@@ -3,21 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hypie Style Rolling & Breathing Preloader</title>
+    <title>ProntoX - Employee Idea Portal</title>
     <style>
-        body {
+        /* --- CSS VARIABLE PALETTES --- */
+        :root {
+            /* Defaulting directly to premium dark scales */
+            --bg: #0E0F11;                  
+            --surface: #1A1E21;              
+            --surface-2: #24292E;            
+            --text-primary: #E7E9EB;         
+            --text-secondary: #AAB0B6;       
+            --text-muted: #888E99;           
+            --border: #353E46;               
+            --shadow: 0 4px 20px rgba(0,0,0,0.25);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.4);
+            --accent: #60A5FA;               
+            --accent-light: #1a3a5a;
+            --accent-mid: #1a4a5a;
+            
+            /* Pronto Brand Scale */
+            --brand-0: #002538;
+            --brand-1: #003F5C;
+            --brand-2: #005F88;
+            --brand-3: #007CB0;
+            --brand-4: #0099D3;
+            --brand-5: #00AFEF;
+            --brand-6: #26C1F5;
+        }
+
+        body.light-mode {
+            --bg: #F0F4F8;                  
+            --surface: #FFFFFF;              
+            --surface-2: #F8FAFC;            
+            --text-primary: #1A2332;         
+            --text-secondary: #475569;       
+            --text-muted: #94A3B8;           
+            --border: #E2E8F0;               
+            --shadow: 0 4px 20px rgba(0,0,0,0.04);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.08);
+            --accent: #00AFEF;               
+            --brand-5: #00AFEF;
+            --accent-light: #E6F6FE;
+            --accent-mid: #B3E5FC;
+        }
+
+        /* Global Resets */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #0b0b0e; 
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- 8-SECOND PRELOADER STYLES --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0b0b0e;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            font-family: sans-serif;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* Outer preloader container */
         .preloader-container {
             position: relative;
             width: 100px;
@@ -27,7 +92,6 @@
             align-items: center;
         }
 
-        /* Thinner rolling outer ring matching your color palette */
         .rolling-ring {
             position: absolute;
             width: 100%;
@@ -35,12 +99,21 @@
             border-radius: 50%;
             background: conic-gradient(from 0deg, #00AFEF, #0099D3, #007CB0, transparent 65%);
             animation: roll 1.4s linear infinite;
-            /* Mask made significantly tighter (95% to 97%) to create a thin line */
             mask: radial-gradient(farthest-side, transparent 95%, black 97%);
             -webkit-mask: radial-gradient(farthest-side, transparent 95%, black 97%);
+            z-index: 1;
         }
 
-        /* Central logo container with breathing/pulsing animation */
+        #lightning-canvas {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
         .logo-box {
             position: absolute;
             width: 60px;
@@ -48,66 +121,688 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2;
-            /* Smooth breathing animation */
+            z-index: 3;
             animation: breathe 2.5s ease-in-out infinite;
         }
 
-        /* Replaceable Logo Image Styling */
         .logo-box img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
 
-        /* Fallback placeholder text style if no image is present */
-        .logo-placeholder {
-            color: #00AFEF;
-            font-weight: bold;
-            font-size: 1.6rem;
-            letter-spacing: 1px;
-        }
-
-        /* 1. Infinite rolling animation */
         @keyframes roll {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* 2. Smooth breathing/pulsing animation */
         @keyframes breathe {
-            0%, 100% {
-                transform: scale(0.92);
-                opacity: 0.85;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
+            0%, 100% { transform: scale(0.92); opacity: 0.85; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* --- MAIN CONTENT LAYOUT --- */
+        #main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-logo {
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .nav-right-block {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--brand-5);
+        }
+
+        .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-toggle-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .btn-login {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-signup {
+            background-color: var(--brand-5);
+            color: #0E0F11;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        body.light-mode .btn-signup { color: #ffffff; font-weight: 500; }
+
+        /* --- HERO SECTION WITH INTERACTIVE LENS + TYPING EFFECT --- */
+        .hero {
+            padding: 7rem 5% 5rem 5%;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Typing & Lens Container */
+        .lens-text {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg, #002538, var(--brand-5), #26C1F5, #003F5C);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: spotlightMotion 5s infinite alternate ease-in-out;
+            border-right: 3px solid var(--brand-5); 
+            padding-right: 4px;
+            white-space: nowrap;
+        }
+
+        @keyframes spotlightMotion {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* --- STYLED GET STARTED BUTTON --- */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-5), #26C1F5);
+            color: #0E0F11;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 175, 239, 0.3);
+            transform: translateY(0);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 175, 239, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        body.light-mode .btn-primary {
+            color: #ffffff;
+        }
+
+        /* --- TICKER / MARQUEE BAR --- */
+        .ticker-wrapper {
+            background-color: var(--surface-2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1.2rem 0;
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+            cursor: pointer;
+        }
+
+        .ticker-content {
+            display: flex;
+            white-space: nowrap;
+            gap: 4rem;
+            animation: scroll-marquee 20s linear infinite;
+        }
+
+        .ticker-content:hover {
+            animation-play-state: paused;
+        }
+
+        .ticker-item {
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            user-select: none;
+        }
+
+        .ticker-item:hover {
+            color: var(--brand-5);
+        }
+
+        .ticker-item::after {
+            content: "•";
+            color: var(--brand-5);
+        }
+
+        @keyframes scroll-marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- FEATURES SECTION (SCROLL FADE-UP LAYOUT) --- */
+        .features-section {
+            padding: 6rem 5%;
+            max-width: 1100px;
+            margin: 0 auto;
+            scroll-margin-top: 80px;
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .feature-row.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-image-container {
+            flex: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            height: 380px;
+        }
+
+        .feature-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .feature-text-container {
+            flex: 1;
+        }
+
+        .feature-tag {
+            color: var(--brand-5);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .feature-text-container h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .feature-text-container p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER SECTION --- */
+        footer {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 4rem 5% 2rem 5%;
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(2, 1fr);
+            gap: 4rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .footer-brand-info h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .footer-brand-info p {
+            color: var(--text-secondary);
+            max-width: 320px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.75rem; }
+        .footer-col ul li a { text-decoration: none; color: var(--text-secondary); font-size: 0.95rem; }
+        .footer-col ul li a:hover { color: var(--brand-5); }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .nav-right-block { gap: 1rem; }
+            .nav-links { display: none; }
+            .feature-row, .feature-row:nth-child(even) { flex-direction: column; gap: 2rem; margin-bottom: 4rem; }
+            .feature-image-container { width: 100%; height: 260px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <div class="preloader-container">
-        <div class="rolling-ring"></div>
-        
-        <div class="logo-box">
-            <img src="../Images/logo.png" alt="Logo">
+    <!-- 8-SECOND PRELOADER SCREEN -->
+    <div id="preloader">
+        <div class="preloader-container">
+            <div class="rolling-ring"></div>
+            <canvas id="lightning-canvas"></canvas>
+            <div class="logo-box">
+                <img src="../Images/logo.png" alt="Logo">
+            </div>
         </div>
     </div>
 
+    <!-- MAIN APP STRUCTURE -->
+    <div id="main-content">
+        
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <img class="brand-logo" src="../Images/logo.png" alt="Pronto Broadband Solutions Logo">
+            
+            <div class="nav-right-block">
+                <ul class="nav-links">
+                    <li><a data-target="about-row">About Us</a></li>
+                    <li><a data-target="marqueeTicker">FAQ</a></li>
+                    <li><a data-target="reward-row">Demo</a></li>
+                </ul>
+
+                <div class="actions-group">
+                    <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle layout look">
+                        <svg id="themeIcon" viewBox="0 0 24 24">
+                            <!-- Inverted behavior paths (shows Sun initially since dark mode is base) -->
+                            <path d="M12,6a6,6,0,1,0,6,6A6,6,0,0,0,12,6Zm0,10a4,4,0,1,1,4-4A4,4,0,0,1,12,16Zm1-13V2a1,1,0,0,0-2,0V3a1,1,0,0,0,2,0Zm0,18V21a1,1,0,0,0-2,0v1a1,1,0,0,0,2,0ZM5,7.41,4.29,6.7A1,1,0,0,0,2.88,8.12L3.59,8.83A1,1,0,0,0,5,7.41ZM19.71,16.29a1,1,0,0,0-1.42,1.42l.71.71a1,1,0,0,0,1.42-1.42ZM6.7,19.71l.71-.71A1,1,0,0,0,6,17.58l-.71.71a1,1,0,0,0,1.42,1.42ZM17.29,5a1,1,0,0,0,1.42,0l.71-.71a1,1,0,0,0-1.42-1.42l-.71.71A1,1,0,0,0,17.29,5ZM3,13H2a1,1,0,0,0,0,2H3a1,1,0,0,0,0-2Zm19,0H21a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Z"/>
+                        </svg>
+                    </button>
+                    <button class="btn-login">Login</button>
+                    <button class="btn-signup">Sign Up</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <header class="hero">
+            <h1>Your Idea, Your <span class="lens-text" id="typingWord"></span></h1>
+            <p>Welcome to ProntoX. The official innovation platform designed for enterprise optimization. Submit creative concepts directly, view refinement progress timelines, and receive recognition as leadership evaluates and implements your workflow transformations.</p>
+            <button class="btn-primary">Get Started</button>
+        </header>
+
+        <!-- TICKER / MARQUEE BAR -->
+        <div class="ticker-wrapper" id="marqueeTicker">
+            <div class="ticker-content">
+                <div class="ticker-item" data-target="about-row">Reality</div>
+                <div class="ticker-item" data-target="monitor-row">Vision</div>
+                <div class="ticker-item" data-target="about-row">Innovation</div>
+                <div class="ticker-item" data-target="monitor-row">Collaboration</div>
+                <div class="ticker-item" data-target="reward-row">Execution</div>
+                <div class="ticker-item" data-target="reward-row">Progress</div>
+                <!-- Continuous looping duplication set -->
+                <div class="ticker-item" data-target="about-row">Reality</div>
+                <div class="ticker-item" data-target="monitor-row">Vision</div>
+                <div class="ticker-item" data-target="about-row">Innovation</div>
+                <div class="ticker-item" data-target="monitor-row">Collaboration</div>
+                <div class="ticker-item" data-target="reward-row">Execution</div>
+                <div class="ticker-item" data-target="reward-row">Progress</div>
+            </div>
+        </div>
+
+        <!-- FEATURES SECTION (SCROLL REVEAL FADE-UP LAYOUT) -->
+        <section class="features-section" id="features-area">
+            
+            <!-- Ideate Row -->
+            <div class="feature-row" id="about-row">
+                <div class="feature-image-container">
+                    <img src="https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=600&auto=format&fit=crop&q=80" alt="Ideation Session">
+                </div>
+                <div class="feature-text-container">
+                    <span class="feature-tag">Ideate</span>
+                    <h2>Submit Ideas Seamlessly</h2>
+                    <p>Break through institutional friction points instantly. File complete workflow improvements, interface solutions, or structural optimizations through a clean submission matrix explicitly curated to channel your voice straight to management dashboards.</p>
+                </div>
+            </div>
+
+            <!-- Monitor Row -->
+            <div class="feature-row" id="monitor-row">
+                <div class="feature-image-container">
+                    <img src="../Images/Progress.jpg" alt="Progress Dashboard tracking">
+                </div>
+                <div class="feature-text-container">
+                    <span class="feature-tag">Monitor</span>
+                    <h2>Track Evaluation Progress</h2>
+                    <p>Never wonder if your voice went missing. Follow live processing status queues directly through the integrated review stack. Know precisely when suggestions pass initial evaluation, enter validation sprints, or transition to complete pipeline implementation phase.</p>
+                </div>
+            </div>
+
+            <!-- Reward Row -->
+            <div class="feature-row" id="reward-row">
+                <div class="feature-image-container">
+                    <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&auto=format&fit=crop&q=80" alt="Employee Recognition Event">
+                </div>
+                <div class="feature-text-container">
+                    <span class="feature-tag">Reward</span>
+                    <h2>Get Recognized &amp; Rewarded</h2>
+                    <p>Earn platform accolades and direct company-wide recognition when your system enhancements hit the field. Every optimization tracks directly to contributor metrics, ensuring high-value team contributions are permanently documented and celebrated.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER LANDING DESIGN -->
+        <footer>
+            <div class="footer-grid">
+                <div class="footer-brand-info">
+                    <h3>ProntoX</h3>
+                    <p>Creating a permanent culture of collaboration, recognition, and structural execution across modern workspaces.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Portal Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Data Protection</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Pronto Broadband Solutions. All rights reserved.</p>
+                <p>Designed for corporate transformation.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPT SYSTEM CONFIGURATION -->
+    <script>
+        /* --- Force Reset Scroll Position on Window Refresh --- */
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        };
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        /* --- 1. LIGHTNING CANVAS SYSTEM --- */
+        const canvas = document.getElementById('lightning-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 300; canvas.height = 300;
+        const centerX = canvas.width / 2; const centerY = canvas.height / 2; const ringRadius = 50;
+
+        function random(min, max) { return Math.random() * (max - min) + min; }
+
+        function drawLightningSegment(x1, y1, x2, y2, displace) {
+            if (displace < 1.0) { ctx.lineTo(x2, y2); } 
+            else {
+                let midX = (x1 + x2) / 2; let midY = (y1 + y2) / 2;
+                midX += (Math.random() - 0.5) * displace; midY += (Math.random() - 0.5) * displace;
+                drawLightningSegment(x1, y1, midX, midY, displace / 2);
+                drawLightningSegment(midX, midY, x2, y2, displace / 2);
+            }
+        }
+
+        function animateLightning() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.25) {
+                let angle = random(0, 2 * Math.PI); 
+                let startX = centerX + Math.cos(angle) * ringRadius;
+                let startY = centerY + Math.sin(angle) * ringRadius;
+                let boltLength = random(50, 80);
+                let endX = centerX + Math.cos(angle) * (ringRadius + boltLength);
+                let endY = centerY + Math.sin(angle) * (ringRadius + boltLength);
+
+                ctx.beginPath(); ctx.moveTo(startX, startY);
+                drawLightningSegment(startX, startY, endX, endY, 18);
+                ctx.strokeStyle = 'rgba(0, 175, 239, 0.45)'; ctx.lineWidth = 4; ctx.shadowBlur = 12; ctx.shadowColor = '#00AFEF'; ctx.stroke();
+
+                ctx.beginPath(); ctx.moveTo(startX, startY);
+                drawLightningSegment(startX, startY, endX, endY, 18);
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.2; ctx.shadowBlur = 0; ctx.stroke();
+            }
+            requestAnimationFrame(animateLightning);
+        }
+        animateLightning();
+
+        /* --- 2. 8-SECOND TIMEOUT HANDLER --- */
+        window.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, 0); // Double enforcement for scroll positioning top reset
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                const mainContent = document.getElementById('main-content');
+                
+                preloader.style.opacity = '0';
+                preloader.style.transform = 'scale(1.05)';
+                
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    mainContent.classList.add('visible');
+                    initTypingEngine(); 
+                }, 800);
+            }, 8000); 
+        });
+
+        /* --- 3. THEME TOGGLER ENGINE --- */
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const moonPath = `<path d="M12.3,2a10,10,0,0,0-1.9.2,1,1,0,0,0-.3,1.5,10,10,0,0,1,12.7,12.7,1,1,0,0,0,1.5-.3,10,10,0,0,0-12-14.1Z"/>`;
+        const sunPath = `<path d="M12,6a6,6,0,1,0,6,6A6,6,0,0,0,12,6Zm0,10a4,4,0,1,1,4-4A4,4,0,0,1,12,16Zm1-13V2a1,1,0,0,0-2,0V3a1,1,0,0,0,2,0Zm0,18V21a1,1,0,0,0-2,0v1a1,1,0,0,0,2,0ZM5,7.41,4.29,6.7A1,1,0,0,0,2.88,8.12L3.59,8.83A1,1,0,0,0,5,7.41ZM19.71,16.29a1,1,0,0,0-1.42,1.42l.71.71a1,1,0,0,0,1.42-1.42ZM6.7,19.71l.71-.71A1,1,0,0,0,6,17.58l-.71.71a1,1,0,0,0,1.42,1.42ZM17.29,5a1,1,0,0,0,1.42,0l.71-.71a1,1,0,0,0-1.42-1.42l-.71.71A1,1,0,0,0,17.29,5ZM3,13H2a1,1,0,0,0,0,2H3a1,1,0,0,0,0-2Zm19,0H21a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Z"/>`;
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            themeIcon.innerHTML = document.body.classList.contains('light-mode') ? moonPath : sunPath;
+        });
+
+        /* --- 4. INTERACTIVE NAV ANCHOR LINKS --- */
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetID = link.getAttribute('data-target');
+                const element = document.getElementById(targetID);
+                if(element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        /* --- 5. HEADLINE TYPING ENGINE CONTROLLER --- */
+        const focusWords = ["Reality", "Vision", "Impact", "Growth"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 150;
+        const erasingSpeed = 75;
+        const switchDelay = 2000;
+
+        function initTypingEngine() {
+            const targetElement = document.getElementById('typingWord');
+            if(!targetElement) return;
+            let currentWord = focusWords[wordIndex];
+
+            if (!isDeleting) {
+                targetElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentWord.length) {
+                    isDeleting = true;
+                    setTimeout(initTypingEngine, switchDelay);
+                    return;
+                }
+            } else {
+                targetElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % focusWords.length;
+                }
+            }
+            setTimeout(initTypingEngine, isDeleting ? erasingSpeed : typingSpeed);
+        }
+
+        /* --- 6. SCROLL REVEAL FADE-UP IMPLEMENTATION --- */
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, revealOptions);
+
+        document.querySelectorAll('.feature-row').forEach(row => {
+            revealObserver.observe(row);
+        });
+
+        /* --- 7. TICKER INTERACTIVE TRACK ROUTING --- */
+        document.querySelectorAll('.ticker-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetID = item.getAttribute('data-target');
+                const targetElement = document.getElementById(targetID);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        // --- Connect Login & Signup buttons to index.html ---
+document.querySelector('.btn-login').addEventListener('click', function() {
+    window.location.href = 'index.html';
+});
+
+document.querySelector('.btn-signup').addEventListener('click', function() {
+    window.location.href = 'index.html?signup=true';
+});
+    </script>
 </body>
 </html>
-
-
-
-
- <div class="logo-box">
-         
-            
-        </div>

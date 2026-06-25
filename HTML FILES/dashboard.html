@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ====== FIX: Prevent white flash on load ====== -->
+    <script>
+        (function() {
+            if (localStorage.getItem('prontox-dark-mode') === 'true') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProntoX · Dashboard</title>
@@ -63,8 +72,8 @@
             --transition-sidebar: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --sidebar-width: 260px;
 
-            --status-submitted: #8b5cf6;
-            --status-submitted-bg: #ede9fe;
+            --status-submitted: var(--accent);
+            --status-submitted-bg: var(--accent-light);
             --status-review: #f59e0b;
             --status-review-bg: #fef3c7;
             --status-approved: #3b82f6;
@@ -93,8 +102,8 @@
             --sidebar-bg: #1A1E21;
             --sidebar-divider: #353E46;
 
-            --status-submitted-bg: #2a1a3a;
-            --status-submitted: #a78bfa;
+            --status-submitted: var(--accent);
+            --status-submitted-bg: var(--accent-light-dark);
             --status-review-bg: #3a2a1a;
             --status-review: #f39c12;
             --status-approved-bg: #1a2a3a;
@@ -272,7 +281,7 @@
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             padding: 0 32px;
-            height: 60px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -325,9 +334,9 @@
             transition: color var(--transition);
             pointer-events: none;
         }
-        .top-header .search-wrap input {
+        .top-header .search-wrap input { 
             width: 100%;
-            padding: 10px 16px 10px 48px;
+            padding: 5px 16px 5px 48px;
             border: 1.5px solid var(--border);
             border-radius: 50px;
             font-size: 15px;
@@ -409,7 +418,7 @@
             letter-spacing: -0.3px;
         }
         .btn-submit-primary {
-            background: var(--accent);
+            background: var(--accent-dark);
             color: #fff;
             border: none;
             padding: 8px 20px;
@@ -423,9 +432,10 @@
             transition: all var(--transition);
             box-shadow: 0 4px 14px rgba(0, 175, 239, 0.30);
             white-space: nowrap;
+            flex-shrink: 0;
         }
         .btn-submit-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 175, 239, 0.40); }
-        .btn-submit-primary:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0, 175, 239, 0.25); }
+        .btn-submit-primary:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(3, 110, 149, 0.25); }
         .btn-submit-primary .ph { font-size: 18px; }
 
         /* Announcement bar */
@@ -550,53 +560,102 @@
 
         .contributors-list {
             flex: 1;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
             padding-right: 4px;
+            gap: 2px;
         }
         .contributors-list::-webkit-scrollbar { width: 3px; }
         .contributors-list::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
 
-        /* FIX: contributor items fill the card width */
         .contributor-item {
             display: flex;
             align-items: center;
-            padding: 4px 0;
+            gap: 12px;
+            padding: 6px 8px;
+            border-radius: var(--radius-xs);
             border-bottom: 1px solid var(--border);
-            font-size: 13px;
+            transition: background var(--transition), transform var(--transition);
+            cursor: default;
         }
         .contributor-item:last-child { border-bottom: none; }
+        .contributor-item:hover {
+            background: var(--surface-2);
+            transform: translateX(3px);
+        }
 
         .contributor-item .contrib-rank {
             font-weight: 700;
-            color: var(--text-muted);
-            min-width: 28px;
-            font-size: 12px;
+            font-size: 18px;
+            min-width: 32px;
+            text-align: center;
             flex-shrink: 0;
         }
+        .contributor-item .contrib-rank.gold { color: #f59e0b; }
+        .contributor-item .contrib-rank.silver { color: #94a3b8; }
+        .contributor-item .contrib-rank.bronze { color: #cd7f32; }
 
-        .contributor-item .contrib-name {
+        .contributor-item .contrib-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: border-color var(--transition);
+        }
+        .contributor-item:hover .contrib-avatar {
+            border-color: var(--accent);
+        }
+        .contributor-item .contrib-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contributor-item .contrib-info {
             flex: 1;
-            font-weight: 500;
+            min-width: 0;
+        }
+        .contributor-item .contrib-name {
+            font-weight: 600;
+            font-size: 14px;
             color: var(--text-primary);
-            padding: 0 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .contributor-item .contrib-name .you-tag {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 11px;
+            margin-left: 4px;
+        }
+        .contributor-item .contrib-role {
+            font-size: 12px;
+            color: var(--text-muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .contributor-item .contrib-name .you-tag {
-            font-weight: 600;
-            color: var(--accent);
-        }
-
         .contributor-item .contrib-points {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--accent);
-            font-size: 13px;
+            font-size: 14px;
             flex-shrink: 0;
+            padding-left: 8px;
         }
 
-        /* ---- TOP ACTIVE IDEAS ---- */
+        /* ---- TOP ACTIVE IDEAS (no "You" tag) ---- */
         .ideas-cards-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -612,6 +671,7 @@
             transition: all var(--transition);
             display: flex;
             flex-direction: column;
+            cursor: default;
         }
         .idea-card-dash:hover { box-shadow: var(--shadow-hover); }
 
@@ -635,11 +695,24 @@
             flex-shrink: 0;
         }
         .idea-card-dash .status-badge .ph { font-size: 13px; }
-        .status-badge.approved { background: var(--status-approved-bg); color: var(--status-approved); }
-        .status-badge.review { background: var(--status-review-bg); color: var(--status-review); }
-        .status-badge.implemented { background: var(--status-implemented-bg); color: var(--status-implemented); }
-        .status-badge.submitted { background: var(--status-submitted-bg); color: var(--status-submitted); }
+        .status-badge.approved {
+            background: var(--status-approved-bg);
+            color: var(--status-approved);
+        }
+        .status-badge.review {
+            background: var(--status-review-bg);
+            color: var(--status-review);
+        }
+        .status-badge.implemented {
+            background: var(--status-implemented-bg);
+            color: var(--status-implemented);
+        }
+        .status-badge.submitted {
+            background: var(--status-submitted-bg);
+            color: var(--status-submitted);
+        }
 
+        /* Department tag in top-right corner */
         .idea-card-dash .dept-tag {
             font-size: 11px;
             font-weight: 600;
@@ -650,19 +723,9 @@
             letter-spacing: 0.3px;
             text-transform: uppercase;
             border: 1px solid var(--border);
+            flex-shrink: 0;
+            align-self: flex-start;
         }
-        .idea-card-dash .owner-badge {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--accent);
-            background: var(--accent-light);
-            padding: 2px 10px;
-            border-radius: 50px;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            border: 1px solid var(--accent-mid);
-        }
-        body.dark-mode .idea-card-dash .owner-badge { background: rgba(0, 175, 239, 0.15); border-color: rgba(0, 175, 239, 0.2); }
 
         .idea-card-dash .idea-title {
             font-size: 15px;
@@ -697,13 +760,48 @@
             gap: 4px;
             font-size: 13px;
             color: var(--text-muted);
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
         }
-        .idea-card-dash .card-footer .meta-item .ph { font-size: 16px; }
-        .idea-card-dash .card-footer .meta-item .count { font-weight: 600; color: var(--text-primary); min-width: 12px; text-align: center; }
+        .idea-card-dash .card-footer .meta-item:hover {
+            background: var(--surface-2);
+            color: var(--text-primary);
+        }
+        .idea-card-dash .card-footer .meta-item:active {
+            transform: scale(0.92);
+        }
+        .idea-card-dash .card-footer .meta-item .ph {
+            font-size: 16px;
+            transition: color var(--transition);
+        }
+        .idea-card-dash .card-footer .meta-item .count {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 12px;
+            text-align: center;
+        }
+        .idea-card-dash .card-footer .meta-item.upvoted {
+            background: var(--status-submitted-bg);
+            color: var(--status-submitted);
+        }
+        .idea-card-dash .card-footer .meta-item.upvoted .ph {
+            color: var(--status-submitted);
+            font-weight: 700;
+        }
+        .idea-card-dash .card-footer .meta-item.upvoted .count {
+            color: var(--status-submitted);
+        }
+        .idea-card-dash .card-footer .meta-item.comment-btn:hover .ph {
+            color: var(--accent);
+        }
+        .idea-card-dash .card-footer .meta-item.upvote-btn:hover .ph {
+            color: var(--status-submitted);
+        }
 
-        /* ---- GENERAL ACTIVE PROJECTS ---- */
+        /* ---- GENERAL ACTIVE PROJECTS (shows ALL ideas) ---- */
         .projects-card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -726,6 +824,16 @@
             color: var(--text-primary);
         }
 
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .project-list::-webkit-scrollbar { width: 3px; }
+        .project-list::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
+
         .project-item {
             padding: 10px 0;
             border-bottom: 1px solid var(--border);
@@ -736,7 +844,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+        .project-item .project-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         .project-item .project-title {
             font-size: 14px;
@@ -750,58 +866,115 @@
             padding: 1px 10px;
             border-radius: 50px;
         }
+        .project-item .project-dept-divider {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 300;
+        }
 
-        .project-item .project-bar-wrap {
+        .project-stage-tracker {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 6px 0 4px;
+            justify-content: space-between;
+            width: 100%;
+            padding: 4px 0;
+            position: relative;
         }
-        .project-item .project-bar {
+
+        .project-stage-tracker .stage-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             flex: 1;
-            height: 6px;
-            background: var(--border);
-            border-radius: 50px;
-            overflow: hidden;
+            position: relative;
+            z-index: 2;
         }
-        .project-item .project-bar .bar-fill {
-            height: 100%;
-            border-radius: 50px;
-            transition: width 1s ease;
+
+        .project-stage-tracker .stage-node .node-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2.5px solid var(--border);
+            background: var(--surface);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .project-stage-tracker .stage-node .node-circle.done {
+            border-color: var(--accent);
             background: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15);
         }
+
+        .project-stage-tracker .stage-node .node-circle.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: 0 0 0 5px rgba(0, 175, 239, 0.2);
+            animation: pulse-node 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-node {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15); }
+            50% { box-shadow: 0 0 0 6px rgba(0, 175, 239, 0.25); }
+        }
+
+        .project-stage-tracker .stage-node .node-label {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 5px;
+            text-align: center;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .project-stage-tracker .stage-node .node-label.done {
+            color: var(--status-implemented);
+            font-weight: 600;
+        }
+
+        .project-stage-tracker .stage-node .node-label.active {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .project-stage-tracker .stage-connector {
+            flex: 1;
+            height: 3px;
+            background: var(--border);
+            margin: 0 2px;
+            position: relative;
+            top: -9px;
+            border-radius: 2px;
+            overflow: hidden;
+            min-width: 12px;
+        }
+
+        .project-stage-tracker .stage-connector .connector-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.6s ease;
+            border-radius: 2px;
+        }
+
+        .project-stage-tracker .stage-connector.done .connector-fill {
+            width: 100%;
+        }
+
+        .project-stage-tracker .stage-connector.partial .connector-fill {
+            width: 50%;
+        }
+
         .project-item .project-percent {
             font-size: 13px;
             font-weight: 700;
             color: var(--accent);
-            min-width: 40px;
             text-align: right;
-        }
-
-        .project-item .project-stages {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            font-size: 11px;
-            color: var(--text-muted);
-            padding-top: 6px;
-            font-weight: 500;
-        }
-        .project-item .project-stages .stage {
-            text-align: center;
-            transition: color 0.3s, font-weight 0.3s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .project-item .project-stages .stage:first-child { text-align: left; }
-        .project-item .project-stages .stage:last-child { text-align: right; }
-        .project-item .project-stages .stage.done {
-            color: var(--status-implemented);
-            font-weight: 600;
-        }
-        .project-item .project-stages .stage.active {
-            color: var(--accent);
-            font-weight: 600;
+            margin-top: 2px;
         }
 
         /* ---- RECENT ACTIVITY ---- */
@@ -819,10 +992,62 @@
             justify-content: space-between;
             margin-bottom: 10px;
         }
-        .activity-section .activity-header h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .activity-section .activity-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-xs);
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .refresh-btn:hover {
+            color: var(--accent);
+            background: var(--surface-2);
+        }
+        .refresh-btn:active {
+            transform: scale(0.92);
+        }
+        .refresh-btn.spinning .ph {
+            animation: spin 0.6s ease-in-out;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .refresh-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            margin-right: 4px;
+        }
+        .refresh-status.show {
+            opacity: 1;
+        }
+        .refresh-status.fade-out {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
         .activity-feed {
             max-height: 140px;
             overflow-y: auto;
+            transition: opacity 0.3s ease;
         }
         .activity-feed::-webkit-scrollbar { width: 3px; }
         .activity-feed::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
@@ -835,12 +1060,43 @@
             border-bottom: 1px solid var(--border);
             font-size: 13px;
             color: var(--text-secondary);
+            animation: fadeInItem 0.3s ease;
         }
         .activity-item:last-child { border-bottom: none; }
-        .activity-item .act-icon { font-size: 16px; color: var(--accent); flex-shrink: 0; }
-        .activity-item .act-text { flex: 1; }
-        .activity-item .act-text strong { color: var(--text-primary); }
-        .activity-item .act-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+
+        @keyframes fadeInItem {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-item .act-icon {
+            font-size: 16px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .activity-item .act-text {
+            flex: 1;
+        }
+        .activity-item .act-text strong {
+            color: var(--text-primary);
+        }
+        .activity-item .act-text .act-idea {
+            color: var(--accent);
+            font-weight: 500;
+        }
+        .activity-item .act-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .activity-empty {
+            text-align: center;
+            padding: 16px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            animation: fadeInItem 0.4s ease;
+        }
 
         /* ---- Section header links ---- */
         .section-header-link {
@@ -1054,14 +1310,236 @@
         .popup-close:hover { background: var(--accent-hover); }
         .popup-close:active { transform: scale(0.97); }
 
+        /* ---- Detail Modal (for comments) ---- */
+        .detail-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .detail-modal-overlay.active { display: flex; }
+
+        .detail-modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 660px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px 36px 28px;
+            position: relative;
+            animation: fadeUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        .detail-modal::-webkit-scrollbar { width: 4px; }
+        .detail-modal::-webkit-scrollbar-track { background: transparent; }
+        .detail-modal::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
+
+        .detail-modal .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color var(--transition), transform var(--transition);
+            padding: 4px;
+            line-height: 1;
+        }
+        .detail-modal .modal-close:hover {
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .detail-modal .detail-badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .detail-modal .detail-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .detail-modal .detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .detail-modal .detail-meta .dept-tag {
+            background: var(--surface-2);
+            padding: 2px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            font-weight: 500;
+        }
+        .detail-modal .detail-meta .status-tag {
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+        }
+        .detail-modal .detail-section { margin-bottom: 12px; }
+        .detail-modal .detail-section .label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 2px;
+        }
+        .detail-modal .detail-section .value {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .detail-modal .detail-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 14px 0 16px;
+        }
+
+        .comments-section { margin-top: 8px; }
+        .comments-section .comments-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .comments-section .comments-title .count {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .comment-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .comment-item:last-child { border-bottom: none; }
+        .comment-item .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .comment-item .comment-header .cname { font-weight: 600; color: var(--text-primary); }
+        .comment-item .comment-header .cdept {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--surface-2);
+            padding: 0 8px;
+            border-radius: 50px;
+        }
+        .comment-item .comment-header .ctime {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .comment-item .comment-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            padding-left: 4px;
+        }
+        .comment-input-wrap {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            align-items: flex-start;
+        }
+        .comment-input-wrap textarea {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--bg);
+            transition: all var(--transition);
+            outline: none;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 44px;
+            max-height: 100px;
+        }
+        .comment-input-wrap textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.10);
+            background: var(--surface);
+        }
+        .comment-input-wrap textarea::placeholder { color: var(--text-muted); }
+        .comment-input-wrap .post-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+            flex-shrink: 0;
+            align-self: flex-end;
+            height: 44px;
+        }
+        .comment-input-wrap .post-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 175, 239, 0.30);
+        }
+        .comment-input-wrap .post-btn:active { transform: scale(0.96); }
+        .no-comments {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 16px 0;
+        }
+
         /* ============================================================
            RESPONSIVE
            ============================================================ */
         @media (max-width: 1100px) {
-            .dashboard-grid { grid-template-columns: 1fr; gap: 20px; }
-            .left-col, .right-col { display: flex; flex-direction: column; gap: 20px; }
-            .right-col { order: 1; }
-            .left-col { order: 2; }
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            .left-col, .right-col {
+                display: contents;
+            }
+            .stats-grid { order: 1; }
+            .top-active-ideas-wrapper { order: 2; }
+            .contributors-card { order: 3; }
+            .projects-card { order: 4; }
             .contributors-card { flex: 0 1 auto; }
         }
 
@@ -1075,6 +1553,8 @@
             .ideas-cards-grid { grid-template-columns: 1fr 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .welcome-heading { font-size: 24px; }
+            .project-stage-tracker .stage-node .node-label { font-size: 8px; }
+            .project-stage-tracker .stage-node .node-circle { width: 14px; height: 14px; }
         }
 
         @media (max-width: 640px) {
@@ -1087,11 +1567,21 @@
             .top-header .profile-image-wrap { width: 32px; height: 32px; }
             .dark-toggle { font-size: 20px; }
             .page-content { padding: 10px 12px 20px; }
-            .welcome-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .welcome-row {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+            }
             .welcome-heading { font-size: 22px; }
-            .btn-submit-primary { padding: 6px 16px; font-size: 13px; width: 100%; justify-content: center; }
+            .btn-submit-primary {
+                padding: 6px 16px;
+                font-size: 13px;
+                width: auto;
+                flex-shrink: 0;
+            }
             .dashboard-grid { gap: 16px; }
-            .left-col, .right-col { gap: 16px; }
             .ideas-cards-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .stat-card .stat-number { font-size: 22px; }
@@ -1102,7 +1592,17 @@
             .top-header .brand-mobile { display: block; }
             .announcement-bar .ticker-item { font-size: 12px; }
             .activity-feed { max-height: 120px; }
-            .project-item .project-stages { font-size: 10px; }
+            .project-stage-tracker { flex-wrap: nowrap; gap: 0; }
+            .project-stage-tracker .stage-node .node-label { font-size: 7px; white-space: nowrap; }
+            .project-stage-tracker .stage-node .node-circle { width: 12px; height: 12px; }
+            .contributor-item .contrib-rank { font-size: 14px; min-width: 24px; }
+            .contributor-item .contrib-avatar { width: 28px; height: 28px; font-size: 11px; }
+            .contributor-item .contrib-name { font-size: 12px; }
+            .contributor-item .contrib-role { font-size: 10px; }
+            .contributor-item .contrib-points { font-size: 12px; }
+            .project-item .project-title { font-size: 13px; }
+            .project-item .project-dept { font-size: 10px; }
+            .project-item .project-dept-divider { font-size: 10px; }
         }
 
         @media (max-width: 400px) {
@@ -1111,6 +1611,8 @@
             .top-header .search-wrap .ph { font-size: 14px; left: 8px; }
             .stats-grid { grid-template-columns: 1fr; }
             .stat-card .stat-number { font-size: 20px; }
+            .welcome-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .btn-submit-primary { width: auto; }
         }
     </style>
 </head>
@@ -1217,7 +1719,7 @@
                 <div class="left-col">
 
                     <!-- Top Active Ideas -->
-                    <div>
+                    <div class="top-active-ideas-wrapper">
                         <div class="section-header-link">
                             <span class="section-title">🔥 Top Active Ideas</span>
                             <button class="section-link" id="viewAllIdeas">View all →</button>
@@ -1284,8 +1786,13 @@
             <!-- Recent Activity -->
             <div class="activity-section">
                 <div class="activity-header">
-                    <h3>📋 Recent Activity</h3>
-                    <button class="section-link" id="refreshActivity" title="Refresh">⟳</button>
+                    <h3>
+                        📋 Recent Activities
+                        <span class="refresh-status" id="refreshStatus">Activities refreshed</span>
+                    </h3>
+                    <button class="refresh-btn" id="refreshActivity" title="Refresh activities">
+                        <i class="ph ph-arrow-clockwise"></i>
+                    </button>
                 </div>
                 <div class="activity-feed" id="activityFeed">
                     <!-- rendered by JS -->
@@ -1365,10 +1872,61 @@
         </div>
     </div>
 
+    <!-- Detail Modal for Comments -->
+    <div class="detail-modal-overlay" id="detailModalOverlay">
+        <div class="detail-modal" id="detailModal">
+            <button class="modal-close" id="detailModalClose" aria-label="Close detail view">
+                <i class="ph ph-x"></i>
+            </button>
+
+            <div class="detail-badge" id="detailBadge">✨ Idea</div>
+            <h2 class="detail-title" id="detailTitle">Idea Title</h2>
+            <div class="detail-meta" id="detailMeta">
+                <span class="dept-tag" id="detailDept">Department</span>
+                <span class="status-tag" id="detailStatus">Status</span>
+                <span id="detailDate">Date</span>
+                <span id="detailAuthor">By: User</span>
+            </div>
+
+            <div class="detail-divider"></div>
+
+            <div class="detail-section">
+                <div class="label">Problem</div>
+                <div class="value" id="detailProblem">Problem description</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="label">Solution</div>
+                <div class="value" id="detailSolution">Solution description</div>
+            </div>
+
+            <div class="detail-section">
+                <div class="label">Full Description</div>
+                <div class="value" id="detailDescription">Full description</div>
+            </div>
+
+            <div class="detail-divider"></div>
+
+            <div class="comments-section" id="commentsSection">
+                <div class="comments-title">
+                    💬 Comments <span class="count" id="commentCount">(0)</span>
+                </div>
+                <div id="commentList"></div>
+                <div class="comment-input-wrap">
+                    <textarea id="commentInput" placeholder="Write a comment…" rows="2"></textarea>
+                    <button class="post-btn" id="postCommentBtn">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function() {
             'use strict';
 
+            // ------------------------------------------------------------
+            // CONSTANTS
+            // ------------------------------------------------------------
             const CURRENT_USER = 'Chidi';
             const STORAGE_KEY = 'prontox_ideas';
             const ACTIVITY_KEY = 'prontox_activity';
@@ -1381,73 +1939,131 @@
                 'Idris A.', 'Joy O.', 'Michael T.'
             ];
 
+            const ROLES = [
+                'Product Designer', 'Product Manager', 'Software Engineer',
+                'Data Scientist', 'UX Researcher', 'DevOps Lead',
+                'Frontend Architect', 'Backend Engineer', 'QA Engineer',
+                'Engineering Manager', 'Product Owner', 'Tech Lead',
+                'Senior Developer', 'Cloud Architect', 'Security Analyst'
+            ];
+
+            const upvotedIdeas = new Set();
+
+            // ------------------------------------------------------------
+            // DATA HELPERS
+            // ------------------------------------------------------------
             function getIdeas() {
                 try {
                     const data = localStorage.getItem(STORAGE_KEY);
                     if (data) return JSON.parse(data);
-                } catch (e) {}
+                } catch (e) { /* ignore */ }
                 const defaultIdeas = [{
-                    id: 1, title: 'Self-service password reset',
+                    id: 1,
+                    title: 'Self-service password reset',
                     description: 'Cuts down helpdesk tickets by allowing users to reset their own passwords securely.',
                     problem: 'Users frequently forget passwords, causing helpdesk overload.',
                     solution: 'Implement a secure self-service password reset portal.',
-                    status: 'submitted', department: 'IT', upvotes: 24, comments: 2,
-                    date: '2024-05-10', createdBy: 'Amanda R.', commentList: []
+                    status: 'submitted',
+                    department: 'IT',
+                    upvotes: 24,
+                    comments: 2,
+                    date: '2024-05-10',
+                    createdBy: 'Amanda R.',
+                    commentList: []
                 }, {
-                    id: 2, title: 'OLT offline auto-alert',
+                    id: 2,
+                    title: 'OLT offline auto-alert',
                     description: 'SMS alert to NOC team when an OLT goes offline to speed up response times.',
                     problem: 'OLT outages are often detected late, causing service degradation.',
                     solution: 'Automated monitoring with instant SMS notifications.',
-                    status: 'submitted', department: 'OLS', upvotes: 17, comments: 1,
-                    date: '2024-05-08', createdBy: 'Chris P.', commentList: []
+                    status: 'submitted',
+                    department: 'OLS',
+                    upvotes: 17,
+                    comments: 1,
+                    date: '2024-05-08',
+                    createdBy: 'Chris P.',
+                    commentList: []
                 }, {
-                    id: 3, title: 'Flexible Friday hours',
+                    id: 3,
+                    title: 'Flexible Friday hours',
                     description: 'Rolled out last month. Core hours 10-2, flexible otherwise.',
                     problem: 'Rigid working hours reduce employee satisfaction and work-life balance.',
                     solution: 'Core hours with flexible scheduling.',
-                    status: 'submitted', department: 'HR', upvotes: 41, comments: 1,
-                    date: '2024-05-01', createdBy: 'Lisa M.', commentList: []
+                    status: 'submitted',
+                    department: 'HR',
+                    upvotes: 41,
+                    comments: 1,
+                    date: '2024-05-01',
+                    createdBy: 'Lisa M.',
+                    commentList: []
                 }, {
-                    id: 4, title: 'Live chat support',
+                    id: 4,
+                    title: 'Live chat support',
                     description: 'Faster than email tickets for quick customer queries.',
                     problem: 'Email support is too slow for urgent customer issues.',
                     solution: 'Implement live chat with real-time agent support.',
-                    status: 'review', department: 'CS', upvotes: 8, comments: 0,
-                    date: '2024-05-12', createdBy: 'Alex Johnson', commentList: []
+                    status: 'review',
+                    department: 'CS',
+                    upvotes: 8,
+                    comments: 0,
+                    date: '2024-05-12',
+                    createdBy: 'Alex Johnson',
+                    commentList: []
                 }, {
-                    id: 5, title: 'AI-powered code review',
+                    id: 5,
+                    title: 'AI-powered code review',
                     description: 'Automated code review suggestions to catch bugs early.',
                     problem: 'Manual code reviews are time-consuming and miss subtle bugs.',
                     solution: 'Integrate AI-powered review tools into the CI pipeline.',
-                    status: 'submitted', department: 'Engineering', upvotes: 32, comments: 5,
-                    date: '2024-05-06', createdBy: 'Sarah K.', commentList: []
+                    status: 'submitted',
+                    department: 'Engineering',
+                    upvotes: 32,
+                    comments: 5,
+                    date: '2024-05-06',
+                    createdBy: 'Sarah K.',
+                    commentList: []
                 }, {
-                    id: 6, title: 'Automated reporting dashboard',
+                    id: 6,
+                    title: 'Automated reporting dashboard',
                     description: 'Real-time reports for operational metrics.',
                     problem: 'Reports are generated manually and take too long.',
                     solution: 'Automated dashboard with live data.',
-                    status: 'submitted', department: 'Ops', upvotes: 12, comments: 0,
-                    date: '2024-05-15', createdBy: 'David L.', commentList: []
+                    status: 'submitted',
+                    department: 'Ops',
+                    upvotes: 12,
+                    comments: 0,
+                    date: '2024-05-15',
+                    createdBy: 'David L.',
+                    commentList: []
                 }];
                 saveIdeas(defaultIdeas);
                 return defaultIdeas;
             }
 
-            function saveIdeas(ideas) { localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas)); }
+            function saveIdeas(ideas) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
+            }
 
             function getActivities() {
                 try {
                     const data = localStorage.getItem(ACTIVITY_KEY);
                     if (data) return JSON.parse(data);
-                } catch (e) {}
+                } catch (e) { /* ignore */ }
                 return [];
             }
 
-            function saveActivities(activities) { localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activities)); }
+            function saveActivities(activities) {
+                localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activities));
+            }
 
             function addActivity(user, action, ideaTitle) {
                 const activities = getActivities();
-                activities.unshift({ user, action, idea: ideaTitle, time: new Date().toISOString() });
+                activities.unshift({
+                    user: user,
+                    action: action,
+                    idea: ideaTitle,
+                    time: new Date().toISOString()
+                });
                 if (activities.length > 50) activities.pop();
                 saveActivities(activities);
             }
@@ -1456,7 +2072,7 @@
                 try {
                     const data = localStorage.getItem(ANNOUNCEMENT_KEY);
                     if (data) return JSON.parse(data);
-                } catch (e) {}
+                } catch (e) { /* ignore */ }
                 const defaultAnnouncements = [
                     { id: 1, text: '🎉 New reward system launching next week!', date: '2024-05-15' },
                     { id: 2, text: '📅 Team retreat this Friday at 3:00 PM', date: '2024-05-13' },
@@ -1486,13 +2102,19 @@
             }
 
             function getStatusProgress(status) {
-                return { 'submitted': 25, 'review': 50, 'approved': 75, 'implemented': 100 }[status] || 0;
+                const map = { 'submitted': 25, 'review': 50, 'approved': 75, 'implemented': 100 };
+                return map[status] || 0;
             }
 
             function getStatusLabel(status) {
-                return { 'submitted': 'Submitted', 'review': 'Under Review', 'approved': 'Approved', 'implemented': 'Implemented' }[status] || status;
+                const map = { 'submitted': 'Submitted', 'review': 'Under Review', 'approved': 'Approved',
+                    'implemented': 'Implemented' };
+                return map[status] || status;
             }
 
+            // ------------------------------------------------------------
+            // DOM REFS
+            // ------------------------------------------------------------
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -1503,10 +2125,12 @@
             const profileImageWrap = document.getElementById('profileImageWrap');
             const darkToggle = document.getElementById('darkToggle');
             const darkIcon = document.getElementById('darkIcon');
-            const refreshActivity = document.getElementById('refreshActivity');
+            const refreshBtn = document.getElementById('refreshActivity');
+            const refreshStatus = document.getElementById('refreshStatus');
             const viewAllIdeas = document.getElementById('viewAllIdeas');
             const viewLeaderboard = document.getElementById('viewLeaderboard');
             const submitIdeaBtnHeader = document.getElementById('submitIdeaBtnHeader');
+
             const statSubmitted = document.getElementById('statSubmitted');
             const statReview = document.getElementById('statReview');
             const statActive = document.getElementById('statActive');
@@ -1516,6 +2140,7 @@
             const projectList = document.getElementById('projectList');
             const activityFeed = document.getElementById('activityFeed');
             const tickerInner = document.getElementById('tickerInner');
+
             const submitModal = document.getElementById('submitModal');
             const modalClose = document.getElementById('modalClose');
             const ideaForm = document.getElementById('ideaForm');
@@ -1527,10 +2152,32 @@
             const successOverlay = document.getElementById('successOverlay');
             const popupDone = document.getElementById('popupDone');
 
+            // Detail modal refs
+            const detailOverlay = document.getElementById('detailModalOverlay');
+            const detailClose = document.getElementById('detailModalClose');
+            const detailBadge = document.getElementById('detailBadge');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailDept = document.getElementById('detailDept');
+            const detailStatus = document.getElementById('detailStatus');
+            const detailDate = document.getElementById('detailDate');
+            const detailAuthor = document.getElementById('detailAuthor');
+            const detailProblem = document.getElementById('detailProblem');
+            const detailSolution = document.getElementById('detailSolution');
+            const detailDescription = document.getElementById('detailDescription');
+            const commentList = document.getElementById('commentList');
+            const commentCount = document.getElementById('commentCount');
+            const commentInput = document.getElementById('commentInput');
+            const postCommentBtn = document.getElementById('postCommentBtn');
+            let currentIdeaId = null;
+
+            // Sidebar state
             let isSidebarOpen = true;
             let isMobile = window.innerWidth <= 640;
 
-            function checkMobile() { isMobile = window.innerWidth <= 640; return isMobile; }
+            function checkMobile() {
+                isMobile = window.innerWidth <= 640;
+                return isMobile;
+            }
 
             function toggleSidebar(forceState) {
                 const open = (typeof forceState === 'boolean') ? forceState : !isSidebarOpen;
@@ -1546,6 +2193,7 @@
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
                         hamburgerIcon.className = 'ph ph-list';
                     }
+                    isSidebarOpen = open;
                 } else {
                     if (open) {
                         sidebar.classList.remove('collapsed');
@@ -1558,40 +2206,76 @@
                         hamburgerBtn.setAttribute('aria-expanded', 'false');
                         hamburgerIcon.className = 'ph ph-list';
                     }
+                    isSidebarOpen = open;
                 }
-                isSidebarOpen = open;
             }
 
-            function closeSidebarMobile() { if (isMobile) toggleSidebar(false); }
+            function closeSidebarMobile() {
+                if (isMobile) toggleSidebar(false);
+            }
 
+            // Sidebar navigation
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
-                    navItems.forEach(function(nav) { nav.classList.remove('active'); nav.removeAttribute('aria-current'); });
+                    navItems.forEach(function(nav) {
+                        nav.classList.remove('active');
+                        nav.removeAttribute('aria-current');
+                    });
                     this.classList.add('active');
                     this.setAttribute('aria-current', 'page');
                     const nav = this.dataset.nav;
-                    if (nav === 'logout') { e.preventDefault(); window.location.href = 'index.html'; return; }
-                    if (nav === 'dashboard') { closeSidebarMobile(); return; }
-                    if (nav === 'ideas') { window.location.href = 'ideas.html'; return; }
-                    if (nav === 'leaderboard') { window.location.href = 'leaderboard.html'; return; }
-                    if (nav === 'rewards') { window.location.href = 'rewards.html'; return; }
-                    if (nav === 'profile') { window.location.href = 'profile.html'; return; }
-                    if (nav === 'settings') { window.location.href = 'settings.html'; return; }
+                    if (nav === 'logout') {
+                        e.preventDefault();
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    if (nav === 'dashboard') {
+                        closeSidebarMobile();
+                        return;
+                    }
+                    if (nav === 'ideas') {
+                        window.location.href = 'ideas.html';
+                        return;
+                    }
+                    if (nav === 'leaderboard') {
+                        window.location.href = 'leaderboard.html';
+                        return;
+                    }
+                    if (nav === 'rewards') {
+                        window.location.href = 'rewards.html';
+                        return;
+                    }
+                    if (nav === 'profile') {
+                        window.location.href = 'profile.html';
+                        return;
+                    }
+                    if (nav === 'settings') {
+                        window.location.href = 'settings.html';
+                        return;
+                    }
                     closeSidebarMobile();
                 });
             });
 
-            hamburgerBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleSidebar(); });
-            backdrop.addEventListener('click', function() { if (isMobile) toggleSidebar(false); });
+            hamburgerBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+
+            backdrop.addEventListener('click', function() {
+                if (isMobile) toggleSidebar(false);
+            });
 
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     if (isMobile && isSidebarOpen) toggleSidebar(false);
                     if (document.activeElement === searchInput) searchInput.blur();
                     closeModal();
+                    closeDetailModal();
                 }
             });
 
+            // Dark mode
             function applyDarkMode() {
                 const darkMode = localStorage.getItem('prontox-dark-mode');
                 if (darkMode === 'true') {
@@ -1616,8 +2300,11 @@
                 }
             });
 
-            profileImageWrap.addEventListener('click', function() { window.location.href = 'profile.html'; });
+            profileImageWrap.addEventListener('click', function() {
+                window.location.href = 'profile.html';
+            });
 
+            // Search
             function performSearch() {
                 const query = searchInput.value.trim();
                 if (query) {
@@ -1625,21 +2312,41 @@
                 } else {
                     searchInput.focus();
                     searchInput.style.borderColor = '#EF4444';
-                    setTimeout(function() { searchInput.style.borderColor = ''; }, 1500);
+                    setTimeout(function() {
+                        searchInput.style.borderColor = '';
+                    }, 1500);
                 }
             }
 
-            searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); performSearch(); } });
-            searchInput.addEventListener('focus', function() { this.closest('.search-wrap').classList.add('focused'); });
-            searchInput.addEventListener('blur', function() { this.closest('.search-wrap').classList.remove('focused'); });
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+            searchInput.addEventListener('focus', function() {
+                this.closest('.search-wrap').classList.add('focused');
+            });
+            searchInput.addEventListener('blur', function() {
+                this.closest('.search-wrap').classList.remove('focused');
+            });
 
-            viewAllIdeas.addEventListener('click', function() { window.location.href = 'ideas.html'; });
-            viewLeaderboard.addEventListener('click', function() { window.location.href = 'leaderboard.html'; });
+            viewAllIdeas.addEventListener('click', function() {
+                window.location.href = 'ideas.html';
+            });
+            viewLeaderboard.addEventListener('click', function() {
+                window.location.href = 'leaderboard.html';
+            });
 
+            // Modal
             function openModal() {
                 submitModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
                 ideaForm.reset();
+                document.querySelectorAll('.modal-form input, .modal-form select, .modal-form textarea').forEach(function(el) {
+                    el.style.borderColor = '';
+                    el.style.boxShadow = '';
+                });
             }
 
             function closeModal() {
@@ -1650,8 +2357,11 @@
 
             submitIdeaBtnHeader.addEventListener('click', openModal);
             modalClose.addEventListener('click', closeModal);
-            submitModal.addEventListener('click', function(e) { if (e.target === submitModal) closeModal(); });
+            submitModal.addEventListener('click', function(e) {
+                if (e.target === submitModal) closeModal();
+            });
 
+            // Form submission
             ideaForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const fields = ['modalTitle', 'modalCategory', 'modalProblem', 'modalSolution', 'modalDescription'];
@@ -1678,14 +2388,17 @@
                     solution: modalSolution.value.trim(),
                     status: 'submitted',
                     department: modalCategory.value,
-                    upvotes: 0, comments: 0,
+                    upvotes: 0,
+                    comments: 0,
                     date: new Date().toISOString().split('T')[0],
                     createdBy: CURRENT_USER,
                     commentList: []
                 };
                 ideas.push(newIdea);
                 saveIdeas(ideas);
+
                 addActivity(CURRENT_USER, 'submitted', newIdea.title);
+
                 closeModal();
                 successOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
@@ -1705,161 +2418,453 @@
                 }
             });
 
+            // ------------------------------------------------------------
+            // DETAIL MODAL
+            // ------------------------------------------------------------
+            function openDetailModal(ideaId) {
+                const ideas = getIdeas();
+                const idea = ideas.find(function(i) { return i.id === ideaId; });
+                if (!idea) return;
+                currentIdeaId = ideaId;
+                detailBadge.textContent = '✨ ' + idea.department + ' Idea';
+                detailTitle.textContent = idea.title;
+                detailDept.textContent = idea.department;
+                const statusLabel = getStatusLabel(idea.status);
+                detailStatus.textContent = statusLabel;
+                detailStatus.className = 'status-tag ' + idea.status;
+                detailDate.textContent = idea.date || 'No date';
+                detailAuthor.textContent = 'By: ' + (idea.createdBy || 'Unknown');
+                detailProblem.textContent = idea.problem || 'No problem specified.';
+                detailSolution.textContent = idea.solution || 'No solution specified.';
+                detailDescription.textContent = idea.description || 'No description provided.';
+                renderComments(idea);
+                detailOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDetailModal() {
+                detailOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                currentIdeaId = null;
+            }
+
+            detailClose.addEventListener('click', closeDetailModal);
+            detailOverlay.addEventListener('click', function(e) {
+                if (e.target === detailOverlay) closeDetailModal();
+            });
+
+            function renderComments(idea) {
+                const comments = idea.commentList || [];
+                commentCount.textContent = '(' + comments.length + ')';
+                if (comments.length === 0) {
+                    commentList.innerHTML = '<div class="no-comments">No comments yet. Be the first!</div>';
+                    return;
+                }
+                let html = '';
+                comments.slice().reverse().forEach(function(c) {
+                    const timeStr = timeAgo(c.timestamp);
+                    html += '<div class="comment-item">' +
+                        '<div class="comment-header">' +
+                        '<span class="cname">' + (c.name || 'Anonymous') + '</span>' +
+                        '<span class="cdept">' + (c.department || 'General') + '</span>' +
+                        '<span class="ctime">' + timeStr + '</span>' +
+                        '</div>' +
+                        '<div class="comment-text">' + c.text + '</div>' +
+                        '</div>';
+                });
+                commentList.innerHTML = html;
+            }
+
+            // ------------------------------------------------------------
+            // POST COMMENT
+            // ------------------------------------------------------------
+            postCommentBtn.addEventListener('click', function() {
+                const text = commentInput.value.trim();
+                if (!text) {
+                    commentInput.style.borderColor = '#EF4444';
+                    commentInput.focus();
+                    setTimeout(function() {
+                        commentInput.style.borderColor = '';
+                    }, 1500);
+                    return;
+                }
+                if (currentIdeaId === null) return;
+                const ideas = getIdeas();
+                const idea = ideas.find(function(i) { return i.id === currentIdeaId; });
+                if (!idea) return;
+
+                const userName = FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)];
+                const depts = ['HR', 'IT', 'Finance', 'Ops', 'Marketing', 'Engineering', 'Product', 'Sales'];
+                const dept = depts[Math.floor(Math.random() * depts.length)];
+                const newComment = {
+                    name: userName,
+                    department: dept,
+                    text: text,
+                    timestamp: new Date().toISOString()
+                };
+                if (!idea.commentList) idea.commentList = [];
+                idea.commentList.push(newComment);
+                idea.comments = (idea.commentList || []).length;
+                saveIdeas(ideas);
+                addActivity(userName, 'commented', idea.title);
+                renderComments(idea);
+                commentInput.value = '';
+                renderDashboard();
+            });
+
+            commentInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    postCommentBtn.click();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // UPVOTE
+            // ------------------------------------------------------------
+            function toggleUpvote(ideaId) {
+                const ideas = getIdeas();
+                const idea = ideas.find(function(i) { return i.id === ideaId; });
+                if (!idea) return;
+                const isUpvoted = upvotedIdeas.has(ideaId);
+                if (isUpvoted) {
+                    upvotedIdeas.delete(ideaId);
+                    idea.upvotes -= 1;
+                    addActivity(CURRENT_USER, 'removed upvote from', idea.title);
+                } else {
+                    upvotedIdeas.add(ideaId);
+                    idea.upvotes += 1;
+                    addActivity(CURRENT_USER, 'upvoted', idea.title);
+                }
+                saveIdeas(ideas);
+                renderDashboard();
+            }
+
+            // ------------------------------------------------------------
+            // RENDER DASHBOARD
+            // ------------------------------------------------------------
             function renderDashboard() {
                 const ideas = getIdeas();
                 const activities = getActivities();
 
-                statSubmitted.textContent = ideas.filter(i => i.status === 'submitted').length;
-                statReview.textContent = ideas.filter(i => i.status === 'review').length;
-                statActive.textContent = ideas.filter(i => i.status === 'approved').length;
-                statImplemented.textContent = ideas.filter(i => i.status === 'implemented').length;
+                // Stats
+                const submitted = ideas.filter(function(i) { return i.status === 'submitted'; }).length;
+                const review = ideas.filter(function(i) { return i.status === 'review'; }).length;
+                const active = ideas.filter(function(i) { return i.status === 'approved'; }).length;
+                const implemented = ideas.filter(function(i) { return i.status === 'implemented'; }).length;
 
-                // Top Active Ideas
+                statSubmitted.textContent = submitted;
+                statReview.textContent = review;
+                statActive.textContent = active;
+                statImplemented.textContent = implemented;
+
+                // ---- TOP ACTIVE IDEAS (no "You" tag) ----
                 const submittedIdeas = ideas
-                    .filter(i => i.status === 'submitted')
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .filter(function(i) { return i.status === 'submitted'; })
+                    .sort(function(a, b) { return new Date(b.date) - new Date(a.date); })
                     .slice(0, 4);
 
                 if (submittedIdeas.length === 0) {
-                    topActiveIdeas.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:14px;">No submitted ideas yet</div>`;
+                    topActiveIdeas.innerHTML =
+                        '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:14px;">No submitted ideas yet</div>';
                 } else {
-                    const iconMap = { 'approved': 'ph-check-circle', 'review': 'ph-clock', 'implemented': 'ph-check', 'submitted': 'ph-paper-plane' };
-                    topActiveIdeas.innerHTML = submittedIdeas.map(function(idea) {
-                        const isOwner = idea.createdBy === CURRENT_USER;
-                        return `
-                            <div class="idea-card-dash">
-                                <div class="card-top">
-                                    <span class="status-badge ${idea.status}">
-                                        <i class="ph ${iconMap[idea.status] || 'ph-circle'}" aria-hidden="true"></i>
-                                        ${getStatusLabel(idea.status)}
-                                    </span>
-                                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                                        <span class="dept-tag">${idea.department}</span>
-                                        ${isOwner ? '<span class="owner-badge">You</span>' : ''}
-                                    </div>
-                                </div>
-                                <h3 class="idea-title">${idea.title}</h3>
-                                <p class="idea-desc">${idea.description}</p>
-                                <div class="card-footer">
-                                    <span class="meta-item"><i class="ph ph-arrow-up" aria-hidden="true"></i><span class="count">${idea.upvotes}</span></span>
-                                    <span class="meta-item"><i class="ph ph-chat-circle" aria-hidden="true"></i><span class="count">${(idea.commentList || []).length}</span></span>
-                                    <span class="meta-item" style="cursor:default;"><i class="ph ph-calendar" aria-hidden="true"></i>${idea.date}</span>
-                                </div>
-                            </div>`;
-                    }).join('');
+                    const iconMap = {
+                        'approved': 'ph-check-circle',
+                        'review': 'ph-clock',
+                        'implemented': 'ph-check',
+                        'submitted': 'ph-paper-plane'
+                    };
+                    let html = '';
+                    submittedIdeas.forEach(function(idea) {
+                        const statusClass = idea.status;
+                        const statusLabel = getStatusLabel(idea.status);
+                        const icon = iconMap[idea.status] || 'ph-circle';
+                        const isUpvoted = upvotedIdeas.has(idea.id);
+                        const upvoteClass = isUpvoted ? 'upvoted' : '';
+
+                        html += '<div class="idea-card-dash">' +
+                            '<div class="card-top">' +
+                            '<span class="status-badge ' + statusClass + '">' +
+                            '<i class="ph ' + icon + '" aria-hidden="true"></i> ' + statusLabel +
+                            '</span>' +
+                            '<span class="dept-tag">' + idea.department + '</span>' +
+                            '</div>' +
+                            '<span class="idea-title">' + idea.title + '</span>' +
+                            '<p class="idea-desc">' + idea.description + '</p>' +
+                            '<div class="card-footer">' +
+                            '<span class="meta-item upvote-btn ' + upvoteClass + '" data-id="' + idea.id +
+                            '" title="Toggle upvote">' +
+                            '<i class="ph ph-arrow-up" aria-hidden="true"></i> ' +
+                            '<span class="count">' + idea.upvotes + '</span>' +
+                            '</span>' +
+                            '<span class="meta-item comment-btn" data-id="' + idea.id +
+                            '" title="Comment">' +
+                            '<i class="ph ph-chat-circle" aria-hidden="true"></i> ' +
+                            '<span class="count">' + (idea.commentList || []).length + '</span>' +
+                            '</span>' +
+                            '<span class="meta-item" style="cursor:default;">' +
+                            '<i class="ph ph-calendar" aria-hidden="true"></i> ' + idea.date +
+                            '</span>' +
+                            '</div>' +
+                            '</div>';
+                    });
+                    topActiveIdeas.innerHTML = html;
+
+                    // Attach events to upvote and comment buttons
+                    document.querySelectorAll('.idea-card-dash .upvote-btn').forEach(function(el) {
+                        el.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const id = parseInt(this.dataset.id);
+                            toggleUpvote(id);
+                        });
+                    });
+                    document.querySelectorAll('.idea-card-dash .comment-btn').forEach(function(el) {
+                        el.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const id = parseInt(this.dataset.id);
+                            openDetailModal(id);
+                        });
+                    });
                 }
 
-                // General Active Projects
+                // ---- GENERAL ACTIVE PROJECTS (shows ALL ideas, with scroll if needed) ----
                 const stages = ['submitted', 'review', 'approved', 'implemented'];
                 const stageLabels = ['Submitted', 'Under Review', 'Approved', 'Implemented'];
+                // Sort by progress (implemented first, then approved, review, submitted)
                 const sortedProjects = ideas.slice()
-                    .sort((a, b) => {
+                    .sort(function(a, b) {
                         const order = { 'implemented': 0, 'approved': 1, 'review': 2, 'submitted': 3 };
                         return order[a.status] - order[b.status];
-                    })
-                    .slice(0, 5);
+                    });
+                // Show ALL projects, no slice limit
 
                 if (sortedProjects.length === 0) {
-                    projectList.innerHTML = `<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:14px;">No projects in progress</div>`;
+                    projectList.innerHTML =
+                        '<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:14px;">No projects in progress</div>';
                 } else {
-                    projectList.innerHTML = sortedProjects.map(function(idea) {
+                    let html = '';
+                    sortedProjects.forEach(function(idea) {
                         const progress = getStatusProgress(idea.status);
                         const currentIndex = stages.indexOf(idea.status);
-                        const stagesHtml = stageLabels.map(function(label, idx) {
-                            let cls = 'stage';
-                            if (idx < currentIndex) cls += ' done';
-                            else if (idx === currentIndex) cls += ' active';
-                            return `<span class="${cls}">${label}</span>`;
-                        }).join('');
-                        return `
-                            <div class="project-item">
-                                <div class="project-header">
-                                    <span class="project-title">${idea.title}</span>
-                                    <span class="project-dept">${idea.department}</span>
-                                </div>
-                                <div class="project-bar-wrap">
-                                    <div class="project-bar"><div class="bar-fill" style="width:${progress}%;"></div></div>
-                                    <span class="project-percent">${progress}%</span>
-                                </div>
-                                <div class="project-stages">${stagesHtml}</div>
-                            </div>`;
-                    }).join('');
+
+                        let trackerHtml = '';
+                        stages.forEach(function(stage, idx) {
+                            let circleClass = 'node-circle';
+                            let labelClass = 'node-label';
+                            if (idx < currentIndex) {
+                                circleClass += ' done';
+                                labelClass += ' done';
+                            } else if (idx === currentIndex) {
+                                circleClass += ' active';
+                                labelClass += ' active';
+                            }
+
+                            trackerHtml += '<div class="stage-node">' +
+                                '<div class="' + circleClass + '"></div>' +
+                                '<span class="' + labelClass + '">' + stageLabels[idx] + '</span>' +
+                                '</div>';
+
+                            if (idx < stages.length - 1) {
+                                let connectorClass = 'stage-connector';
+                                if (idx < currentIndex) connectorClass += ' done';
+                                else if (idx === currentIndex) connectorClass += ' partial';
+                                trackerHtml += '<div class="' + connectorClass + '">' +
+                                    '<div class="connector-fill"></div>' +
+                                    '</div>';
+                            }
+                        });
+
+                        html += '<div class="project-item">' +
+                            '<div class="project-header">' +
+                            '<div class="project-title-wrap">' +
+                            '<span class="project-title">' + idea.title + '</span>' +
+                            '<span class="project-dept-divider">•</span>' +
+                            '<span class="project-dept">' + idea.department + '</span>' +
+                            '</div>' +
+                            '<span class="project-percent">' + progress + '%</span>' +
+                            '</div>' +
+                            '<div class="project-stage-tracker">' + trackerHtml + '</div>' +
+                            '</div>';
+                    });
+                    projectList.innerHTML = html;
                 }
 
-                // Top Contributors – names fill the card width
-                const shuffled = [...FAKE_NAMES].sort(() => Math.random() - 0.5);
-                const points = [5200, 3400, 1250, 1100, 950, 880, 790, 710, 650, 600, 580, 510, 490, 420, 380];
-                topContributors.innerHTML = shuffled.slice(0, 15).map(function(name, idx) {
+                // ---- TOP CONTRIBUTORS ----
+                const shuffled = [...FAKE_NAMES].sort(function() { return Math.random() - 0.5; });
+                const top10 = shuffled.slice(0, 10);
+                const points = [5200, 3400, 1250, 1100, 950, 880, 790, 710, 650, 600];
+                const rankEmojis = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10'];
+
+                let contributorHtml = '';
+                top10.forEach(function(name, idx) {
                     const pts = points[idx] || Math.floor(Math.random() * 5000) + 500;
-                    const isYou = name === 'Chidi Okafor';
-                    return `
-                        <div class="contributor-item">
-                            <span class="contrib-rank">${idx + 1}</span>
-                            <span class="contrib-name">${name}${isYou ? ' <span class="you-tag">(You)</span>' : ''}</span>
-                            <span class="contrib-points">${pts.toLocaleString()} pts</span>
-                        </div>`;
-                }).join('');
+                    const isYou = (name === 'Chidi Okafor' || (idx === 2 && name === 'Chidi Okafor'));
+                    const rank = idx + 1;
+                    let rankClass = 'contrib-rank';
+                    if (rank === 1) rankClass += ' gold';
+                    else if (rank === 2) rankClass += ' silver';
+                    else if (rank === 3) rankClass += ' bronze';
 
-                // Recent Activity
+                    const initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+                    const role = ROLES[idx % ROLES.length];
+
+                    contributorHtml += '<div class="contributor-item">' +
+                        '<span class="' + rankClass + '">' + rankEmojis[idx] + '</span>' +
+                        '<div class="contrib-avatar">' + initials + '</div>' +
+                        '<div class="contrib-info">' +
+                        '<div class="contrib-name">' + name + (isYou ? ' <span class="you-tag">(You)</span>' : '') +
+                        '</div>' +
+                        '<div class="contrib-role">' + role + '</div>' +
+                        '</div>' +
+                        '<span class="contrib-points">' + pts.toLocaleString() + ' PTS</span>' +
+                        '</div>';
+                });
+                topContributors.innerHTML = contributorHtml;
+
+                // ---- RECENT ACTIVITY ----
                 if (activities.length === 0) {
-                    activityFeed.innerHTML = `<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:13px;">No activity yet</div>`;
+                    activityFeed.innerHTML = '<div class="activity-empty">No recent activities</div>';
                 } else {
-                    const actionIcons = { 'submitted': 'ph-paper-plane', 'approved': 'ph-check-circle', 'review': 'ph-clock', 'implemented': 'ph-check', 'commented': 'ph-chat-circle' };
-                    activityFeed.innerHTML = activities.slice(0, 12).map(function(act) {
-                        return `
-                            <div class="activity-item">
-                                <span class="act-icon"><i class="ph ${actionIcons[act.action] || 'ph-dot'}"></i></span>
-                                <span class="act-text"><strong>${act.user}</strong> ${act.action} "${act.idea}"</span>
-                                <span class="act-time">${timeAgo(act.time)}</span>
-                            </div>`;
-                    }).join('');
+                    const actionMap = {
+                        'submitted': 'submitted a new idea',
+                        'commented': 'commented on',
+                        'approved': 'approved',
+                        'review': 'moved to review',
+                        'implemented': 'implemented',
+                        'upvoted': 'upvoted',
+                        'removed upvote from': 'removed upvote from'
+                    };
+                    const actionIcons = {
+                        'submitted': 'ph-paper-plane',
+                        'approved': 'ph-check-circle',
+                        'review': 'ph-clock',
+                        'implemented': 'ph-check',
+                        'commented': 'ph-chat-circle',
+                        'upvoted': 'ph-arrow-up',
+                        'removed upvote from': 'ph-arrow-down'
+                    };
+                    let html = '';
+                    activities.slice(0, 12).forEach(function(act) {
+                        const actionText = actionMap[act.action] || act.action;
+                        const icon = actionIcons[act.action] || 'ph-dot';
+                        const timeStr = timeAgo(act.time);
+                        let displayText = '<strong>' + act.user + '</strong> ' + actionText;
+                        if (act.idea && (act.action === 'commented' || act.action === 'upvoted' || act.action ===
+                                'removed upvote from' || act.action === 'approved' || act.action === 'implemented' ||
+                                act.action === 'review')) {
+                            displayText += ' <span class="act-idea">"' + act.idea + '"</span>';
+                        } else if (act.idea && act.action === 'submitted') {
+                            displayText += ' <span class="act-idea">"' + act.idea + '"</span>';
+                        }
+                        html += '<div class="activity-item">' +
+                            '<span class="act-icon"><i class="ph ' + icon + '"></i></span>' +
+                            '<span class="act-text">' + displayText + '</span>' +
+                            '<span class="act-time">' + timeStr + '</span>' +
+                            '</div>';
+                    });
+                    activityFeed.innerHTML = html;
                 }
 
-                // Announcements
+                // ---- ANNOUNCEMENTS ----
                 const announcements = getAnnouncements();
                 if (announcements.length === 0) {
-                    tickerInner.innerHTML = `<div class="ticker-item">No announcements yet</div>`;
+                    tickerInner.innerHTML = '<div class="ticker-item">No announcements yet</div>';
                 } else {
-                    tickerInner.innerHTML = announcements
-                        .slice().sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map(ann => `<div class="ticker-item">${ann.text}<span class="date-badge">${ann.date}</span></div>`)
-                        .join('');
+                    let html = '';
+                    const sorted = announcements.slice().sort(function(a, b) { return new Date(b.date) - new Date(a
+                        .date); });
+                    sorted.forEach(function(ann) {
+                        html += '<div class="ticker-item">' + ann.text +
+                            '<span class="date-badge">' + ann.date + '</span></div>';
+                    });
+                    tickerInner.innerHTML = html;
                 }
             }
 
-            refreshActivity.addEventListener('click', function() {
+            // ---- REFRESH ACTIVITIES ----
+            let isRefreshing = false;
+            refreshBtn.addEventListener('click', function() {
+                if (isRefreshing) return;
+                isRefreshing = true;
+
+                this.classList.add('spinning');
+
+                saveActivities([]);
                 renderDashboard();
-                this.style.transform = 'rotate(360deg)';
-                setTimeout(function() { refreshActivity.style.transform = ''; }, 400);
+
+                refreshStatus.textContent = 'Activities refreshed';
+                refreshStatus.className = 'refresh-status show';
+
+                setTimeout(function() {
+                    refreshStatus.className = 'refresh-status fade-out';
+                    setTimeout(function() {
+                        refreshStatus.className = 'refresh-status';
+                    }, 600);
+                }, 2500);
+
+                setTimeout(function() {
+                    refreshBtn.classList.remove('spinning');
+                    isRefreshing = false;
+                }, 600);
             });
 
+            // ---- RESIZE ----
             let resizeTimer;
-            window.addEventListener('resize', function() {
+
+            function handleResize() {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(function() {
                     const wasMobile = isMobile;
                     const nowMobile = checkMobile();
                     if (nowMobile && !wasMobile) {
-                        toggleSidebar(false);
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            toggleSidebar(false);
+                        } else {
+                            toggleSidebar(false);
+                        }
                     } else if (!nowMobile && wasMobile) {
-                        sidebar.classList.remove('open');
-                        backdrop.classList.remove('visible');
-                        toggleSidebar(true);
+                        if (sidebar.classList.contains('open')) {
+                            sidebar.classList.remove('open');
+                            backdrop.classList.remove('visible');
+                            toggleSidebar(true);
+                        } else {
+                            toggleSidebar(false);
+                        }
                     }
                     if (!nowMobile) {
+                        if (isSidebarOpen) {
+                            sidebar.classList.remove('collapsed');
+                            mainContent.classList.remove('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'true');
+                            hamburgerIcon.className = 'ph ph-x';
+                        } else {
+                            sidebar.classList.add('collapsed');
+                            mainContent.classList.add('expanded');
+                            hamburgerBtn.setAttribute('aria-expanded', 'false');
+                            hamburgerIcon.className = 'ph ph-list';
+                        }
                         sidebar.classList.remove('open');
                         backdrop.classList.remove('visible');
                     }
                 }, 120);
-            });
+            }
+            window.addEventListener('resize', handleResize);
 
+            // ---- AVATAR LOAD ----
             function loadAvatar() {
                 const saved = localStorage.getItem('prontox-avatar');
                 const headerImg = document.getElementById('profileImage');
-                if (saved && headerImg) { headerImg.src = saved; headerImg.style.display = 'block'; }
-                else if (headerImg) { headerImg.style.display = 'none'; }
+                if (saved && headerImg) {
+                    headerImg.src = saved;
+                    headerImg.style.display = 'block';
+                } else if (headerImg) {
+                    headerImg.style.display = 'none';
+                }
             }
 
+            // ---- INIT ----
             function init() {
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
@@ -1870,8 +2875,11 @@
                 window.addEventListener('focus', renderDashboard);
             }
 
-            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-            else init();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
 
         })();
     </script>
