@@ -891,8 +891,8 @@
         }
 
         .project-stage-tracker .stage-node .node-circle {
-            width: 18px;
-            height: 18px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             border: 2.5px solid var(--border);
             background: var(--surface);
@@ -1614,6 +1614,16 @@
             .welcome-row { flex-direction: column; align-items: flex-start; gap: 6px; }
             .btn-submit-primary { width: auto; }
         }
+        @media (max-width: 360px) {
+            .top-header .search-wrap { max-width: 100px; }
+            .top-header .search-wrap input { padding: 4px 8px 4px 28px; font-size: 11px; }
+            .welcome-heading { font-size: 18px; }
+            .btn-submit-primary { font-size: 12px; padding: 4px 12px; }
+            .stat-card .stat-number { font-size: 18px; }
+            .contributor-item .contrib-name { font-size: 11px; }
+            .contributor-item .contrib-points { font-size: 11px; }
+            .project-item .project-title { font-size: 12px; }
+}
     </style>
 </head>
 <body>

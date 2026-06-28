@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
+    <!-- ====== FIX: Prevent white flash on load ====== -->
+    <script>
+        (function() {
+            if (localStorage.getItem('prontox-dark-mode') === 'true') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProntoX · Leaderboard</title>
 
-    <!-- Phosphor Icons CDN -->
+    <!-- Phosphor Icons -->
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
@@ -39,7 +47,6 @@
             --accent-light: #E6F6FE;
             --accent-mid: #B3E5FC;
 
-            /* ====== SIDEBAR VARIABLES (matching dashboard) ====== */
             --sidebar-bg: #FFFFFF;
             --sidebar-text: var(--text-primary);
             --sidebar-active: var(--accent);
@@ -79,14 +86,12 @@
             --accent: var(--accent-dark-mode);
             --accent-light: var(--accent-light-dark);
             --accent-mid: #1a4a5a;
-
-            /* ====== SIDEBAR DARK OVERRIDES (matching dashboard) ====== */
-            --sidebar-bg: #1A1E21;
-            --sidebar-divider: #353E46;
             --sidebar-active: var(--accent-dark-mode);
             --sidebar-active-bg: var(--accent-light-dark);
             --sidebar-hover-bg: rgba(59, 130, 246, 0.06);
-            --sidebar-text-muted: #888E99;
+
+            --sidebar-bg: #1A1E21;
+            --sidebar-divider: #353E46;
         }
 
         html {
@@ -166,12 +171,7 @@
             box-shadow: 0 4px 14px rgba(0, 175, 239, 0.15);
             transition: background var(--transition);
         }
-        .sidebar-header .brand-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .sidebar-header .brand-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .sidebar-header .brand-text {
             font-size: 20px;
             font-weight: 700;
@@ -208,26 +208,10 @@
             white-space: nowrap;
         }
 
-        .sidebar-nav .nav-item .ph {
-            font-size: 22px;
-            flex-shrink: 0;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-nav .nav-item:hover {
-            background: var(--sidebar-hover-bg);
-            color: var(--text-primary);
-        }
-
-        .sidebar-nav .nav-item.active {
-            background: var(--sidebar-active-bg);
-            color: var(--sidebar-active);
-            font-weight: 600;
-        }
-        .sidebar-nav .nav-item.active .ph {
-            color: var(--sidebar-active);
-        }
+        .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
+        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: var(--text-primary); }
+        .sidebar-nav .nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
+        .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
 
         .sidebar-divider {
             height: 1px;
@@ -257,10 +241,7 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
-        .sidebar-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
+        .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
 
         /* ============================================================
            MAIN CONTENT
@@ -273,9 +254,7 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
-        .main-content.expanded {
-            margin-left: 0;
-        }
+        .main-content.expanded { margin-left: 0; }
 
         /* ============================================================
            TOP HEADER – compact (60px)
@@ -298,15 +277,9 @@
             background: rgba(255, 255, 255, 0.92);
             transition: background var(--transition), border-color var(--transition);
         }
-        body.dark-mode .top-header {
-            background: rgba(26, 30, 33, 0.92);
-        }
+        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
 
-        .top-header .left-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .top-header .left-section { display: flex; align-items: center; gap: 16px; }
         .top-header .hamburger-btn {
             background: transparent;
             border: none;
@@ -321,12 +294,8 @@
             justify-content: center;
             line-height: 1;
         }
-        .top-header .hamburger-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
-        }
-        .top-header .hamburger-btn:active {
-            transform: scale(0.92);
-        }
+        .top-header .hamburger-btn:hover { background: rgba(0, 0, 0, 0.04); }
+        .top-header .hamburger-btn:active { transform: scale(0.92); }
         .top-header .brand-mobile {
             font-size: 20px;
             font-weight: 700;
@@ -352,35 +321,25 @@
         }
         .top-header .search-wrap input {
             width: 100%;
-            padding: 10px 16px 10px 48px;
+            padding: 8px 16px 8px 48px;
             border: 1.5px solid var(--border);
             border-radius: 50px;
-            font-size: 15px;
+            font-size: 14px;
             background: var(--bg);
             color: var(--text-primary);
             transition: all var(--transition);
             outline: none;
             font-weight: 450;
         }
-        .top-header .search-wrap input::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
+        .top-header .search-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
         .top-header .search-wrap input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 175, 239, 0.12);
             background: var(--surface);
         }
-        .top-header .search-wrap input:focus ~ .ph {
-            color: var(--accent);
-        }
+        .top-header .search-wrap input:focus ~ .ph { color: var(--accent); }
 
-        .top-header .right-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
+        .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
         .top-header .profile-image-wrap {
             width: 40px;
@@ -395,16 +354,8 @@
             align-items: center;
             justify-content: center;
         }
-        .top-header .profile-image-wrap:hover {
-            border-color: var(--accent);
-            transform: scale(1.04);
-        }
-        .top-header .profile-image-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .top-header .profile-image-wrap:hover { border-color: var(--accent); transform: scale(1.04); }
+        .top-header .profile-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .top-header .user-name {
             font-size: 15px;
             font-weight: 500;
@@ -426,16 +377,11 @@
             border: none;
             line-height: 1;
         }
-        .dark-toggle:hover {
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-        .dark-toggle:active {
-            transform: scale(0.9);
-        }
+        .dark-toggle:hover { color: var(--accent); transform: scale(1.1); }
+        .dark-toggle:active { transform: scale(0.9); }
 
         /* ============================================================
-           PAGE CONTENT – LEADERBOARD (centred)
+           PAGE CONTENT – LEADERBOARD
            ============================================================ */
         .page-content {
             padding: 32px 40px 48px;
@@ -449,7 +395,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             width: 100%;
             max-width: 900px;
         }
@@ -467,162 +413,185 @@
             font-weight: 450;
         }
 
-        .table-card {
+        /* ---- LEADERBOARD CARD (fits screen, no scroll) ---- */
+        .leaderboard-card {
             background: var(--surface);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 24px 28px 28px;
             border: 1px solid var(--border);
+            padding: 20px 24px 16px;
             transition: all var(--transition);
             max-width: 900px;
             width: 100%;
         }
-
-        .table-card:hover {
+        .leaderboard-card:hover {
             box-shadow: var(--shadow-hover);
-            transform: translateY(-2px);
         }
 
-        .table-card .table-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 15px;
-        }
-
-        .leaderboard-table thead th {
-            text-align: left;
-            padding: 14px 12px 14px 0;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--border);
-        }
-        .leaderboard-table thead th:first-child { padding-left: 0; }
-        .leaderboard-table thead th:last-child { padding-right: 0; text-align: right; }
-
-        .leaderboard-table tbody td {
-            padding: 16px 12px 16px 0;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
-        }
-        .leaderboard-table tbody td:first-child { padding-left: 0; }
-        .leaderboard-table tbody td:last-child { padding-right: 0; text-align: right; }
-        .leaderboard-table tbody tr:last-child td { border-bottom: none; }
-
-        .rank-cell {
-            font-weight: 700;
-            color: var(--text-muted);
-            font-size: 16px;
-            width: 50px;
-        }
-
-        .staff-cell {
+        .leaderboard-card .card-header {
             display: flex;
             align-items: center;
-            gap: 14px;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .leaderboard-card .card-header .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .leaderboard-card .card-header .live-badge {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--surface-2);
+            padding: 2px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
         }
 
-        .staff-avatar {
-            width: 40px;
-            height: 40px;
+        /* ---- CONTRIBUTOR LIST (no scroll, fits naturally) ---- */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            width: 100%;
+        }
+
+        /* ===== CONTRIBUTOR ROW (identical to dashboard) ===== */
+        .contributor-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 10px;
+            border-radius: var(--radius-xs);
+            border-bottom: 1px solid var(--border);
+            transition: background var(--transition), transform var(--transition);
+            cursor: default;
+        }
+        .contributor-item:last-child { border-bottom: none; }
+        .contributor-item:hover {
+            background: var(--surface-2);
+            transform: translateX(3px);
+        }
+
+        .contributor-item .contrib-rank {
+            font-weight: 700;
+            font-size: 16px;
+            min-width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .contributor-item .contrib-rank.gold { color: #f59e0b; }
+        .contributor-item .contrib-rank.silver { color: #94a3b8; }
+        .contributor-item .contrib-rank.bronze { color: #cd7f32; }
+
+        .contributor-item .contrib-avatar {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            background: var(--accent-light);
+            color: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
+            font-weight: 600;
+            font-size: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: border-color var(--transition);
+        }
+        .contributor-item:hover .contrib-avatar {
+            border-color: var(--accent);
+        }
+        .contributor-item .contrib-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contributor-item .contrib-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .contributor-item .contrib-name {
             font-weight: 600;
             font-size: 14px;
-            flex-shrink: 0;
-            text-transform: uppercase;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .staff-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .staff-name {
+        .contributor-item .contrib-name .you-tag {
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--accent);
+            font-size: 11px;
+            margin-left: 4px;
         }
-        .staff-dept {
-            font-size: 13px;
+        .contributor-item .contrib-role {
+            font-size: 12px;
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .num-cell {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        .points-cell {
+        .contributor-item .contrib-points {
             font-weight: 700;
-            color: var(--text-primary);
-            font-size: 16px;
+            color: var(--accent);
+            font-size: 14px;
+            flex-shrink: 0;
+            padding-left: 8px;
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
+        /* ---- RESPONSIVE ---- */
         @media (max-width: 900px) {
             .top-header { padding: 0 20px; }
             .page-content { padding: 24px 20px 36px; }
             .top-header .brand-mobile { display: block; }
             .top-header .left-section .brand-text { display: none; }
             .top-header .user-name { display: none; }
-            .top-header .search-wrap { max-width: 300px; }
-            .table-card { padding: 20px 18px; }
+            .top-header .search-wrap { max-width: 280px; }
+            .leaderboard-card { padding: 18px 16px; }
         }
 
         @media (max-width: 640px) {
             :root { --sidebar-width: 280px; }
-            .top-header { padding: 0 14px; height: 52px; gap: 12px; }
-            .top-header .search-wrap { max-width: 180px; }
-            .top-header .search-wrap input { padding: 8px 12px 8px 40px; font-size: 14px; }
-            .top-header .search-wrap .ph { font-size: 18px; left: 12px; }
-            .top-header .hamburger-btn { font-size: 24px; padding: 4px; }
-            .top-header .profile-image-wrap { width: 34px; height: 34px; }
+            .top-header { padding: 0 14px; height: 52px; gap: 10px; }
+            .top-header .search-wrap { max-width: 160px; }
+            .top-header .search-wrap input { padding: 6px 10px 6px 34px; font-size: 13px; }
+            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
+            .top-header .hamburger-btn { font-size: 22px; padding: 4px; }
+            .top-header .profile-image-wrap { width: 32px; height: 32px; }
             .dark-toggle { font-size: 20px; }
             .page-content { padding: 18px 14px 32px; }
             .leaderboard-header h1 { font-size: 24px; }
-            .table-card { padding: 18px 14px 20px; }
-            .leaderboard-table { font-size: 14px; }
-            .staff-avatar { width: 34px; height: 34px; font-size: 12px; }
-            .staff-name { font-size: 14px; }
-            .staff-dept { font-size: 12px; }
-            .rank-cell { font-size: 14px; width: 36px; }
-            .points-cell { font-size: 14px; }
+            .leaderboard-card { padding: 14px 12px; }
             .main-content { margin-left: 0 !important; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
             .top-header .brand-mobile { display: block; }
+            .contributor-item .contrib-rank { font-size: 14px; min-width: 24px; }
+            .contributor-item .contrib-avatar { width: 28px; height: 28px; font-size: 11px; }
+            .contributor-item .contrib-name { font-size: 12px; }
+            .contributor-item .contrib-role { font-size: 10px; }
+            .contributor-item .contrib-points { font-size: 12px; }
+            .contributor-item { padding: 4px 8px; gap: 8px; }
         }
 
         @media (max-width: 400px) {
             .top-header .search-wrap { max-width: 120px; }
-            .top-header .search-wrap input { font-size: 13px; padding: 6px 10px 6px 34px; }
-            .top-header .search-wrap .ph { font-size: 16px; left: 10px; }
+            .top-header .search-wrap input { font-size: 12px; padding: 5px 8px 5px 28px; }
+            .top-header .search-wrap .ph { font-size: 14px; left: 8px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    SIDEBAR BACKDROP (mobile)
-    ============================================================ -->
+    <!-- Sidebar backdrop -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
-    <!-- ============================================================
-    SIDEBAR (improved – matching dashboard)
-    ============================================================ -->
+    <!-- SIDEBAR (improved – matching dashboard) -->
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <div class="sidebar-header">
             <div class="brand-icon">
@@ -630,7 +599,6 @@
             </div>
             <span class="brand-text">ProntoX</span>
         </div>
-
         <nav class="sidebar-nav">
             <button class="nav-item" data-nav="dashboard">
                 <i class="ph ph-house" aria-hidden="true"></i>
@@ -664,14 +632,10 @@
         </nav>
     </aside>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
+    <!-- MAIN CONTENT -->
     <div class="main-content" id="mainContent" role="main">
 
-        <!-- ============================================================
-        TOP HEADER
-        ============================================================ -->
+        <!-- TOP HEADER -->
         <header class="top-header" role="banner">
             <div class="left-section">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
@@ -686,7 +650,6 @@
             </div>
 
             <div class="right-section">
-                <!-- Dark mode toggle -->
                 <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
                     <i class="ph ph-sun" id="darkIcon"></i>
                 </button>
@@ -699,119 +662,203 @@
             </div>
         </header>
 
-        <!-- ============================================================
-        PAGE CONTENT – LEADERBOARD
-        ============================================================ -->
+        <!-- PAGE CONTENT -->
         <div class="page-content">
 
             <div class="leaderboard-header">
                 <h1>Leaderboard</h1>
-                <span class="subtitle">Top contributors this quarter</span>
+                <span class="subtitle">Top contributors – ranked by total points</span>
             </div>
 
-            <div class="table-card">
-                <div class="table-wrap">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Staff Member</th>
-                                <th>Ideas</th>
-                                <th>Implemented</th>
-                                <th>Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="rank-cell">1</td>
-                                <td>
-                                    <div class="staff-cell">
-                                        <div class="staff-avatar">AR</div>
-                                        <div class="staff-info">
-                                            <span class="staff-name">Amanda R.</span>
-                                            <span class="staff-dept">HR</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="num-cell">8</td>
-                                <td class="num-cell">5</td>
-                                <td class="points-cell">3,450</td>
-                            </tr>
-                            <tr>
-                                <td class="rank-cell">2</td>
-                                <td>
-                                    <div class="staff-cell">
-                                        <div class="staff-avatar">DL</div>
-                                        <div class="staff-info">
-                                            <span class="staff-name">David L.</span>
-                                            <span class="staff-dept">IT</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="num-cell">12</td>
-                                <td class="num-cell">8</td>
-                                <td class="points-cell">2,800</td>
-                            </tr>
-                            <tr>
-                                <td class="rank-cell">3</td>
-                                <td>
-                                    <div class="staff-cell">
-                                        <div class="staff-avatar">CP</div>
-                                        <div class="staff-info">
-                                            <span class="staff-name">Chris P.</span>
-                                            <span class="staff-dept">Ops</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="num-cell">15</td>
-                                <td class="num-cell">10</td>
-                                <td class="points-cell">2,100</td>
-                            </tr>
-                            <tr>
-                                <td class="rank-cell">4</td>
-                                <td>
-                                    <div class="staff-cell">
-                                        <div class="staff-avatar">LM</div>
-                                        <div class="staff-info">
-                                            <span class="staff-name">Lisa M.</span>
-                                            <span class="staff-dept">Finance</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="num-cell">6</td>
-                                <td class="num-cell">4</td>
-                                <td class="points-cell">1,850</td>
-                            </tr>
-                            <tr>
-                                <td class="rank-cell">5</td>
-                                <td>
-                                    <div class="staff-cell">
-                                        <div class="staff-avatar">AJ</div>
-                                        <div class="staff-info">
-                                            <span class="staff-name">Alex Johnson</span>
-                                            <span class="staff-dept">Engineering</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="num-cell">9</td>
-                                <td class="num-cell">6</td>
-                                <td class="points-cell">1,200</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="leaderboard-card">
+                <div class="card-header">
+                    <span class="card-title">🏆 Top Contributors</span>
+                    <span class="live-badge" id="lastUpdated">● Live</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- rendered by JS -->
                 </div>
             </div>
 
         </div><!-- /page-content -->
     </div><!-- /main-content -->
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
     <script>
         (function() {
             'use strict';
 
+            // ------------------------------------------------------------
+            // CONSTANTS & SHARED DATA
+            // ------------------------------------------------------------
+            const CURRENT_USER = 'Chidi';
+            const CONTRIBUTORS_KEY = 'prontox_contributors';
+            const IDEAS_KEY = 'prontox_ideas';
+            const ACTIVITY_KEY = 'prontox_activity';
+
+            // Same fake names and roles as dashboard
+            const FAKE_NAMES = [
+                'Fatima Yusuf', 'Amina Bello', 'Oluwaseun A.', 'Emeka N.',
+                'Zainab O.', 'Tunde A.', 'Chioma N.', 'Efe Paul',
+                'Musa I.', 'Abubakar M.', 'Blessing E.', 'Funmi L.',
+                'Idris A.', 'Joy O.', 'Michael T.'
+            ];
+
+            const ROLES = [
+                'Product Designer', 'Product Manager', 'Software Engineer',
+                'Data Scientist', 'UX Researcher', 'DevOps Lead',
+                'Frontend Architect', 'Backend Engineer', 'QA Engineer',
+                'Engineering Manager', 'Product Owner', 'Tech Lead',
+                'Senior Developer', 'Cloud Architect', 'Security Analyst'
+            ];
+
+            // ------------------------------------------------------------
+            // CONTRIBUTORS DATA STORE (shared with dashboard)
+            // ------------------------------------------------------------
+            function getContributors() {
+                try {
+                    const data = localStorage.getItem(CONTRIBUTORS_KEY);
+                    if (data) {
+                        const parsed = JSON.parse(data);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            return parsed;
+                        }
+                    }
+                } catch (e) { /* ignore */ }
+
+                // Generate default contributors with random points
+                const defaultContributors = FAKE_NAMES.map(function(name, index) {
+                    const isYou = (name === 'Chidi Okafor' || (index === 2 && name === 'Chidi Okafor'));
+                    const basePoints = [5200, 3400, 1250, 1100, 950, 880, 790, 710, 650, 600, 580, 510, 490, 420, 380];
+                    const pts = basePoints[index] || Math.floor(Math.random() * 5000) + 500;
+                    return {
+                        id: index + 1,
+                        name: name,
+                        role: ROLES[index % ROLES.length],
+                        points: pts,
+                        isYou: isYou
+                    };
+                });
+                saveContributors(defaultContributors);
+                return defaultContributors;
+            }
+
+            function saveContributors(contributors) {
+                localStorage.setItem(CONTRIBUTORS_KEY, JSON.stringify(contributors));
+            }
+
+            // Sync contributors with ideas (recalculate points based on activity)
+            function syncContributorsFromIdeas() {
+                try {
+                    const ideasData = localStorage.getItem(IDEAS_KEY);
+                    if (!ideasData) return getContributors();
+                    const ideas = JSON.parse(ideasData);
+
+                    const contributors = getContributors();
+                    // Reset points based on activity
+                    const pointsMap = {};
+                    ideas.forEach(function(idea) {
+                        const creator = idea.createdBy || 'Unknown';
+                        if (!pointsMap[creator]) pointsMap[creator] = 0;
+                        if (idea.status === 'submitted') pointsMap[creator] += 10;
+                        else if (idea.status === 'review') pointsMap[creator] += 20;
+                        else if (idea.status === 'approved') pointsMap[creator] += 30;
+                        else if (idea.status === 'implemented') pointsMap[creator] += 50;
+                        // Upvotes also give points to the idea owner
+                        if (idea.upvotes && idea.upvotes > 0) {
+                            pointsMap[creator] += idea.upvotes * 2;
+                        }
+                    });
+
+                    // Update contributor points
+                    contributors.forEach(function(c) {
+                        if (pointsMap[c.name]) {
+                            c.points = pointsMap[c.name];
+                        }
+                    });
+
+                    // If Chidi (current user) has no points but is in the list, give base
+                    const chidi = contributors.find(function(c) { return c.name === CURRENT_USER; });
+                    if (chidi && chidi.points === 0) {
+                        chidi.points = 1250; // base points for current user
+                    }
+
+                    saveContributors(contributors);
+                    return contributors;
+                } catch (e) {
+                    return getContributors();
+                }
+            }
+
+            // ------------------------------------------------------------
+            // RENDER LEADERBOARD – all 15 contributors, no scroll
+            // ------------------------------------------------------------
+            function renderLeaderboard() {
+                const contributors = syncContributorsFromIdeas();
+
+                // Sort by points descending
+                const sorted = contributors.slice().sort(function(a, b) {
+                    return b.points - a.points;
+                });
+
+                // Show ALL contributors (15)
+                const allContributors = sorted;
+
+                const listEl = document.getElementById('leaderboardList');
+
+                if (allContributors.length === 0) {
+                    listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">No contributors yet</div>';
+                    return;
+                }
+
+                let html = '';
+                allContributors.forEach(function(contrib, idx) {
+                    const rank = idx + 1;
+                    let rankClass = 'contrib-rank';
+                    if (rank === 1) rankClass += ' gold';
+                    else if (rank === 2) rankClass += ' silver';
+                    else if (rank === 3) rankClass += ' bronze';
+
+                    const initials = contrib.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(
+                        0, 2);
+                    const isYou = contrib.isYou || (contrib.name === CURRENT_USER);
+
+                    // Check if user has an avatar stored
+                    let avatarHtml = '';
+                    const avatarKey = 'prontox-avatar-' + contrib.id;
+                    const savedAvatar = localStorage.getItem(avatarKey);
+                    if (savedAvatar) {
+                        avatarHtml = '<img src="' + savedAvatar + '" alt="' + contrib.name + '" />';
+                    } else {
+                        avatarHtml = initials;
+                    }
+
+                    html += '<div class="contributor-item">' +
+                        '<span class="' + rankClass + '">' + rank + '</span>' +
+                        '<div class="contrib-avatar">' + avatarHtml + '</div>' +
+                        '<div class="contrib-info">' +
+                        '<div class="contrib-name">' + contrib.name + (isYou ? ' <span class="you-tag">(You)</span>' : '') +
+                        '</div>' +
+                        '<div class="contrib-role">' + (contrib.role || ROLES[idx % ROLES.length]) + '</div>' +
+                        '</div>' +
+                        '<span class="contrib-points">' + contrib.points.toLocaleString() + ' pts</span>' +
+                        '</div>';
+                });
+
+                listEl.innerHTML = html;
+            }
+
+            // ------------------------------------------------------------
+            // LISTEN FOR CHANGES (cross-tab sync)
+            // ------------------------------------------------------------
+            window.addEventListener('storage', function(e) {
+                if (e.key === CONTRIBUTORS_KEY || e.key === IDEAS_KEY || e.key === ACTIVITY_KEY) {
+                    renderLeaderboard();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // SIDEBAR & DARK MODE (same as dashboard)
+            // ------------------------------------------------------------
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -866,7 +913,6 @@
                 if (isMobile) toggleSidebar(false);
             }
 
-            // Sidebar navigation
             navItems.forEach(function(item) {
                 item.addEventListener('click', function(e) {
                     navItems.forEach(function(nav) {
@@ -937,7 +983,7 @@
                 this.closest('.search-wrap').classList.remove('focused');
             });
 
-            // ---- Dark mode (sun/moon) ----
+            // ---- Dark mode ----
             function applyDarkMode() {
                 const darkMode = localStorage.getItem('prontox-dark-mode');
                 if (darkMode === 'true') {
@@ -962,7 +1008,7 @@
                 }
             });
 
-            // ---- Avatar loading ----
+            // ---- Avatar loading for header ----
             function loadAvatar() {
                 const saved = localStorage.getItem('prontox-avatar');
                 const headerImg = document.getElementById('profileImage');
@@ -1025,13 +1071,19 @@
 
             window.addEventListener('resize', handleResize);
 
-            // ---- Init ----
+            // ---- INIT ----
             function init() {
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
                 applyDarkMode();
                 loadAvatar();
+                renderLeaderboard();
+
+                // Auto-refresh every 8 seconds (for multi-tab sync)
+                setInterval(function() {
+                    renderLeaderboard();
+                }, 8000);
             }
 
             if (document.readyState === 'loading') {
@@ -1040,7 +1092,7 @@
                 init();
             }
 
-            // Listen for storage changes (avatar updated in another tab)
+            // Listen for storage changes (avatar, dark mode)
             window.addEventListener('storage', function(e) {
                 if (e.key === 'prontox-avatar') {
                     loadAvatar();
