@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+    <!-- ====== FIX: Prevent white flash on load ====== -->
+    <script>
+        (function() {
+            if (localStorage.getItem('prontox-dark-mode') === 'true') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ProntoX · Rewards</title>
 
-    <!-- Phosphor Icons CDN -->
+    <!-- Phosphor Icons -->
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
@@ -39,7 +47,6 @@
             --accent-light: #E6F6FE;
             --accent-mid: #B3E5FC;
 
-            /* ====== SIDEBAR VARIABLES (matching dashboard) ====== */
             --sidebar-bg: #FFFFFF;
             --sidebar-text: var(--text-primary);
             --sidebar-active: var(--accent);
@@ -88,14 +95,12 @@
             --accent: var(--accent-dark-mode);
             --accent-light: var(--accent-light-dark);
             --accent-mid: #1a4a5a;
-
-            /* ====== SIDEBAR DARK OVERRIDES (matching dashboard) ====== */
-            --sidebar-bg: #1A1E21;
-            --sidebar-divider: #353E46;
             --sidebar-active: var(--accent-dark-mode);
             --sidebar-active-bg: var(--accent-light-dark);
             --sidebar-hover-bg: rgba(59, 130, 246, 0.06);
-            --sidebar-text-muted: #888E99;
+
+            --sidebar-bg: #1A1E21;
+            --sidebar-divider: #353E46;
 
             --reward-blue-light: #1a3a5a;
             --reward-gold-light: #3a2a1a;
@@ -181,12 +186,7 @@
             box-shadow: 0 4px 14px rgba(0, 175, 239, 0.15);
             transition: background var(--transition);
         }
-        .sidebar-header .brand-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .sidebar-header .brand-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .sidebar-header .brand-text {
             font-size: 20px;
             font-weight: 700;
@@ -223,26 +223,10 @@
             white-space: nowrap;
         }
 
-        .sidebar-nav .nav-item .ph {
-            font-size: 22px;
-            flex-shrink: 0;
-            width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-nav .nav-item:hover {
-            background: var(--sidebar-hover-bg);
-            color: var(--text-primary);
-        }
-
-        .sidebar-nav .nav-item.active {
-            background: var(--sidebar-active-bg);
-            color: var(--sidebar-active);
-            font-weight: 600;
-        }
-        .sidebar-nav .nav-item.active .ph {
-            color: var(--sidebar-active);
-        }
+        .sidebar-nav .nav-item .ph { font-size: 22px; flex-shrink: 0; width: 24px; text-align: center; }
+        .sidebar-nav .nav-item:hover { background: var(--sidebar-hover-bg); color: var(--text-primary); }
+        .sidebar-nav .nav-item.active { background: var(--sidebar-active-bg); color: var(--sidebar-active); font-weight: 600; }
+        .sidebar-nav .nav-item.active .ph { color: var(--sidebar-active); }
 
         .sidebar-divider {
             height: 1px;
@@ -272,10 +256,7 @@
             backdrop-filter: blur(2px);
             -webkit-backdrop-filter: blur(2px);
         }
-        .sidebar-backdrop.visible {
-            opacity: 1;
-            visibility: visible;
-        }
+        .sidebar-backdrop.visible { opacity: 1; visibility: visible; }
 
         /* ============================================================
            MAIN CONTENT
@@ -288,9 +269,7 @@
             flex-direction: column;
             transition: margin-left var(--transition-sidebar);
         }
-        .main-content.expanded {
-            margin-left: 0;
-        }
+        .main-content.expanded { margin-left: 0; }
 
         /* ============================================================
            TOP HEADER – compact (60px)
@@ -313,15 +292,9 @@
             background: rgba(255, 255, 255, 0.92);
             transition: background var(--transition), border-color var(--transition);
         }
-        body.dark-mode .top-header {
-            background: rgba(26, 30, 33, 0.92);
-        }
+        body.dark-mode .top-header { background: rgba(26, 30, 33, 0.92); }
 
-        .top-header .left-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .top-header .left-section { display: flex; align-items: center; gap: 16px; }
         .top-header .hamburger-btn {
             background: transparent;
             border: none;
@@ -336,12 +309,8 @@
             justify-content: center;
             line-height: 1;
         }
-        .top-header .hamburger-btn:hover {
-            background: rgba(0, 0, 0, 0.04);
-        }
-        .top-header .hamburger-btn:active {
-            transform: scale(0.92);
-        }
+        .top-header .hamburger-btn:hover { background: rgba(0, 0, 0, 0.04); }
+        .top-header .hamburger-btn:active { transform: scale(0.92); }
         .top-header .brand-mobile {
             font-size: 20px;
             font-weight: 700;
@@ -367,35 +336,25 @@
         }
         .top-header .search-wrap input {
             width: 100%;
-            padding: 10px 16px 10px 48px;
+            padding: 8px 16px 8px 48px;
             border: 1.5px solid var(--border);
             border-radius: 50px;
-            font-size: 15px;
+            font-size: 14px;
             background: var(--bg);
             color: var(--text-primary);
             transition: all var(--transition);
             outline: none;
             font-weight: 450;
         }
-        .top-header .search-wrap input::placeholder {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
+        .top-header .search-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
         .top-header .search-wrap input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 4px rgba(0, 175, 239, 0.12);
             background: var(--surface);
         }
-        .top-header .search-wrap input:focus ~ .ph {
-            color: var(--accent);
-        }
+        .top-header .search-wrap input:focus ~ .ph { color: var(--accent); }
 
-        .top-header .right-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
+        .top-header .right-section { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 
         .top-header .profile-image-wrap {
             width: 40px;
@@ -410,16 +369,8 @@
             align-items: center;
             justify-content: center;
         }
-        .top-header .profile-image-wrap:hover {
-            border-color: var(--accent);
-            transform: scale(1.04);
-        }
-        .top-header .profile-image-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .top-header .profile-image-wrap:hover { border-color: var(--accent); transform: scale(1.04); }
+        .top-header .profile-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .top-header .user-name {
             font-size: 15px;
             font-weight: 500;
@@ -441,16 +392,11 @@
             border: none;
             line-height: 1;
         }
-        .dark-toggle:hover {
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-        .dark-toggle:active {
-            transform: scale(0.9);
-        }
+        .dark-toggle:hover { color: var(--accent); transform: scale(1.1); }
+        .dark-toggle:active { transform: scale(0.9); }
 
         /* ============================================================
-           PAGE CONTENT – REWARDS (centred)
+           PAGE CONTENT – REWARDS
            ============================================================ */
         .page-content {
             padding: 32px 40px 48px;
@@ -476,34 +422,44 @@
             color: var(--text-primary);
         }
 
+        /* ===== BALANCE CARD (dark blue – matches sidebar active) ===== */
         .balance-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-            padding: 16px 24px;
+            justify-content: space-between;
+            background: var(--accent);
+            padding: 18px 28px;
             border-radius: var(--radius);
-            margin: 16px 0 20px 0;
+            margin: 16px 0 24px 0;
             color: #ffffff;
             flex-wrap: wrap;
+            gap: 12px;
             box-shadow: 0 4px 20px rgba(0, 175, 239, 0.25);
             width: 100%;
             max-width: 960px;
+            transition: background var(--transition);
+        }
+        body.dark-mode .balance-bar {
+            background: var(--accent-dark-mode);
+            box-shadow: 0 4px 20px rgba(96, 165, 250, 0.25);
         }
 
+        .balance-bar .balance-info {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
         .balance-bar .balance-label {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
             opacity: 0.9;
         }
         .balance-bar .balance-amount {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: -0.3px;
-            margin-left: 4px;
         }
         .balance-bar .balance-sub {
-            margin-left: auto;
             font-size: 14px;
             opacity: 0.85;
             display: flex;
@@ -514,6 +470,30 @@
             font-size: 18px;
         }
 
+        /* Points earned notification badge */
+        .points-earned-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        .points-earned-badge.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body.dark-mode .points-earned-badge {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== REWARDS GRID ===== */
         .rewards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -625,7 +605,7 @@
         }
 
         .reward-card .reward-btn {
-            padding: 6px 16px;
+            padding: 6px 18px;
             border: none;
             border-radius: 50px;
             font-size: 13px;
@@ -670,6 +650,191 @@
         }
 
         /* ============================================================
+           CONFIRMATION MODAL
+           ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.45);
+            backdrop-filter: blur(3px);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-overlay .fullscreen-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 480px;
+            padding: 32px 36px 28px;
+            position: relative;
+            animation: fadeUp 0.35s ease;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-overlay .card-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 4px;
+            line-height: 1;
+        }
+        .modal-overlay .card-close:hover { color: var(--text-primary); }
+        .modal-overlay .card-close svg { width: 22px; height: 22px; }
+
+        .modal-overlay .modal-header {
+            margin-bottom: 20px;
+        }
+        .modal-overlay .modal-header .badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+        .modal-overlay .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .modal-overlay .modal-header p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .modal-overlay .modal-body {
+            margin: 16px 0;
+        }
+        .modal-overlay .modal-body .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        .modal-overlay .modal-body .detail-row:last-child {
+            border-bottom: none;
+        }
+        .modal-overlay .modal-body .detail-row .label {
+            color: var(--text-muted);
+        }
+        .modal-overlay .modal-body .detail-row .value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .modal-overlay .modal-body .detail-row .value.highlight {
+            color: var(--accent);
+        }
+        .modal-overlay .modal-body .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 12px 0;
+        }
+        .modal-overlay .modal-body .warning-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .modal-overlay .modal-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        .modal-overlay .modal-footer .btn-secondary {
+            background: var(--surface-2);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .modal-overlay .modal-footer .btn-secondary:hover {
+            background: var(--border);
+        }
+        .modal-overlay .modal-footer .btn-danger {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 4px 14px rgba(0, 175, 239, 0.3);
+        }
+        .modal-overlay .modal-footer .btn-danger:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 175, 239, 0.4);
+        }
+        .modal-overlay .modal-footer .btn-danger:active {
+            transform: scale(0.96);
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--surface-dark);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 9999;
+            max-width: 400px;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast .ph {
+            font-size: 20px;
+            color: #34d399;
+        }
+        .toast .ph-error {
+            color: #f87171;
+        }
+
+        /* ============================================================
            RESPONSIVE
            ============================================================ */
         @media (max-width: 1100px) {
@@ -707,7 +872,7 @@
                 margin-left: 0;
             }
             .balance-bar .balance-amount {
-                font-size: 22px;
+                font-size: 24px;
             }
         }
 
@@ -762,7 +927,7 @@
                 border-radius: var(--radius-sm);
             }
             .balance-bar .balance-amount {
-                font-size: 20px;
+                font-size: 22px;
             }
             .reward-card {
                 padding: 16px 16px 18px;
@@ -800,6 +965,17 @@
             .top-header .brand-mobile {
                 display: block;
             }
+            .modal-overlay .fullscreen-card {
+                padding: 24px 20px 20px;
+            }
+            .modal-overlay .modal-footer {
+                flex-direction: column;
+            }
+            .modal-overlay .modal-footer .btn-secondary,
+            .modal-overlay .modal-footer .btn-danger {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 400px) {
@@ -817,19 +993,18 @@
             .top-header .user-name {
                 display: none;
             }
+            .balance-bar .balance-amount {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    SIDEBAR BACKDROP (mobile)
-    ============================================================ -->
+    <!-- Sidebar backdrop -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
-    <!-- ============================================================
-    SIDEBAR (improved – matching dashboard)
-    ============================================================ -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
         <div class="sidebar-header">
             <div class="brand-icon">
@@ -837,7 +1012,6 @@
             </div>
             <span class="brand-text">ProntoX</span>
         </div>
-
         <nav class="sidebar-nav">
             <button class="nav-item" data-nav="dashboard">
                 <i class="ph ph-house" aria-hidden="true"></i>
@@ -871,14 +1045,10 @@
         </nav>
     </aside>
 
-    <!-- ============================================================
-    MAIN CONTENT
-    ============================================================ -->
+    <!-- MAIN CONTENT -->
     <div class="main-content" id="mainContent" role="main">
 
-        <!-- ============================================================
-        TOP HEADER – compact
-        ============================================================ -->
+        <!-- TOP HEADER -->
         <header class="top-header" role="banner">
             <div class="left-section">
                 <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="true">
@@ -905,93 +1075,396 @@
             </div>
         </header>
 
-        <!-- ============================================================
-        PAGE CONTENT – REWARDS
-        ============================================================ -->
+        <!-- PAGE CONTENT -->
         <div class="page-content">
 
             <div class="rewards-header">
                 <h1>Rewards</h1>
             </div>
 
-            <div class="balance-bar">
-                <span class="balance-label">Available Balance:</span>
-                <span class="balance-amount">1,250 pts</span>
-                <span class="balance-sub">
+            <!-- Balance Bar (dark blue – matches sidebar active) -->
+            <div class="balance-bar" id="balanceBar">
+                <div class="balance-info">
+                    <span class="balance-label">Available Balance:</span>
+                    <span class="balance-amount" id="balanceAmount">0</span>
+                    <span class="points-earned-badge" id="pointsEarnedBadge">
+                        <i class="ph ph-check-circle" aria-hidden="true"></i>
+                        +100 pts earned!
+                    </span>
+                </div>
+                <div class="balance-sub">
                     <i class="ph ph-coins" aria-hidden="true"></i>
-                    Redeem your hard-earned points for perks.
-                </span>
+                    <span>Redeem your hard-earned points for perks.</span>
+                </div>
             </div>
 
-            <div class="rewards-grid">
-                <div class="reward-card accent-blue">
-                    <div class="card-accent"></div>
-                    <div class="card-icon">
-                        <i class="ph ph-calendar-blank" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="reward-title">Extra Day Off</h3>
-                    <p class="reward-desc">Take an extra day off on us. Recharge and come back stronger.</p>
-                    <div class="reward-footer">
-                        <span class="reward-points">
-                            <i class="ph ph-coins" aria-hidden="true"></i>
-                            5,000 pts
-                        </span>
-                        <button class="reward-btn disabled" disabled>
-                            <i class="ph ph-x-circle" aria-hidden="true"></i>
-                            Not enough pts
-                        </button>
-                    </div>
-                </div>
-
-                <div class="reward-card accent-gold">
-                    <div class="card-accent"></div>
-                    <div class="card-icon">
-                        <i class="ph ph-certificate" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="reward-title">Certification Exams</h3>
-                    <p class="reward-desc">Get certified in your field. We'll cover the exam fees for you.</p>
-                    <div class="reward-footer">
-                        <span class="reward-points">
-                            <i class="ph ph-coins" aria-hidden="true"></i>
-                            2,000 pts
-                        </span>
-                        <button class="reward-btn disabled" disabled>
-                            <i class="ph ph-x-circle" aria-hidden="true"></i>
-                            Not enough pts
-                        </button>
-                    </div>
-                </div>
-
-                <div class="reward-card accent-green">
-                    <div class="card-accent"></div>
-                    <div class="card-icon">
-                        <i class="ph ph-currency-dollar" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="reward-title">Redeem to Cash</h3>
-                    <p class="reward-desc">Turn your points into real money. Withdraw directly to your account.</p>
-                    <div class="reward-footer">
-                        <span class="reward-points">
-                            <i class="ph ph-coins" aria-hidden="true"></i>
-                            1,000 pts
-                        </span>
-                        <button class="reward-btn primary" id="redeemCashBtn">
-                            <i class="ph ph-arrow-right" aria-hidden="true"></i>
-                            Redeem
-                        </button>
-                    </div>
-                </div>
+            <!-- Rewards Grid -->
+            <div class="rewards-grid" id="rewardsGrid">
+                <!-- rendered by JS -->
             </div>
 
         </div><!-- /page-content -->
     </div><!-- /main-content -->
 
-    <!-- ============================================================
-    JAVASCRIPT
-    ============================================================ -->
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="fullscreen-card">
+            <button class="card-close" id="modalClose" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <div class="modal-header">
+                <span class="badge">🎁 Redeem Reward</span>
+                <h2 id="modalTitle">Confirm Redemption</h2>
+                <p>You are about to redeem a reward with your hard-earned points.</p>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+                <div class="detail-row">
+                    <span class="label">Reward</span>
+                    <span class="value" id="modalRewardName">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Cost</span>
+                    <span class="value" id="modalCost">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Current Balance</span>
+                    <span class="value" id="modalCurrentBalance">—</span>
+                </div>
+                <div class="divider"></div>
+                <div class="detail-row">
+                    <span class="label">New Balance</span>
+                    <span class="value highlight" id="modalNewBalance">—</span>
+                </div>
+                <div class="warning-text" id="modalWarning">This action cannot be undone.</div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn-danger" id="modalConfirm">Confirm Redeem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="ph ph-check-circle" id="toastIcon" aria-hidden="true"></i>
+        <span id="toastMessage">Action completed!</span>
+    </div>
+
     <script>
         (function() {
             'use strict';
 
+            // ------------------------------------------------------------
+            // CONSTANTS & STATE
+            // ------------------------------------------------------------
+            const POINTS_KEY = 'prontox_points';
+            const REDEMPTIONS_KEY = 'prontox_redemptions';
+            const CURRENT_USER = 'Chidi';
+
+            // Reward data (hardcoded for now)
+            const REWARDS = [{
+                id: 1,
+                name: 'Extra Day Off',
+                description: 'Take an extra day off on us. Recharge and come back stronger.',
+                points_cost: 5000,
+                icon: 'ph-calendar-blank',
+                accent: 'blue'
+            }, {
+                id: 2,
+                name: 'Certification Exams',
+                description: 'Get certified in your field. We\'ll cover the exam fees for you.',
+                points_cost: 2000,
+                icon: 'ph-certificate',
+                accent: 'gold'
+            }, {
+                id: 3,
+                name: 'Redeem to Cash',
+                description: 'Turn your points into real money. Withdraw directly to your account.',
+                points_cost: 1000,
+                icon: 'ph-currency-dollar',
+                accent: 'green'
+            }];
+
+            // ------------------------------------------------------------
+            // POINTS HELPERS
+            // ------------------------------------------------------------
+            function getBalance() {
+                try {
+                    const data = localStorage.getItem(POINTS_KEY);
+                    return data ? parseInt(data, 10) : 0;
+                } catch (e) {
+                    return 0;
+                }
+            }
+
+            function setBalance(newBalance) {
+                localStorage.setItem(POINTS_KEY, String(newBalance));
+                return newBalance;
+            }
+
+            function addPoints(amount, reason) {
+                const current = getBalance();
+                const newBalance = current + amount;
+                setBalance(newBalance);
+
+                // Log to points history (optional)
+                const history = getPointsHistory();
+                history.push({
+                    date: new Date().toISOString(),
+                    amount: amount,
+                    reason: reason || 'Points earned',
+                    balance: newBalance
+                });
+                localStorage.setItem('prontox_points_history', JSON.stringify(history));
+
+                return newBalance;
+            }
+
+            function getPointsHistory() {
+                try {
+                    const data = localStorage.getItem('prontox_points_history');
+                    return data ? JSON.parse(data) : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function getRedemptions() {
+                try {
+                    const data = localStorage.getItem(REDEMPTIONS_KEY);
+                    return data ? JSON.parse(data) : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function addRedemption(rewardId, rewardName, cost) {
+                const redemptions = getRedemptions();
+                redemptions.push({
+                    id: Date.now(),
+                    reward_id: rewardId,
+                    reward_name: rewardName,
+                    cost: cost,
+                    date: new Date().toISOString(),
+                    status: 'approved'
+                });
+                localStorage.setItem(REDEMPTIONS_KEY, JSON.stringify(redemptions));
+            }
+
+            // ------------------------------------------------------------
+            // EXPOSE POINTS TO OTHER PAGES (for idea submission)
+            // ------------------------------------------------------------
+            window.ProntoX = window.ProntoX || {};
+            window.ProntoX.addPoints = function(amount, reason) {
+                const newBalance = addPoints(amount, reason);
+                // Also broadcast to other tabs
+                try {
+                    localStorage.setItem('prontox_points_updated', Date.now().toString());
+                } catch (e) { /* ignore */ }
+                return newBalance;
+            };
+            window.ProntoX.getBalance = getBalance;
+
+            // ------------------------------------------------------------
+            // RENDER REWARDS
+            // ------------------------------------------------------------
+            function renderRewards() {
+                const balance = getBalance();
+                const grid = document.getElementById('rewardsGrid');
+                const balanceEl = document.getElementById('balanceAmount');
+
+                // Update balance display
+                balanceEl.textContent = balance.toLocaleString();
+
+                if (!grid) return;
+
+                let html = '';
+                REWARDS.forEach(function(reward) {
+                    const canAfford = balance >= reward.points_cost;
+                    const btnClass = canAfford ? 'primary' : 'disabled';
+                    const btnText = canAfford ? 'Redeem' : 'Need more points';
+                    const btnDisabled = canAfford ? '' : 'disabled';
+                    const iconMap = {
+                        'ph-calendar-blank': 'ph-calendar-blank',
+                        'ph-certificate': 'ph-certificate',
+                        'ph-currency-dollar': 'ph-currency-dollar'
+                    };
+                    const icon = iconMap[reward.icon] || 'ph-gift';
+
+                    html += `
+                        <div class="reward-card accent-${reward.accent}" data-reward-id="${reward.id}">
+                            <div class="card-accent"></div>
+                            <div class="card-icon">
+                                <i class="ph ${icon}" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="reward-title">${reward.name}</h3>
+                            <p class="reward-desc">${reward.description}</p>
+                            <div class="reward-footer">
+                                <span class="reward-points">
+                                    <i class="ph ph-coins" aria-hidden="true"></i>
+                                    ${reward.points_cost.toLocaleString()} pts
+                                </span>
+                                <button class="reward-btn ${btnClass}" data-reward-id="${reward.id}" ${btnDisabled}>
+                                    <i class="ph ${canAfford ? 'ph-arrow-right' : 'ph-x-circle'}" aria-hidden="true"></i>
+                                    ${btnText}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+
+                // Attach click events to redeem buttons
+                document.querySelectorAll('.reward-btn.primary').forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const rewardId = parseInt(this.dataset.rewardId);
+                        const reward = REWARDS.find(function(r) { return r.id === rewardId; });
+                        if (reward) {
+                            openConfirmModal(reward);
+                        }
+                    });
+                });
+            }
+
+            // ------------------------------------------------------------
+            // CONFIRMATION MODAL
+            // ------------------------------------------------------------
+            let pendingReward = null;
+
+            function openConfirmModal(reward) {
+                const balance = getBalance();
+                pendingReward = reward;
+
+                document.getElementById('modalRewardName').textContent = reward.name;
+                document.getElementById('modalCost').textContent = reward.points_cost.toLocaleString() + ' pts';
+                document.getElementById('modalCurrentBalance').textContent = balance.toLocaleString() + ' pts';
+                const newBalance = balance - reward.points_cost;
+                document.getElementById('modalNewBalance').textContent = newBalance.toLocaleString() + ' pts';
+
+                // Warning if balance becomes 0
+                const warningEl = document.getElementById('modalWarning');
+                if (newBalance === 0) {
+                    warningEl.textContent = '⚠️ This will bring your balance to 0. Continue?';
+                    warningEl.style.color = 'var(--status-review)';
+                } else {
+                    warningEl.textContent = 'This action cannot be undone.';
+                    warningEl.style.color = '';
+                }
+
+                document.getElementById('confirmModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeConfirmModal() {
+                document.getElementById('confirmModal').classList.remove('active');
+                document.body.style.overflow = '';
+                pendingReward = null;
+            }
+
+            function confirmRedemption() {
+                if (!pendingReward) return;
+
+                const balance = getBalance();
+                const reward = pendingReward;
+
+                if (balance < reward.points_cost) {
+                    showToast('You don\'t have enough points!', 'error');
+                    closeConfirmModal();
+                    return;
+                }
+
+                // Deduct points
+                const newBalance = balance - reward.points_cost;
+                setBalance(newBalance);
+
+                // Log redemption
+                addRedemption(reward.id, reward.name, reward.points_cost);
+
+                // Close modal
+                closeConfirmModal();
+
+                // Show success toast
+                showToast('🎉 You redeemed "' + reward.name + '" successfully!', 'success');
+
+                // Update UI
+                renderRewards();
+
+                // Trigger celebration effect (optional)
+                triggerCelebration();
+            }
+
+            // ------------------------------------------------------------
+            // TOAST
+            // ------------------------------------------------------------
+            let toastTimer = null;
+
+            function showToast(message, type) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                const toastIcon = document.getElementById('toastIcon');
+
+                toastMessage.textContent = message;
+                toastIcon.className = 'ph ' + (type === 'error' ? 'ph-x-circle ph-error' : 'ph-check-circle');
+                toast.classList.add('show');
+
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3500);
+            }
+
+            // ------------------------------------------------------------
+            // CELEBRATION EFFECT (simple confetti using emojis)
+            // ------------------------------------------------------------
+            function triggerCelebration() {
+                // Simple celebration – we could add confetti library later
+                // For now, a subtle animation on the balance
+                const balanceEl = document.getElementById('balanceAmount');
+                const badge = document.getElementById('pointsEarnedBadge');
+
+                // Flash the balance
+                balanceEl.style.transition = 'transform 0.2s ease';
+                balanceEl.style.transform = 'scale(1.3)';
+                setTimeout(function() {
+                    balanceEl.style.transform = 'scale(1)';
+                }, 300);
+
+                // Show a "redeemed" badge briefly
+                badge.textContent = '🎁 Redeemed!';
+                badge.className = 'points-earned-badge show';
+                setTimeout(function() {
+                    badge.className = 'points-earned-badge';
+                    setTimeout(function() {
+                        badge.textContent = '+100 pts earned!';
+                    }, 400);
+                }, 2000);
+            }
+
+            // ------------------------------------------------------------
+            // LISTEN FOR POINTS UPDATES FROM OTHER TABS
+            // ------------------------------------------------------------
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'prontox_points_updated' || e.key === POINTS_KEY) {
+                    renderRewards();
+                }
+                if (e.key === 'prontox-dark-mode') {
+                    applyDarkMode();
+                }
+                if (e.key === 'prontox-avatar') {
+                    loadAvatar();
+                }
+            });
+
+            // ------------------------------------------------------------
+            // SIDEBAR & DARK MODE (same as dashboard)
+            // ------------------------------------------------------------
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -999,7 +1472,6 @@
             const mainContent = document.getElementById('mainContent');
             const searchInput = document.getElementById('searchInput');
             const navItems = document.querySelectorAll('.nav-item');
-            const redeemBtn = document.getElementById('redeemCashBtn');
             const profileImageWrap = document.getElementById('profileImageWrap');
             const darkToggle = document.getElementById('darkToggle');
             const darkIcon = document.getElementById('darkIcon');
@@ -1090,10 +1562,6 @@
                 });
             });
 
-            profileImageWrap.addEventListener('click', function() {
-                window.location.href = 'profile.html';
-            });
-
             hamburgerBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleSidebar();
@@ -1107,6 +1575,7 @@
                 if (e.key === 'Escape') {
                     if (isMobile && isSidebarOpen) toggleSidebar(false);
                     if (document.activeElement === searchInput) searchInput.blur();
+                    closeConfirmModal();
                 }
             });
 
@@ -1117,7 +1586,7 @@
                 this.closest('.search-wrap').classList.remove('focused');
             });
 
-            // Dark mode
+            // ---- Dark mode ----
             function applyDarkMode() {
                 const darkMode = localStorage.getItem('prontox-dark-mode');
                 if (darkMode === 'true') {
@@ -1142,7 +1611,7 @@
                 }
             });
 
-            // Avatar
+            // ---- Avatar loading for header ----
             function loadAvatar() {
                 const saved = localStorage.getItem('prontox-avatar');
                 const headerImg = document.getElementById('profileImage');
@@ -1158,23 +1627,7 @@
                 }
             }
 
-            if (redeemBtn) {
-                redeemBtn.addEventListener('click', function() {
-                    const original = this.innerHTML;
-                    this.innerHTML = '<i class="ph ph-check-circle" aria-hidden="true"></i> Redeemed!';
-                    this.style.background = 'linear-gradient(135deg, #059669, #047857)';
-                    this.style.boxShadow = '0 4px 14px rgba(5, 150, 105, 0.4)';
-                    this.disabled = true;
-
-                    setTimeout(function() {
-                        this.innerHTML = original;
-                        this.style.background = '';
-                        this.style.boxShadow = '';
-                        this.disabled = false;
-                    }.bind(this), 2500);
-                });
-            }
-
+            // ---- Resize ----
             let resizeTimer;
 
             function handleResize() {
@@ -1221,12 +1674,44 @@
 
             window.addEventListener('resize', handleResize);
 
+            // ---- Modal event listeners ----
+            document.getElementById('modalClose').addEventListener('click', closeConfirmModal);
+            document.getElementById('modalCancel').addEventListener('click', closeConfirmModal);
+            document.getElementById('modalConfirm').addEventListener('click', confirmRedemption);
+
+            // Close modal on backdrop click
+            document.getElementById('confirmModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeConfirmModal();
+                }
+            });
+
+            // ---- INIT ----
             function init() {
                 checkMobile();
                 if (isMobile) toggleSidebar(false);
                 else toggleSidebar(true);
                 applyDarkMode();
                 loadAvatar();
+                renderRewards();
+
+                // Check if points were earned from another tab recently
+                const lastUpdate = localStorage.getItem('prontox_points_updated');
+                if (lastUpdate) {
+                    const elapsed = Date.now() - parseInt(lastUpdate, 10);
+                    if (elapsed < 5000) {
+                        // Show a subtle indicator
+                        const badge = document.getElementById('pointsEarnedBadge');
+                        badge.textContent = '🔄 Points updated!';
+                        badge.className = 'points-earned-badge show';
+                        setTimeout(function() {
+                            badge.className = 'points-earned-badge';
+                            setTimeout(function() {
+                                badge.textContent = '+100 pts earned!';
+                            }, 400);
+                        }, 2000);
+                    }
+                }
             }
 
             if (document.readyState === 'loading') {
@@ -1235,14 +1720,13 @@
                 init();
             }
 
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'prontox-avatar') {
-                    loadAvatar();
-                }
-                if (e.key === 'prontox-dark-mode') {
-                    applyDarkMode();
-                }
-            });
+            // ------------------------------------------------------------
+            // EXPOSE REWARD FUNCTIONS GLOBALLY (for debugging / cross-page)
+            // ------------------------------------------------------------
+            window.ProntoX = window.ProntoX || {};
+            window.ProntoX.renderRewards = renderRewards;
+            window.ProntoX.addPoints = addPoints;
+            window.ProntoX.getBalance = getBalance;
 
         })();
     </script>

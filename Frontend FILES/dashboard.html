@@ -872,43 +872,63 @@
             font-weight: 300;
         }
 
+        /* ---- STAGE TRACKER: circles embedded IN the line (────○────○────○────○) ---- */
         .project-stage-tracker {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
             width: 100%;
             padding: 4px 0;
-            position: relative;
         }
 
-        .project-stage-tracker .stage-node {
+        /* Top row: the horizontal line with circles sitting on it */
+        .tracker-line-row {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            flex: 1;
+            width: 100%;
+            height: 16px;
             position: relative;
-            z-index: 2;
         }
 
-        .project-stage-tracker .stage-node .node-circle {
-            width: 8px;
-            height: 8px;
+        /* Connector segment between circles */
+        .tracker-line-row .stage-connector {
+            flex: 1;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            min-width: 8px;
+        }
+
+        .tracker-line-row .stage-connector .connector-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.6s ease;
+            border-radius: 2px;
+        }
+
+        .tracker-line-row .stage-connector.done .connector-fill { width: 100%; }
+        .tracker-line-row .stage-connector.partial .connector-fill { width: 50%; }
+
+        /* Circle nodes sitting directly on the line */
+        .tracker-line-row .node-circle {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             border: 2.5px solid var(--border);
             background: var(--surface);
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 2;
             flex-shrink: 0;
+            transition: all 0.4s ease;
+            z-index: 2;
         }
 
-        .project-stage-tracker .stage-node .node-circle.done {
+        .tracker-line-row .node-circle.done {
             border-color: var(--accent);
             background: var(--accent);
             box-shadow: 0 0 0 3px rgba(0, 175, 239, 0.15);
         }
 
-        .project-stage-tracker .stage-node .node-circle.active {
+        .tracker-line-row .node-circle.active {
             border-color: var(--accent);
             background: var(--accent);
             box-shadow: 0 0 0 5px rgba(0, 175, 239, 0.2);
@@ -920,53 +940,41 @@
             50% { box-shadow: 0 0 0 6px rgba(0, 175, 239, 0.25); }
         }
 
-        .project-stage-tracker .stage-node .node-label {
+        /* Bottom row: labels aligned under each circle */
+        .tracker-labels-row {
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .tracker-labels-row .stage-label-slot {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* First and last labels align to edges, not center */
+        .tracker-labels-row .stage-label-slot:first-child { justify-content: flex-start; }
+        .tracker-labels-row .stage-label-slot:last-child { justify-content: flex-end; }
+
+        .tracker-labels-row .stage-label-slot .node-label {
             font-size: 9px;
             font-weight: 500;
             color: var(--text-muted);
-            margin-top: 5px;
-            text-align: center;
             white-space: nowrap;
             transition: color 0.3s ease;
             letter-spacing: 0.3px;
         }
 
-        .project-stage-tracker .stage-node .node-label.done {
+        .tracker-labels-row .stage-label-slot .node-label.done {
             color: var(--status-implemented);
             font-weight: 600;
         }
 
-        .project-stage-tracker .stage-node .node-label.active {
+        .tracker-labels-row .stage-label-slot .node-label.active {
             color: var(--accent);
             font-weight: 700;
-        }
-
-        .project-stage-tracker .stage-connector {
-            flex: 1;
-            height: 3px;
-            background: var(--border);
-            margin: 0 2px;
-            position: relative;
-            top: -9px;
-            border-radius: 2px;
-            overflow: hidden;
-            min-width: 12px;
-        }
-
-        .project-stage-tracker .stage-connector .connector-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.6s ease;
-            border-radius: 2px;
-        }
-
-        .project-stage-tracker .stage-connector.done .connector-fill {
-            width: 100%;
-        }
-
-        .project-stage-tracker .stage-connector.partial .connector-fill {
-            width: 50%;
         }
 
         .project-item .project-percent {
@@ -2657,7 +2665,8 @@
                         const progress = getStatusProgress(idea.status);
                         const currentIndex = stages.indexOf(idea.status);
 
-                        let trackerHtml = '';
+                        let lineRowHtml = '';
+                        let labelsRowHtml = '';
                         stages.forEach(function(stage, idx) {
                             let circleClass = 'node-circle';
                             let labelClass = 'node-label';
@@ -2669,20 +2678,21 @@
                                 labelClass += ' active';
                             }
 
-                            trackerHtml += '<div class="stage-node">' +
-                                '<div class="' + circleClass + '"></div>' +
-                                '<span class="' + labelClass + '">' + stageLabels[idx] + '</span>' +
-                                '</div>';
-
-                            if (idx < stages.length - 1) {
+                            // Line row: connector then circle (connector before each circle except the first)
+                            if (idx > 0) {
                                 let connectorClass = 'stage-connector';
-                                if (idx < currentIndex) connectorClass += ' done';
-                                else if (idx === currentIndex) connectorClass += ' partial';
-                                trackerHtml += '<div class="' + connectorClass + '">' +
-                                    '<div class="connector-fill"></div>' +
-                                    '</div>';
+                                if (idx <= currentIndex) connectorClass += ' done';
+                                else if (idx - 1 === currentIndex) connectorClass += ' partial';
+                                lineRowHtml += '<div class="' + connectorClass + '"><div class="connector-fill"></div></div>';
                             }
+                            lineRowHtml += '<div class="' + circleClass + '"></div>';
+
+                            // Labels row: one slot per stage
+                            labelsRowHtml += '<div class="stage-label-slot"><span class="' + labelClass + '">' + stageLabels[idx] + '</span></div>';
                         });
+
+                        const trackerHtml = '<div class="tracker-line-row">' + lineRowHtml + '</div>' +
+                            '<div class="tracker-labels-row">' + labelsRowHtml + '</div>';
 
                         html += '<div class="project-item">' +
                             '<div class="project-header">' +
@@ -2700,38 +2710,63 @@
                 }
 
                 // ---- TOP CONTRIBUTORS ----
-                const shuffled = [...FAKE_NAMES].sort(function() { return Math.random() - 0.5; });
-                const top10 = shuffled.slice(0, 10);
-                const points = [5200, 3400, 1250, 1100, 950, 880, 790, 710, 650, 600];
-                const rankEmojis = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10'];
+                // Contributors are seeded once at init and never changed by refresh
+                if (!topContributors._rendered) {
+                    const shuffled = [...FAKE_NAMES].sort(function() { return Math.random() - 0.5; });
+                    const top10 = shuffled.slice(0, 10);
+                    const points = [5200, 3400, 1250, 1100, 950, 880, 790, 710, 650, 600];
+                    const rankEmojis = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10'];
 
-                let contributorHtml = '';
-                top10.forEach(function(name, idx) {
-                    const pts = points[idx] || Math.floor(Math.random() * 5000) + 500;
-                    const isYou = (name === 'Chidi Okafor' || (idx === 2 && name === 'Chidi Okafor'));
-                    const rank = idx + 1;
-                    let rankClass = 'contrib-rank';
-                    if (rank === 1) rankClass += ' gold';
-                    else if (rank === 2) rankClass += ' silver';
-                    else if (rank === 3) rankClass += ' bronze';
+                    let contributorHtml = '';
+                    top10.forEach(function(name, idx) {
+                        const pts = points[idx] || Math.floor(Math.random() * 5000) + 500;
+                        const isYou = (name === 'Chidi Okafor' || (idx === 2 && name === 'Chidi Okafor'));
+                        const rank = idx + 1;
+                        let rankClass = 'contrib-rank';
+                        if (rank === 1) rankClass += ' gold';
+                        else if (rank === 2) rankClass += ' silver';
+                        else if (rank === 3) rankClass += ' bronze';
 
-                    const initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
-                    const role = ROLES[idx % ROLES.length];
+                        const initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+                        const role = ROLES[idx % ROLES.length];
 
-                    contributorHtml += '<div class="contributor-item">' +
-                        '<span class="' + rankClass + '">' + rankEmojis[idx] + '</span>' +
-                        '<div class="contrib-avatar">' + initials + '</div>' +
-                        '<div class="contrib-info">' +
-                        '<div class="contrib-name">' + name + (isYou ? ' <span class="you-tag">(You)</span>' : '') +
-                        '</div>' +
-                        '<div class="contrib-role">' + role + '</div>' +
-                        '</div>' +
-                        '<span class="contrib-points">' + pts.toLocaleString() + ' PTS</span>' +
-                        '</div>';
-                });
-                topContributors.innerHTML = contributorHtml;
+                        contributorHtml += '<div class="contributor-item">' +
+                            '<span class="' + rankClass + '">' + rankEmojis[idx] + '</span>' +
+                            '<div class="contrib-avatar">' + initials + '</div>' +
+                            '<div class="contrib-info">' +
+                            '<div class="contrib-name">' + name + (isYou ? ' <span class="you-tag">(You)</span>' : '') +
+                            '</div>' +
+                            '<div class="contrib-role">' + role + '</div>' +
+                            '</div>' +
+                            '<span class="contrib-points">' + pts.toLocaleString() + ' PTS</span>' +
+                            '</div>';
+                    });
+                    topContributors.innerHTML = contributorHtml;
+                    topContributors._rendered = true;
+                }
 
                 // ---- RECENT ACTIVITY ----
+                renderActivityFeed();
+
+                // ---- ANNOUNCEMENTS ----
+                const announcements = getAnnouncements();
+                if (announcements.length === 0) {
+                    tickerInner.innerHTML = '<div class="ticker-item">No announcements yet</div>';
+                } else {
+                    let html = '';
+                    const sorted = announcements.slice().sort(function(a, b) { return new Date(b.date) - new Date(a
+                        .date); });
+                    sorted.forEach(function(ann) {
+                        html += '<div class="ticker-item">' + ann.text +
+                            '<span class="date-badge">' + ann.date + '</span></div>';
+                    });
+                    tickerInner.innerHTML = html;
+                }
+            }
+
+            // ---- RENDER ACTIVITY FEED (isolated — does NOT touch any other card) ----
+            function renderActivityFeed() {
+                const activities = getActivities();
                 if (activities.length === 0) {
                     activityFeed.innerHTML = '<div class="activity-empty">No recent activities</div>';
                 } else {
@@ -2774,21 +2809,6 @@
                     });
                     activityFeed.innerHTML = html;
                 }
-
-                // ---- ANNOUNCEMENTS ----
-                const announcements = getAnnouncements();
-                if (announcements.length === 0) {
-                    tickerInner.innerHTML = '<div class="ticker-item">No announcements yet</div>';
-                } else {
-                    let html = '';
-                    const sorted = announcements.slice().sort(function(a, b) { return new Date(b.date) - new Date(a
-                        .date); });
-                    sorted.forEach(function(ann) {
-                        html += '<div class="ticker-item">' + ann.text +
-                            '<span class="date-badge">' + ann.date + '</span></div>';
-                    });
-                    tickerInner.innerHTML = html;
-                }
             }
 
             // ---- REFRESH ACTIVITIES ----
@@ -2800,7 +2820,7 @@
                 this.classList.add('spinning');
 
                 saveActivities([]);
-                renderDashboard();
+                renderActivityFeed();
 
                 refreshStatus.textContent = 'Activities refreshed';
                 refreshStatus.className = 'refresh-status show';
